@@ -14,7 +14,8 @@ function fixture(staticResponses){
      // static response - null is valid response
     } else if (staticResponse !== undefined) {
     // return result asynchronously
-    setTimeout(() => end(null, staticResponse))
+    res.result = staticResponse
+    setTimeout(() => end(null, res))
   // no prepared response - skip
   } else {
     next()
