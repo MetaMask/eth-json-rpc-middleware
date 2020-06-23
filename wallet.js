@@ -2,17 +2,17 @@ const createAsyncMiddleware = require('json-rpc-engine/src/createAsyncMiddleware
 const createScaffoldMiddleware = require('json-rpc-engine/src/createScaffoldMiddleware')
 const sigUtil = require('eth-sig-util')
 
-module.exports = function createWalletMiddleware(opts = {}) {
+module.exports = function createWalletMiddleware (opts = {}) {
   // parse + validate options
-  const getAccounts = opts.getAccounts
-  const processTypedMessage = opts.processTypedMessage
-  const processTypedMessageV3 = opts.processTypedMessageV3
-  const processTypedMessageV4 = opts.processTypedMessageV4
-  const processPersonalMessage = opts.processPersonalMessage
-  const processEthSignMessage = opts.processEthSignMessage
-  const processTransaction = opts.processTransaction
-  const processDecryptMessage = opts.processDecryptMessage
-  const processEncryptionPublicKey = opts.processEncryptionPublicKey
+  const { getAccounts } = opts
+  const { processTypedMessage } = opts
+  const { processTypedMessageV3 } = opts
+  const { processTypedMessageV4 } = opts
+  const { processPersonalMessage } = opts
+  const { processEthSignMessage } = opts
+  const { processTransaction } = opts
+  const { processDecryptMessage } = opts
+  const { processEncryptionPublicKey } = opts
 
   if (!getAccounts) {
     throw new Error('WalletMiddleware - opts.getAccounts not provided')
@@ -39,11 +39,11 @@ module.exports = function createWalletMiddleware(opts = {}) {
   // account lookups
   //
 
-  async function lookupAccounts(req, res) {
+  async function lookupAccounts (req, res) {
     res.result = await getAccounts(req)
   }
 
-  async function lookupDefaultAccount(req, res) {
+  async function lookupDefaultAccount (req, res) {
     const accounts = await getAccounts(req)
     res.result = accounts[0] || null
   }
@@ -52,7 +52,7 @@ module.exports = function createWalletMiddleware(opts = {}) {
   // transaction signatures
   //
 
-  async function sendTransaction(req, res) {
+  async function sendTransaction (req, res) {
 
     if (!processTransaction) {
       throw new Error('WalletMiddleware - opts.processTransaction not provided')
@@ -67,19 +67,18 @@ module.exports = function createWalletMiddleware(opts = {}) {
   // message signatures
   //
 
-  async function ethSign(req, res) {
+  async function ethSign (req, res) {
 
     if (!processEthSignMessage) {
       throw new Error('WalletMiddleware - opts.processEthSignMessage not provided')
     }
 
-    const address = await validateAndNormalizeKeyholder(req.params[0], req)
-    const message = req.params[1]
-    const extraParams = req.params[2] || {}
-    const msgParams = Object.assign({}, extraParams, {
-      from: address,
+    const [address, message, extraParams = {}] = req.params
+    const msgParams = {
+      ...extraParams,
+      from: await validateAndNormalizeKeyholder(address, req),
       data: message,
-    })
+    }
 
     res.result = await processEthSignMessage(msgParams, req)
   }
@@ -90,14 +89,13 @@ module.exports = function createWalletMiddleware(opts = {}) {
       throw new Error('WalletMiddleware - opts.processTypedMessage not provided')
     }
 
-    const message = req.params[0]
-    const address = await validateAndNormalizeKeyholder(req.params[1], req)
+    const [message, address, extraParams = {}] = req.params
     const version = 'V1'
-    const extraParams = req.params[2] || {}
-    const msgParams = Object.assign({}, extraParams, {
-      from: address,
+    const msgParams = {
+      ...extraParams,
+      from: await validateAndNormalizeKeyholder(address, req),
       data: message,
-    })
+    }
 
     res.result = await processTypedMessage(msgParams, req, version)
   }
@@ -108,13 +106,12 @@ module.exports = function createWalletMiddleware(opts = {}) {
       throw new Error('WalletMiddleware - opts.processTypedMessage not provided')
     }
 
-    const address = await validateAndNormalizeKeyholder(req.params[0], req)
-    const message = req.params[1]
+    const [address, message] = req.params
     const version = 'V3'
     const msgParams = {
       data: message,
-      from: address,
-      version
+      from: await validateAndNormalizeKeyholder(address, req),
+      version,
     }
 
     res.result = await processTypedMessageV3(msgParams, req, version)
@@ -126,13 +123,12 @@ module.exports = function createWalletMiddleware(opts = {}) {
       throw new Error('WalletMiddleware - opts.processTypedMessage not provided')
     }
 
-    const address = await validateAndNormalizeKeyholder(req.params[0], req)
-    const message = req.params[1]
+    const [address, message] = req.params
     const version = 'V4'
     const msgParams = {
       data: message,
-      from: address,
-      version
+      from: await validateAndNormalizeKeyholder(address, req),
+      version,
     }
 
     res.result = await processTypedMessageV4(msgParams, req, version)
@@ -144,11 +140,7 @@ module.exports = function createWalletMiddleware(opts = {}) {
       throw new Error('WalletMiddleware - opts.processPersonalMessage not provided')
     }
 
-    // process normally
-    const firstParam = req.params[0]
-    const secondParam = req.params[1]
-    // non-standard "extraParams" to be appended to our "msgParams" obj
-    const extraParams = req.params[2] || {}
+    const [firstParam, secondParam, extraParams = {}] = req.params
 
     // We initially incorrectly ordered these parameters.
     // To gracefully respect users who adopted this API early,
@@ -173,23 +165,23 @@ module.exports = function createWalletMiddleware(opts = {}) {
     }
     address = await validateAndNormalizeKeyholder(address, req)
 
-    const msgParams = Object.assign({}, extraParams, {
+    const msgParams = {
+      ...extraParams,
       from: address,
       data: message,
-    })
-    
+    }
+
     res.result = await processPersonalMessage(msgParams, req)
   }
 
-  async function personalRecover(req, res) {
+  async function personalRecover (req, res) {
 
-    const message = req.params[0]
-    const signature = req.params[1]
-    const extraParams = req.params[2] || {}
-    const msgParams = Object.assign({}, extraParams, {
+    const [message, signature, extraParams = {}] = req.params
+    const msgParams = {
+      ...extraParams,
       sig: signature,
       data: message,
-    })
+    }
     const signerAddress = sigUtil.recoverPersonalSignature(msgParams)
 
     res.result = signerAddress
@@ -205,20 +197,19 @@ module.exports = function createWalletMiddleware(opts = {}) {
 
     res.result = await processEncryptionPublicKey(address, req)
   }
-	
+
   async function decryptMessage (req, res) {
 
     if (!processDecryptMessage) {
       throw new Error('WalletMiddleware - opts.processDecryptMessage not provided')
     }
 
-    const ciphertext = req.params[0]
-    const address = await validateAndNormalizeKeyholder(req.params[1])
-    const extraParams = req.params[2] || {}
-    const msgParams = Object.assign({}, extraParams, {
-      from: address,
+    const [ciphertext, address, extraParams = {}] = req.params
+    const msgParams = {
+      ...extraParams,
+      from: await validateAndNormalizeKeyholder(address, req),
       data: ciphertext,
-    })
+    }
 
     res.result = await processDecryptMessage(msgParams, req)
   }
@@ -230,20 +221,20 @@ module.exports = function createWalletMiddleware(opts = {}) {
   /**
    * Validates the keyholder address, and returns a normalized (i.e. lowercase)
    * copy of it.
-   * 
+   *
    * @param {string} address - The address to validate and normalize.
    * @param {Object} req - The request object.
    * @returns {string} - The normalized address, if valid. Otherwise, throws
    * an error
    */
-  async function validateAndNormalizeKeyholder(address, req) {
+  async function validateAndNormalizeKeyholder (address, req) {
 
     if (typeof address === 'string' && address.length > 0) {
 
       // ensure address is included in provided accounts
       const accounts = await getAccounts(req)
-      const normalizedAccounts = accounts.map(_address => _address.toLowerCase())
-      const normalizedAddress =  address.toLowerCase()
+      const normalizedAccounts = accounts.map((_address) => _address.toLowerCase())
+      const normalizedAddress = address.toLowerCase()
 
       if (normalizedAccounts.includes(normalizedAddress)) {
         return normalizedAddress

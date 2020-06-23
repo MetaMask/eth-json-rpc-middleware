@@ -1,7 +1,7 @@
 const clone = require('clone')
 const pify = require('pify')
 const createAsyncMiddleware = require('json-rpc-engine/src/createAsyncMiddleware')
-const blockTagParamIndex = require('./cache-utils').blockTagParamIndex
+const { blockTagParamIndex } = require('./cache-utils')
 // `<nil>` comes from https://github.com/ethereum/go-ethereum/issues/16925
 const emptyValues = [undefined, null, '\u003cnil\u003e']
 
@@ -13,22 +13,32 @@ const emptyValues = [undefined, null, '\u003cnil\u003e']
 // nodes that are not always in sync with each other.
 //
 
-module.exports = createBlockReEmitMiddleware
-
-function createBlockReEmitMiddleware (opts = {}) {
+module.exports = function createBlockReEmitMiddleware (opts = {}) {
   const { blockTracker, provider } = opts
-  if (!blockTracker) throw Error('BlockReEmitMiddleware - mandatory "blockTracker" option is missing.')
-  if (!provider) throw Error('BlockReEmitMiddleware - mandatory "provider" option is missing.')
+  if (!blockTracker) {
+    throw Error('BlockReEmitMiddleware - mandatory "blockTracker" option is missing.')
+  }
+  if (!provider) {
+    throw Error('BlockReEmitMiddleware - mandatory "provider" option is missing.')
+  }
 
   return createAsyncMiddleware(async (req, res, next) => {
     const blockRefIndex = blockTagParamIndex(req)
     // skip if method does not include blockRef
-    if (blockRefIndex === undefined) return next()
+    if (blockRefIndex === undefined) {
+      next()
+      return
+    }
     // skip if not "latest"
     let blockRef = req.params[blockRefIndex]
     // omitted blockRef implies "latest"
-    if (blockRef === undefined) blockRef = 'latest'
-    if (blockRef !== 'latest') return next()
+    if (blockRef === undefined) {
+      blockRef = 'latest'
+    }
+    if (blockRef !== 'latest') {
+      next()
+      return
+    }
     // lookup latest block
     const latestBlockNumber = await blockTracker.getLatestBlock()
     // re-emit request with specific block-ref
@@ -36,21 +46,20 @@ function createBlockReEmitMiddleware (opts = {}) {
     childRequest.params[blockRefIndex] = latestBlockNumber
     // attempt child request until non-empty response is received
     const childRes = await retry(10, async () => {
-      const childRes = await pify(provider.sendAsync).call(provider, childRequest)
+      const _childRes = await pify(provider.sendAsync).call(provider, childRequest)
       // verify result
-      if (emptyValues.includes(childRes.result)) {
+      if (emptyValues.includes(_childRes.result)) {
         throw new Error('BlockReEmitMiddleware - empty response')
       }
-      return childRes
+      return _childRes
     })
     // copy child response onto original response
     res.result = childRes.result
     res.error = childRes.error
   })
-
 }
 
-async function retry(maxRetries, asyncFn) {
+async function retry (maxRetries, asyncFn) {
   for (let index = 0; index < maxRetries; index++) {
     try {
       return await asyncFn()
@@ -61,6 +70,6 @@ async function retry(maxRetries, asyncFn) {
   throw new Error('BlockReEmitMiddleware - retries exhausted')
 }
 
-function timeout(duration) {
-  return new Promise(resolve => setTimeout(resolve, duration))
+function timeout (duration) {
+  return new Promise((resolve) => setTimeout(resolve, duration))
 }

@@ -1,12 +1,9 @@
 const test = require('tape')
 const JsonRpcEngine = require('json-rpc-engine')
 const BlockTracker = require('eth-block-tracker')
-const EthQuery = require('eth-query')
 const GanacheCore = require('ganache-core')
 const pify = require('pify')
 const createBlockCacheMiddleware = require('../block-cache')
-const providerFromEngine = require('../providerFromEngine')
-const providerAsMiddleware = require('../providerAsMiddleware')
 const createHitTrackerMiddleware = require('./util/createHitTrackerMiddleware')
 
 //
@@ -149,8 +146,7 @@ cacheTest('getStorageAt for different block should not cache', [{
 // }], true)
 
 
-
-async function cacheTest(label, basePayloads, shouldCache) {
+async function cacheTest (label, basePayloads, shouldCache) {
   test(`block-cache - ${label}`, async (t) => {
     try {
       // setup block tracker
@@ -165,15 +161,15 @@ async function cacheTest(label, basePayloads, shouldCache) {
       engine.push(createBlockCacheMiddleware({ blockTracker }))
       const hitCountMiddleware = createHitTrackerMiddleware()
       engine.push(hitCountMiddleware)
-      const dummyResultMiddleware = (req, res, next, end) => {
+      const dummyResultMiddleware = (_req, res, _next, end) => {
         res.result = true
         end()
       }
       engine.push(dummyResultMiddleware)
 
       // prepare payloads
-      const payload1 = Object.assign({}, (Array.isArray(basePayloads) ? basePayloads[0] : basePayloads), { id: 1, jsonrpc: '2.0' })
-      const payload2 = Object.assign({}, (Array.isArray(basePayloads) ? basePayloads[1] : basePayloads), { id: 2, jsonrpc: '2.0' })
+      const payload1 = { ...(Array.isArray(basePayloads) ? basePayloads[0] : basePayloads), id: 1, jsonrpc: '2.0' }
+      const payload2 = { ...(Array.isArray(basePayloads) ? basePayloads[1] : basePayloads), id: 2, jsonrpc: '2.0' }
 
       // perform tests
       // first try, cache miss

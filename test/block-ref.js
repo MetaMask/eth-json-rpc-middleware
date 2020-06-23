@@ -5,7 +5,6 @@ const GanacheCore = require('ganache-core')
 const pify = require('pify')
 const EthQuery = require('ethjs-query')
 const createBlockRefMiddleware = require('../block-ref')
-const ScaffoldMiddleware = require('../scaffold')
 const providerFromEngine = require('../providerFromEngine')
 const providerAsMiddleware = require('../providerAsMiddleware')
 const createHitTrackerMiddleware = require('./util/createHitTrackerMiddleware')
@@ -53,7 +52,7 @@ test('should rewrite "latest" blockRef to current block', async (t) => {
     const origReq = { id: 1, method: 'eth_getBalance', params: [accounts[0], 'latest'] }
     const res = await pify(engine.handle).call(engine, origReq)
     t.equal(origReq.params[1], 'latest', 'Original request unchanged')
-    const matchingHit = hitTracker.getHits(origReq.method)[0]
+    const [matchingHit] = hitTracker.getHits(origReq.method)
     t.equal(matchingHit.params[1], '0x0', 'Original request params rewritten internally')
     t.ok(res, 'Has response')
   } catch (err) {
@@ -73,7 +72,7 @@ test('should add blockRef for omitted blockRef param', async (t) => {
     const res = await pify(engine.handle).call(engine, origReq)
     t.equal(origReq.params[1], undefined, 'Original request unchanged')
     t.equal(origReq.params.length, 1, 'Original request unchanged')
-    const matchingHit = hitTracker.getHits(origReq.method)[0]
+    const [matchingHit] = hitTracker.getHits(origReq.method)
     t.equal(matchingHit.params[1], '0x0', 'Original request params rewritten internally')
     t.ok(res, 'Has response')
   } catch (err) {

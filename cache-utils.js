@@ -1,21 +1,21 @@
 const stringify = require('json-stable-stringify')
 
 module.exports = {
-  cacheIdentifierForPayload: cacheIdentifierForPayload,
-  canCache: canCache,
-  blockTagForPayload: blockTagForPayload,
-  paramsWithoutBlockTag: paramsWithoutBlockTag,
-  blockTagParamIndex: blockTagParamIndex,
-  cacheTypeForPayload: cacheTypeForPayload
+  cacheIdentifierForPayload,
+  canCache,
+  blockTagForPayload,
+  paramsWithoutBlockTag,
+  blockTagParamIndex,
+  cacheTypeForPayload,
 }
 
 function cacheIdentifierForPayload (payload, skipBlockRef) {
   const simpleParams = skipBlockRef ? paramsWithoutBlockTag(payload) : payload.params
   if (canCache(payload)) {
-    return payload.method + ':' + stringify(simpleParams)
-  } else {
-    return null
+    return `${payload.method}:${stringify(simpleParams)}`
   }
+  return null
+
 }
 
 function canCache (payload) {
@@ -23,7 +23,7 @@ function canCache (payload) {
 }
 
 function blockTagForPayload (payload) {
-  let index = blockTagParamIndex(payload)
+  const index = blockTagParamIndex(payload)
 
   // Block tag param not passed.
   if (index >= payload.params.length) {
@@ -148,5 +148,7 @@ function cacheTypeForPayload (payload) {
     case 'shh_getMessages':
     case 'test_neverCache':
       return 'never'
+    default:
+      return undefined
   }
 }

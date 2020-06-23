@@ -6,14 +6,20 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node test/index.js"
+    "test": "node test/index.js",
+    "lint": "eslint . --ext js,json",
+    "lint:fix": "eslint . --ext js,json --fix"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.5.5",
+    "@metamask/eslint-config": "^2.1.1",
     "async": "^2.5.0",
     "concat-stream": "^1.6.2",
+    "eslint": "^7.3.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-json": "^2.1.1",
     "eth-block-tracker": "^4.4.1",
     "ethjs-query": "^0.3.8",
     "ganache-core": "^2.7.0",

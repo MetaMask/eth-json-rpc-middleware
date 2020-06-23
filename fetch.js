@@ -1,9 +1,10 @@
-const fetch = global.fetch || require('fetch-ponyfill')().fetch
 const url = require('url')
+const fetchPonyfill = require('fetch-ponyfill')
 const { errors: rpcErrors } = require('eth-json-rpc-errors')
 const btoa = require('btoa')
 const createAsyncMiddleware = require('json-rpc-engine/src/createAsyncMiddleware')
 
+const fetch = global.fetch || fetchPonyfill().fetch
 
 module.exports = createFetchMiddleware
 module.exports.createFetchConfigFromReq = createFetchConfigFromReq
@@ -20,7 +21,7 @@ const RETRIABLE_ERRORS = [
 ]
 
 function createFetchMiddleware ({ rpcUrl, originHttpHeaderKey }) {
-  return createAsyncMiddleware(async (req, res, next) => {
+  return createAsyncMiddleware(async (req, res, _next) => {
     const { fetchUrl, fetchParams } = createFetchConfigFromReq({ req, rpcUrl, originHttpHeaderKey })
 
     // attempt request multiple times
@@ -45,9 +46,11 @@ function createFetchMiddleware ({ rpcUrl, originHttpHeaderKey }) {
         return
       } catch (err) {
         const errMsg = err.toString()
-        const isRetriable = RETRIABLE_ERRORS.some(phrase => errMsg.includes(phrase))
+        const isRetriable = RETRIABLE_ERRORS.some((phrase) => errMsg.includes(phrase))
         // re-throw error if not retriable
-        if (!isRetriable) throw err
+        if (!isRetriable) {
+          throw err
+        }
       }
       // delay before retrying
       await timeout(retryInterval)
@@ -67,6 +70,8 @@ function checkForHttpErrors (fetchRes) {
     case 503:
     case 504:
       throw createTimeoutError()
+    default:
+      break
   }
 }
 
@@ -76,12 +81,14 @@ function parseResponse (fetchRes, body) {
     throw rpcErrors.internal(`Non-200 status code: '${fetchRes.status}'`, body)
   }
   // check for rpc error
-  if (body.error) throw rpcErrors.internal(body.error.toString(), body.error)
+  if (body.error) {
+    throw rpcErrors.internal(body.error.toString(), body.error)
+  }
   // return successful result
   return body.result
 }
 
-function createFetchConfigFromReq({ req, rpcUrl, originHttpHeaderKey }) {
+function createFetchConfigFromReq ({ req, rpcUrl, originHttpHeaderKey }) {
   const parsedUrl = url.parse(rpcUrl)
   const fetchUrl = normalizeUrlFromParsed(parsedUrl)
 
@@ -105,7 +112,7 @@ function createFetchConfigFromReq({ req, rpcUrl, originHttpHeaderKey }) {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: serializedPayload,
   }
@@ -113,7 +120,7 @@ function createFetchConfigFromReq({ req, rpcUrl, originHttpHeaderKey }) {
   // encoded auth details as header (not allowed in fetch url)
   if (parsedUrl.auth) {
     const encodedAuth = btoa(parsedUrl.auth)
-    fetchParams.headers['Authorization'] = `Basic ${encodedAuth}`
+    fetchParams.headers.Authorization = `Basic ${encodedAuth}`
   }
 
   // optional: add request origin as header
@@ -124,10 +131,12 @@ function createFetchConfigFromReq({ req, rpcUrl, originHttpHeaderKey }) {
   return { fetchUrl, fetchParams }
 }
 
-function normalizeUrlFromParsed(parsedUrl) {
+function normalizeUrlFromParsed (parsedUrl) {
   let result = ''
   result += parsedUrl.protocol
-  if (parsedUrl.slashes) result += '//'
+  if (parsedUrl.slashes) {
+    result += '//'
+  }
   result += parsedUrl.hostname
   if (parsedUrl.port) {
     result += `:${parsedUrl.port}`
@@ -137,7 +146,7 @@ function normalizeUrlFromParsed(parsedUrl) {
 }
 
 function createRatelimitError () {
-  let msg = `Request is being rate limited.`
+  const msg = `Request is being rate limited.`
   return rpcErrors.internal(msg)
 }
 
@@ -147,6 +156,6 @@ function createTimeoutError () {
   return rpcErrors.internal(msg)
 }
 
-function timeout(duration) {
-  return new Promise(resolve => setTimeout(resolve, duration))
+function timeout (duration) {
+  return new Promise((resolve) => setTimeout(resolve, duration))
 }

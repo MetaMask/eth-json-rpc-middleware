@@ -1,12 +1,9 @@
 const test = require('tape')
 const JsonRpcEngine = require('json-rpc-engine')
-const asMiddleware = require('json-rpc-engine/src/asMiddleware')
 const BlockTracker = require('eth-block-tracker')
 const GanacheCore = require('ganache-core')
-const providerAsMiddleware = require('../providerAsMiddleware')
 const providerFromEngine = require('../providerFromEngine')
 const createInflightCacheMiddleware = require('../inflight-cache')
-const createScaffoldMiddleware = require('../scaffold')
 
 test('inflight-cache - basic', (t) => {
   t.plan(10)
@@ -21,8 +18,8 @@ test('inflight-cache - basic', (t) => {
   engine.push(createInflightCacheMiddleware())
 
   // add stalling result handler for `test_blockCache`
-  engine.push((req, res, next, end) => {
-    hitCount++
+  engine.push((_req, res, _next, end) => {
+    hitCount += 1
     res.result = true
     releaseStall = end
   })
