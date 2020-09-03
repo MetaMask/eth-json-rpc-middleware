@@ -6,6 +6,7 @@
     "test": "test"
   },
   "scripts": {
+    "lint": "printf '%s\\n' 'No lint command'",
     "test": "node test/index.js"
   },
   "author": "",
@@ -14,6 +15,7 @@
     "*.js"
   ],
   "resolutions": {
+    "ganache-core/**/elliptic": "^6.5.3",
     "ganache-core/lodash": "^4.17.19"
   },
   "devDependencies": {
