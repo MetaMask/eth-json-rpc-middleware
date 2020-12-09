@@ -3,8 +3,8 @@ const createScaffoldMiddleware = require('json-rpc-engine/src/createScaffoldMidd
 
 module.exports = createParityWalletMiddleware
 
-function createParityWalletMiddleware({ walletMiddleware }){
-  const parityRequestCount = 0
+function createParityWalletMiddleware ({ walletMiddleware }) {
+  let parityRequestCount = 0
   const parityRequests = []
 
   return createScaffoldMiddleware({
@@ -18,7 +18,7 @@ function createParityWalletMiddleware({ walletMiddleware }){
   // parity wallet methods
   //
 
-  async function defaultAccount (req, res) {
+  async function defaultAccount (_req, res) {
     res.result = await callOnWalletMiddleware({ method: 'eth_coinbase', params: [] })
   }
 
@@ -52,7 +52,8 @@ function createParityWalletMiddleware({ walletMiddleware }){
     })
   }
 
-  async function checkRequest (req, res) {
+  async function checkRequest (_req, res) {
+    // eslint-disable-next-line no-undef
     const result = parityRequests[reqId]
     // request not handled yet
     if (!result) {
@@ -71,16 +72,16 @@ function createParityWalletMiddleware({ walletMiddleware }){
   // utility
   //
 
-  function createReqId() {
+  function createReqId () {
     // get request id
     const reqId = `0x${parityRequestCount.toString(16)}`
-    parityRequestCount++
+    parityRequestCount += 1
     return reqId
   }
 
-  async function callOnWalletMiddleware(req) {
+  async function callOnWalletMiddleware (req) {
     const res = {}
-    await new Promise(resolve => walletMiddleware(req, res, null, resolve))
+    await new Promise((resolve) => walletMiddleware(req, res, null, resolve))
     return res.result
   }
 
