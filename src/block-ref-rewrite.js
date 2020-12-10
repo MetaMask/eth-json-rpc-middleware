@@ -28,7 +28,7 @@ function createBlockRefRewriteMiddleware (opts = {}) {
     const latestBlockNumber = await blockTracker.getLatestBlock()
     // eslint-disable-next-line require-atomic-updates
     req.params[blockRefIndex] = latestBlockNumber
-    next()
+    return next()
   })
 
 }

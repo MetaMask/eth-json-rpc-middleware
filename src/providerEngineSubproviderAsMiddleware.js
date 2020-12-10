@@ -34,6 +34,7 @@ function providerEngineSubproviderAsMiddle ({ subprovider, provider, blockTracke
       next((done) => {
         nextHandler(res.error, res.result, done)
       })
+      return undefined
     }
     // adapter for end handler
     function subproviderEnd (err, result) {
@@ -43,7 +44,7 @@ function providerEngineSubproviderAsMiddle ({ subprovider, provider, blockTracke
       if (result) {
         res.result = result
       }
-      end()
+      return end()
     }
   }
 }

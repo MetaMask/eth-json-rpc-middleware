@@ -31,7 +31,7 @@ class BlockCacheStrategy {
     // lookup block cache
     const blockCache = this.getBlockCacheForPayload(payload, requestedBlockNumber)
     if (!blockCache) {
-      return
+      return undefined
     }
     // lookup payload in block cache
     const identifier = cacheUtils.cacheIdentifierForPayload(payload, true)
@@ -69,7 +69,7 @@ class BlockCacheStrategy {
   canCacheResult (payload, result) {
     // never cache empty values (e.g. undefined)
     if (emptyValues.includes(result)) {
-      return
+      return false
     }
     // check if transactions have block reference before caching
     if (['eth_getTransactionByHash', 'eth_getTransactionReceipt'].includes(payload.method)) {
@@ -153,6 +153,7 @@ function createBlockCacheMiddleware (opts = {}) {
     if (cacheResult === undefined) {
       // cache miss
       // wait for other middleware to handle request
+      // eslint-disable-next-line node/callback-return
       await next()
       // add result to cache
       await strategy.set(req, requestedBlockNumber, res.result)
@@ -160,5 +161,6 @@ function createBlockCacheMiddleware (opts = {}) {
       // fill in result from cache
       res.result = cacheResult
     }
+    return undefined
   })
 }

@@ -59,7 +59,6 @@ function createFetchMiddleware ({ rpcUrl, originHttpHeaderKey }) {
 
 function checkForHttpErrors (fetchRes) {
   // check for errors
-  // eslint-disable-next-line default-case
   switch (fetchRes.status) {
     case 405:
       throw ethErrors.rpc.methodNotFound()
@@ -70,6 +69,8 @@ function checkForHttpErrors (fetchRes) {
     case 503:
     case 504:
       throw createTimeoutError()
+    default:
+      break
   }
 }
 

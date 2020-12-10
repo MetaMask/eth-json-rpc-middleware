@@ -10,7 +10,7 @@ function providerAsMiddleware (provider) {
       }
       // copy provider response onto original response
       Object.assign(res, providerRes)
-      end()
+      return end()
     })
   }
 }

@@ -25,19 +25,20 @@ function createInflightCache () {
       // setup the response listener and wait for it to be called
       // it will handle copying the result and request fields
       await createActiveRequestHandler(res, activeRequestHandlers)
-      return
+      return undefined
     }
     // setup response handler array for subsequent requests
     activeRequestHandlers = []
     inflightRequests[cacheId] = activeRequestHandlers
     // allow request to be handled normally
+    // eslint-disable-next-line node/callback-return
     await next()
     // clear inflight requests
     delete inflightRequests[cacheId]
     // schedule activeRequestHandlers to be handled
     handleActiveRequest(res, activeRequestHandlers)
     // complete
-
+    return undefined
   })
 
   function createActiveRequestHandler (res, activeRequestHandlers) {

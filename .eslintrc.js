@@ -18,12 +18,5 @@ module.exports = {
     'node_modules/',
   ],
   overrides: [
-    {
-      files: ['*js'],
-      rules: {
-        'consistent-return': 'off',
-        'node/callback-return': 'off',
-      },
-    },
   ],
 }

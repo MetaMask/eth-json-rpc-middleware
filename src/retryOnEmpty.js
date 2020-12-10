@@ -67,6 +67,7 @@ function createRetryOnEmptyMiddleware (opts = {}) {
     // copy child response onto original response
     res.result = childResponse.result
     res.error = childResponse.error
+    return next()
   })
 
 }

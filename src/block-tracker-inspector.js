@@ -10,10 +10,11 @@ function createBlockTrackerInspectorMiddleware ({ blockTracker }) {
     if (!futureBlockRefRequests.includes(req.method)) {
       return next()
     }
+    // eslint-disable-next-line node/callback-return
     await next()
     // abort if no result or no block number
     if (!res.result || !res.result.blockNumber) {
-      return
+      return undefined
     }
     // if number is higher, suggest block-tracker check for a new block
     const blockNumber = Number.parseInt(res.result.blockNumber, 16)
@@ -21,5 +22,6 @@ function createBlockTrackerInspectorMiddleware ({ blockTracker }) {
     if (blockNumber > currentBlockNumber) {
       await blockTracker.checkForLatestBlock()
     }
+    return next()
   })
 }

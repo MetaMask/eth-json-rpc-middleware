@@ -69,7 +69,9 @@ function blockTagParamIndex (payload) {
   }
 }
 
+// eslint-disable-next-line consistent-return
 function cacheTypeForPayload (payload) {
+  // eslint-disable-next-line default-case
   switch (payload.method) {
     // cache permanently
     case 'web3_clientVersion':
@@ -147,7 +149,6 @@ function cacheTypeForPayload (payload) {
     case 'shh_getFilterChanges':
     case 'shh_getMessages':
     case 'test_neverCache':
-    default:
       return 'never'
   }
 }

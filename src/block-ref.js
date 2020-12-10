@@ -39,6 +39,7 @@ function createBlockRefMiddleware (opts = {}) {
     // copy child response onto original response
     res.result = childRes.result
     res.error = childRes.error
+    return next()
   })
 
 }
