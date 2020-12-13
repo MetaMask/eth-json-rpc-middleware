@@ -1,6 +1,6 @@
-const fetch = global.fetch || require('fetch-ponyfill')().fetch
+const fetch = global.fetch || require('node-fetch')
 const url = require('url')
-const JsonRpcError = require('json-rpc-error')
+const { ethErrors } = require('eth-rpc-errors')
 const btoa = require('btoa')
 const createAsyncMiddleware = require('json-rpc-engine/src/createAsyncMiddleware')
 
@@ -59,7 +59,7 @@ function checkForHttpErrors (fetchRes) {
   // check for errors
   switch (fetchRes.status) {
     case 405:
-      throw new JsonRpcError.MethodNotFound()
+      throw ethErrors.rpc.methodNotFound()
 
     case 418:
       throw createRatelimitError()
@@ -73,10 +73,15 @@ function checkForHttpErrors (fetchRes) {
 function parseResponse (fetchRes, body) {
   // check for error code
   if (fetchRes.status !== 200) {
-    throw new JsonRpcError.InternalError(body)
+    throw ethErrors.rpc.internal({
+      message: `Non-200 status code: '${fetchRes.status}'`,
+      data: body,
+    })
   }
   // check for rpc error
-  if (body.error) throw new JsonRpcError.InternalError(body.error)
+  if (body.error) throw ethErrors.rpc.internal({
+    data: body.error,
+  })
   // return successful result
   return body.result
 }
@@ -86,10 +91,17 @@ function createFetchConfigFromReq({ req, rpcUrl, originHttpHeaderKey }) {
   const fetchUrl = normalizeUrlFromParsed(parsedUrl)
 
   // prepare payload
-  const payload = Object.assign({}, req)
+  // copy only canonical json rpc properties
+  const payload = {
+    id: req.id,
+    jsonrpc: req.jsonrpc,
+    method: req.method,
+    params: req.params,
+  }
+
   // extract 'origin' parameter from request
-  const originDomain = payload.origin
-  delete payload.origin
+  const originDomain = req.origin
+
   // serialize request body
   const serializedPayload = JSON.stringify(payload)
 
@@ -130,16 +142,13 @@ function normalizeUrlFromParsed(parsedUrl) {
 }
 
 function createRatelimitError () {
-  let msg = `Request is being rate limited.`
-  const err = new Error(msg)
-  return new JsonRpcError.InternalError(err)
+  return ethErrors.rpc.internal({ message: `Request is being rate limited.` })
 }
 
 function createTimeoutError () {
   let msg = `Gateway timeout. The request took too long to process. `
   msg += `This can happen when querying logs over too wide a block range.`
-  const err = new Error(msg)
-  return new JsonRpcError.InternalError(err)
+  return ethErrors.rpc.internal({ message: msg })
 }
 
 function timeout(duration) {

@@ -5,9 +5,9 @@ const EthQuery = require('ethjs-query')
 const GanacheCore = require('ganache-core')
 const pify = require('pify')
 // const providerAsMiddleware = require('../providerAsMiddleware')
-const providerFromEngine = require('../providerFromEngine')
+const providerFromEngine = require('../src/providerFromEngine')
 // const createScaffoldMiddleware = require('../scaffold')
-const createWalletMiddleware = require('../wallet')
+const createWalletMiddleware = require('../src/wallet')
 
 const testAddresses = ['0xbe93f9bacbcffc8ee6663f2647917ed7a20a57bb', '0x1234362ef32bcd26d3dd18ca749378213625ba0b']
 const testUnkownAddress = '0xbadbadbadbadbadbadbadbadbadbadbadbadbad6'
@@ -38,15 +38,6 @@ accountsTest({
 //
 
 transactionTest({
-  testLabel: 'no address',
-  txParams: {
-    from: undefined,
-  },
-  accounts: testAddresses,
-  fromAddressIsValid: true,
-})
-
-transactionTest({
   testLabel: 'valid address',
   txParams: {
     from: testAddresses[0],
@@ -71,13 +62,6 @@ transactionTest({
 // eth_sign
 
 ethSignTest({
-  testLabel: 'eth_sign - no address',
-  address: null,
-  accounts: testAddresses.slice(),
-  fromAddressIsValid: true,
-})
-
-ethSignTest({
   testLabel: 'eth_sign - valid address',
   address: testAddresses[0],
   accounts: testAddresses.slice(),
@@ -94,13 +78,6 @@ ethSignTest({
 // eth_signTypedData
 
 ethSignTypedDataTest({
-  testLabel: 'eth_signTypedData - no address',
-  address: null,
-  accounts: testAddresses.slice(),
-  fromAddressIsValid: true,
-})
-
-ethSignTypedDataTest({
   testLabel: 'eth_signTypedData - valid address',
   address: testAddresses[0],
   accounts: testAddresses.slice(),
@@ -115,13 +92,6 @@ ethSignTypedDataTest({
 })
 
 // personal_sign
-
-personalSignTest({
-  testLabel: 'personal_sign - no address',
-  address: null,
-  accounts: testAddresses.slice(),
-  fromAddressIsValid: true,
-})
 
 personalSignTest({
   testLabel: 'personal_sign - valid address',
@@ -210,7 +180,7 @@ function ethSignTest({ testLabel, address, accounts, fromAddressIsValid }) {
         t.fail('should have validated that fromAddress is invalid')
       }
     } catch (err) {
-      if (!fromAddressIsValid && err.message.includes('WalletMiddleware - Invalid "from" address.')) {
+      if (!fromAddressIsValid && err.message.includes('Invalid parameters: must provide an Ethereum address.')) {
         t.pass('correctly errored on invalid sender.')
       } else {
         t.ifError(err)
@@ -254,7 +224,7 @@ function ethSignTypedDataTest({ testLabel, address, accounts, fromAddressIsValid
         t.fail('should have validated that fromAddress is invalid')
       }
     } catch (err) {
-      if (!fromAddressIsValid && err.message.includes('WalletMiddleware - Invalid "from" address.')) {
+      if (!fromAddressIsValid && err.message.includes('Invalid parameters: must provide an Ethereum address.')) {
         t.pass('correctly errored on invalid sender.')
       } else {
         t.ifError(err)
@@ -292,7 +262,7 @@ function personalSignTest({ testLabel, address, accounts, fromAddressIsValid }) 
         t.fail('should have validated that fromAddress is invalid')
       }
     } catch (err) {
-      if (!fromAddressIsValid && err.message.includes('WalletMiddleware - Invalid "from" address.')) {
+      if (!fromAddressIsValid && err.message.includes('Invalid parameters: must provide an Ethereum address.')) {
         t.pass('correctly errored on invalid sender.')
       } else {
         t.ifError(err)
@@ -328,7 +298,7 @@ function transactionTest({ testLabel, txParams, accounts, fromAddressIsValid }) 
         t.fail('should have validated that fromAddress is invalid')
       }
     } catch (err) {
-      if (!fromAddressIsValid && err.message.includes('WalletMiddleware - Invalid "from" address.')) {
+      if (!fromAddressIsValid && err.message.includes('Invalid parameters: must provide an Ethereum address.')) {
         t.pass('correctly errored on invalid sender.')
       } else {
         t.ifError(err)
