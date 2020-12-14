@@ -17,6 +17,4 @@ module.exports = {
     '!.eslintrc.js',
     'node_modules/',
   ],
-  overrides: [
-  ],
 }
