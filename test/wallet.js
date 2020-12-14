@@ -277,9 +277,8 @@ function transactionTest ({ testLabel, txParams, accounts, fromAddressIsValid })
   const witnessedTxParams = []
 
   const getAccounts = async () => accounts.slice()
-  // eslint-disable-next-line no-shadow
-  const processTransaction = async (txParams) => {
-    witnessedTxParams.push(txParams)
+  const processTransaction = async (_txParams) => {
+    witnessedTxParams.push(_txParams)
     return testTxHash
   }
   engine.push(createWalletMiddleware({ getAccounts, processTransaction }))
