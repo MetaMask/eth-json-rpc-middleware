@@ -4,13 +4,16 @@ const sigUtil = require('eth-sig-util')
 const { ethErrors } = require('eth-rpc-errors')
 
 module.exports = function createWalletMiddleware (opts = {}) {
-  // parse + validate options
   const {
-    getAccounts, processTypedMessage,
-    processTypedMessageV3, processTypedMessageV4,
-    processPersonalMessage, processEthSignMessage,
-    processTransaction, processDecryptMessage,
+    getAccounts,
+    processDecryptMessage,
     processEncryptionPublicKey,
+    processEthSignMessage,
+    processPersonalMessage,
+    processTransaction,
+    processTypedMessage,
+    processTypedMessageV3,
+    processTypedMessageV4,
   } = opts
 
   if (!getAccounts) {
