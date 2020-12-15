@@ -1,4 +1,3 @@
-const url = require('url')
 const { ethErrors } = require('eth-rpc-errors')
 const btoa = require('btoa')
 const createAsyncMiddleware = require('json-rpc-engine/src/createAsyncMiddleware')
@@ -93,8 +92,7 @@ function parseResponse (fetchRes, body) {
 }
 
 function createFetchConfigFromReq ({ req, rpcUrl, originHttpHeaderKey }) {
-  // eslint-disable-next-line node/no-deprecated-api
-  const parsedUrl = url.parse(rpcUrl)
+  const parsedUrl = new URL(rpcUrl)
   const fetchUrl = normalizeUrlFromParsed(parsedUrl)
 
   // prepare payload
