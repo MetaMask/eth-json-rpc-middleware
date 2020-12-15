@@ -68,6 +68,7 @@ function checkForHttpErrors (fetchRes) {
     case 503:
     case 504:
       throw createTimeoutError()
+
     default:
       break
   }
@@ -92,6 +93,7 @@ function parseResponse (fetchRes, body) {
 }
 
 function createFetchConfigFromReq ({ req, rpcUrl, originHttpHeaderKey }) {
+
   const parsedUrl = new URL(rpcUrl)
   const fetchUrl = normalizeUrlFromParsed(parsedUrl)
 
@@ -121,8 +123,9 @@ function createFetchConfigFromReq ({ req, rpcUrl, originHttpHeaderKey }) {
   }
 
   // encoded auth details as header (not allowed in fetch url)
-  if (parsedUrl.auth) {
-    const encodedAuth = btoa(parsedUrl.auth)
+  if (parsedUrl.username && parsedUrl.password) {
+    const authString = `${parsedUrl.username}:${parsedUrl.password}`
+    const encodedAuth = btoa(authString)
     fetchParams.headers.Authorization = `Basic ${encodedAuth}`
   }
 
@@ -137,14 +140,11 @@ function createFetchConfigFromReq ({ req, rpcUrl, originHttpHeaderKey }) {
 function normalizeUrlFromParsed (parsedUrl) {
   let result = ''
   result += parsedUrl.protocol
-  if (parsedUrl.slashes) {
-    result += '//'
-  }
-  result += parsedUrl.hostname
+  result += `//${parsedUrl.hostname}`
   if (parsedUrl.port) {
     result += `:${parsedUrl.port}`
   }
-  result += `${parsedUrl.path}`
+  result += `${parsedUrl.pathname}`
   return result
 }
 
