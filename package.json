@@ -1,7 +1,7 @@
 {
   "name": "eth-json-rpc-middleware",
   "version": "6.0.0",
-  "main": "block-ref.js",
+  "main": "dist/block-ref.js",
   "engines": {
     "node": ">=10.0.0"
   },
@@ -9,7 +9,7 @@
     "test": "test"
   },
   "scripts": {
-    "build": "tsc --project .",
+    "build": "rm -rf ./dist && tsc --project .",
     "lint": "eslint . --ext ts,js,json",
     "lint:fix": "yarn lint --fix",
     "test": "yarn build && node test/index.js"
@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "files": [
-    "*.js"
+    "dist/"
   ],
   "resolutions": {
     "ganache-core/**/elliptic": "^6.5.3",

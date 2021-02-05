@@ -6,8 +6,6 @@ const series = require('async/series');
 const btoa = require('btoa');
 const { createFetchMiddleware, createFetchConfigFromReq } = require('../dist/fetch');
 
-// const { createFetchConfigFromReq } = createFetchMiddleware;
-
 test('fetch - basic', (t) => {
 
   const req = {
