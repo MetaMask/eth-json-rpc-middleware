@@ -94,7 +94,7 @@ function checkForHttpErrors(
   // check for errors
   switch (fetchRes.status) {
     case 405:
-      throw ethErrors.rpc.methodNotFound('');
+      throw ethErrors.rpc.methodNotFound();
 
     case 418:
       throw createRatelimitError();

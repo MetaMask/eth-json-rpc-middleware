@@ -82,7 +82,7 @@ function createWalletMiddleware(
   async function sendTransaction(req: JsonRpcRequest<unknown>, res: PendingJsonRpcResponse<unknown>): Promise<void> {
 
     if (!processTransaction) {
-      throw ethErrors.rpc.methodNotSupported({});
+      throw ethErrors.rpc.methodNotSupported();
     }
 
     const txParams: ParamsObject = (req.params as ParamsObjectList)[0] || {};
@@ -97,7 +97,7 @@ function createWalletMiddleware(
   async function ethSign(req: JsonRpcRequest<unknown>, res: PendingJsonRpcResponse<unknown>): Promise<void> {
 
     if (!processEthSignMessage) {
-      throw ethErrors.rpc.methodNotSupported({});
+      throw ethErrors.rpc.methodNotSupported();
     }
 
     const address: string = await validateAndNormalizeKeyholder((req.params as string[])[0], req);
@@ -114,7 +114,7 @@ function createWalletMiddleware(
   async function signTypedData(req: JsonRpcRequest<unknown>, res: PendingJsonRpcResponse<unknown>): Promise<void> {
 
     if (!processTypedMessage) {
-      throw ethErrors.rpc.methodNotSupported({});
+      throw ethErrors.rpc.methodNotSupported();
     }
 
     const message: string = (req.params as string[])[0];
@@ -132,7 +132,7 @@ function createWalletMiddleware(
   async function signTypedDataV3(req: JsonRpcRequest<unknown>, res: PendingJsonRpcResponse<unknown>): Promise<void> {
 
     if (!processTypedMessageV3) {
-      throw ethErrors.rpc.methodNotSupported({});
+      throw ethErrors.rpc.methodNotSupported();
     }
 
     const address: string = await validateAndNormalizeKeyholder((req.params as string[])[0], req);
@@ -150,7 +150,7 @@ function createWalletMiddleware(
   async function signTypedDataV4(req: JsonRpcRequest<unknown>, res: PendingJsonRpcResponse<unknown>): Promise<void> {
 
     if (!processTypedMessageV4) {
-      throw ethErrors.rpc.methodNotSupported({});
+      throw ethErrors.rpc.methodNotSupported();
     }
 
     const address: string = await validateAndNormalizeKeyholder((req.params as string[])[0], req);
@@ -167,7 +167,7 @@ function createWalletMiddleware(
 
   async function personalSign(req: JsonRpcRequest<unknown>, res: PendingJsonRpcResponse<unknown>): Promise<void> {
     if (!processPersonalMessage) {
-      throw ethErrors.rpc.methodNotSupported({});
+      throw ethErrors.rpc.methodNotSupported();
     }
 
     // process normally
@@ -224,7 +224,7 @@ function createWalletMiddleware(
 
   async function encryptionPublicKey(req: JsonRpcRequest<unknown>, res: PendingJsonRpcResponse<unknown>): Promise<void> {
     if (!processEncryptionPublicKey) {
-      throw ethErrors.rpc.methodNotSupported({});
+      throw ethErrors.rpc.methodNotSupported();
     }
 
     const address: string = await validateAndNormalizeKeyholder((req.params as string)[0], req);
@@ -235,7 +235,7 @@ function createWalletMiddleware(
   async function decryptMessage(req: JsonRpcRequest<unknown>, res: PendingJsonRpcResponse<unknown>): Promise<void> {
 
     if (!processDecryptMessage) {
-      throw ethErrors.rpc.methodNotSupported({});
+      throw ethErrors.rpc.methodNotSupported();
     }
 
     const ciphertext: string = (req.params as string)[0];
