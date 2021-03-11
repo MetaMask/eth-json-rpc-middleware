@@ -41,5 +41,4 @@ function createBlockRefRewriteMiddleware(
     }
     return next();
   });
-
 }
