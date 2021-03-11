@@ -3,6 +3,10 @@ import {
   JsonRpcMiddleware,
 } from 'json-rpc-engine';
 
+import {
+  Block,
+} from './cache-utils';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports
 const BlockTracker = require('eth-block-tracker');
 
@@ -16,7 +20,7 @@ export = createBlockTrackerInspectorMiddleware;
 // inspect if response contains a block ref higher than our latest block
 function createBlockTrackerInspectorMiddleware(
   { blockTracker }: BlockTrackerInspectorMiddlewareOptions,
-): JsonRpcMiddleware<string[], Record<string, unknown>> {
+): JsonRpcMiddleware<string[], Block> {
   return createAsyncMiddleware(async (req, res, next) => {
     if (!futureBlockRefRequests.includes(req.method)) {
       return next();
@@ -27,11 +31,13 @@ function createBlockTrackerInspectorMiddleware(
     if (!res.result || !res.result.blockNumber) {
       return undefined;
     }
-    // if number is higher, suggest block-tracker check for a new block
-    const blockNumber: number = Number.parseInt((res.result as Record<string, string>).blockNumber, 16);
-    const currentBlockNumber: number = Number.parseInt(blockTracker.getCurrentBlock(), 16);
-    if (blockNumber > currentBlockNumber) {
-      await blockTracker.checkForLatestBlock();
+    if (typeof res.result.blockNumber === 'string') {
+      // if number is higher, suggest block-tracker check for a new block
+      const blockNumber: number = Number.parseInt(res.result.blockNumber, 16);
+      const currentBlockNumber: number = Number.parseInt(blockTracker.getCurrentBlock(), 16);
+      if (blockNumber > currentBlockNumber) {
+        await blockTracker.checkForLatestBlock();
+      }
     }
     return next();
   });

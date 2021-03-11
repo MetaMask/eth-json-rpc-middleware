@@ -1,20 +1,31 @@
 import clone from 'clone';
-import { createAsyncMiddleware, JsonRpcMiddleware, PendingJsonRpcResponse } from 'json-rpc-engine';
-import * as cacheUtils from './cache-utils';
+import {
+  createAsyncMiddleware,
+  JsonRpcMiddleware,
+  PendingJsonRpcResponse,
+} from 'json-rpc-engine';
+import {
+  cacheIdentifierForPayload,
+  Block,
+  JsonRPCRequestToCache,
+} from './cache-utils';
 
-type RequestHandlers = (handledRes: PendingJsonRpcResponse<Record<string, unknown>>) => void;
+type RequestHandlers = (handledRes: PendingJsonRpcResponse<Block>) => void;
+interface InflightRequest{
+  [cacheId: string]: RequestHandlers[];
+}
 export = createInflightCache;
 
-function createInflightCache(): JsonRpcMiddleware<string[], Record<string, unknown>> {
-  const inflightRequests: Record<string, RequestHandlers[]> = {};
+function createInflightCache(): JsonRpcMiddleware<string[], Block> {
+  const inflightRequests: InflightRequest = {};
 
   return createAsyncMiddleware(async (req, res, next) => {
     // allow cach to be skipped if so specified
-    if (((req as unknown) as Record<string, unknown>).skipCache) {
+    if ((req as JsonRPCRequestToCache).skipCache) {
       return next();
     }
     // get cacheId, if cacheable
-    const cacheId = cacheUtils.cacheIdentifierForPayload(req);
+    const cacheId: string|null = cacheIdentifierForPayload(req);
     // if not cacheable, skip
     if (!cacheId) {
       return next();
@@ -43,11 +54,11 @@ function createInflightCache(): JsonRpcMiddleware<string[], Record<string, unkno
   });
 
   function createActiveRequestHandler(
-    res: PendingJsonRpcResponse<Record<string, unknown>>,
+    res: PendingJsonRpcResponse<Block>,
     activeRequestHandlers: RequestHandlers[]
-  ): Promise<unknown> {
+  ): Promise<void> {
     const { resolve, promise } = deferredPromise();
-    activeRequestHandlers.push((handledRes: PendingJsonRpcResponse<Record<string, unknown>>) => {
+    activeRequestHandlers.push((handledRes: PendingJsonRpcResponse<Block>) => {
       // append a copy of the result and error to the response
       res.result = clone(handledRes.result);
       res.error = clone(handledRes.error);
@@ -57,9 +68,9 @@ function createInflightCache(): JsonRpcMiddleware<string[], Record<string, unkno
   }
 
   function handleActiveRequest(
-    res: PendingJsonRpcResponse<Record<string, unknown>>,
+    res: PendingJsonRpcResponse<Block>,
     activeRequestHandlers: RequestHandlers[]
-  ) {
+  ): void {
     // use setTimeout so we can resolve our original request first
     setTimeout(() => {
       activeRequestHandlers.forEach((handler) => {
@@ -76,7 +87,7 @@ function createInflightCache(): JsonRpcMiddleware<string[], Record<string, unkno
 
 function deferredPromise() {
   let resolve: any;
-  const promise: Promise<unknown> = new Promise((_resolve) => {
+  const promise: Promise<void> = new Promise((_resolve) => {
     resolve = _resolve;
   });
   return { resolve, promise };

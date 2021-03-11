@@ -1,8 +1,28 @@
-import { JsonRpcRequest } from 'json-rpc-engine';
+import {
+  JsonRpcRequest,
+  PendingJsonRpcResponse,
+} from 'json-rpc-engine';
 import stringify from 'json-stable-stringify';
+import SafeEventEmitter from '@metamask/safe-event-emitter';
 
-export function cacheIdentifierForPayload(payload: JsonRpcRequest<string[]>, skipBlockRef?: boolean): string|null {
-  const simpleParams: string[] = skipBlockRef ? paramsWithoutBlockTag(payload) : (payload.params as string[]);
+export type Payload = Partial<JsonRpcRequest<string[]>>;
+export interface JsonRPCRequestToCache extends JsonRpcRequest<string[]>{
+  skipCache: boolean;
+}
+export type BlockData = string | string[];
+export interface Block{
+  [field: string]: BlockData;
+}
+export type BlockCache = Record<string, Block>;
+export type Cache = Record<number, BlockCache>;
+export type SendAsyncCallBack = (err: Error, providerRes: PendingJsonRpcResponse<Block>) => void;
+export interface SafeEventEmitterProvider extends SafeEventEmitter{
+  sendAsync: (req: JsonRpcRequest<string[]>, callback: SendAsyncCallBack) => void;
+  send: (req: JsonRpcRequest<string[]>, callback: VoidFunction) => void;
+}
+
+export function cacheIdentifierForPayload(payload: Payload, skipBlockRef?: boolean): string|null {
+  const simpleParams: string[] = skipBlockRef ? paramsWithoutBlockTag(payload) : (payload.params ?? []);
   if (canCache(payload)) {
     return `${payload.method}:${stringify(simpleParams)}`;
   }
@@ -10,38 +30,43 @@ export function cacheIdentifierForPayload(payload: JsonRpcRequest<string[]>, ski
 
 }
 
-export function canCache(payload: JsonRpcRequest<string[]>): boolean {
+export function canCache(payload: Payload): boolean {
   return cacheTypeForPayload(payload) !== 'never';
 }
 
-export function blockTagForPayload(payload: JsonRpcRequest<string[]>): string|null {
-  const index: number = (blockTagParamIndex(payload) as number);
+export function blockTagForPayload(payload: Payload): string|undefined {
+  if (!payload.params) {
+    return undefined;
+  }
+  const index: number|undefined = blockTagParamIndex(payload);
 
   // Block tag param not passed.
-  if (index >= (payload.params as string[]).length) {
-    return null;
+  if (index === undefined || index >= payload.params.length) {
+    return undefined;
   }
 
-  return (payload.params as string[])[index];
+  return payload.params[index];
 }
 
-export function paramsWithoutBlockTag(payload: JsonRpcRequest<string[]>): string[] {
-  const index = (blockTagParamIndex(payload) as number);
+export function paramsWithoutBlockTag(payload: Payload): string[] {
+  if (!payload.params) {
+    return [];
+  }
+  const index: number|undefined = blockTagParamIndex(payload);
 
   // Block tag param not passed.
-  if (index >= (payload.params as string[]).length) {
-    return (payload.params as string[]);
+  if (index === undefined || index >= payload.params.length) {
+    return payload.params;
   }
 
   // eth_getBlockByNumber has the block tag first, then the optional includeTx? param
   if (payload.method === 'eth_getBlockByNumber') {
-    return (payload.params as string[]).slice(1);
+    return payload.params.slice(1);
   }
-
-  return (payload.params as string[]).slice(0, index);
+  return payload.params.slice(0, index);
 }
 
-export function blockTagParamIndex(payload: JsonRpcRequest<string[]>): number|undefined {
+export function blockTagParamIndex(payload: Payload): number|undefined {
   switch (payload.method) {
     // blockTag is at index 2
     case 'eth_getStorageAt':
@@ -61,7 +86,7 @@ export function blockTagParamIndex(payload: JsonRpcRequest<string[]>): number|un
   }
 }
 
-export function cacheTypeForPayload(payload: JsonRpcRequest<string[]>): string {
+export function cacheTypeForPayload(payload: Payload): string {
   switch (payload.method) {
     // cache permanently
     case 'web3_clientVersion':

@@ -1,13 +1,15 @@
 import {
   createAsyncMiddleware,
   JsonRpcMiddleware,
-  JsonRpcRequest,
   PendingJsonRpcResponse,
 } from 'json-rpc-engine';
 import clone from 'clone';
 import pify from 'pify';
-import SafeEventEmitter from '@metamask/safe-event-emitter';
-import * as cacheUtils from './cache-utils';
+import {
+  Block,
+  blockTagParamIndex,
+  SafeEventEmitterProvider,
+} from './cache-utils';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
 const BlockTracker = require('eth-block-tracker');
@@ -26,13 +28,13 @@ export = createRetryOnEmptyMiddleware;
 const emptyValues: (string|null|undefined)[] = [undefined, null, '\u003cnil\u003e'];
 
 interface RetryOnEmptyMiddlewareOptions{
-  provider?: SafeEventEmitter;
+  provider?: SafeEventEmitterProvider;
   blockTracker?: typeof BlockTracker;
 }
 
 function createRetryOnEmptyMiddleware(
   opts: RetryOnEmptyMiddlewareOptions = {}
-): JsonRpcMiddleware<string[], Record<string, unknown>> {
+): JsonRpcMiddleware<string[], Block> {
   const { provider, blockTracker } = opts;
   if (!provider) {
     throw Error('RetryOnEmptyMiddleware - mandatory "provider" option is missing.');
@@ -42,13 +44,13 @@ function createRetryOnEmptyMiddleware(
   }
 
   return createAsyncMiddleware(async (req, res, next) => {
-    const blockRefIndex: number|undefined = cacheUtils.blockTagParamIndex(req);
+    const blockRefIndex: number|undefined = blockTagParamIndex(req);
     // skip if method does not include blockRef
     if (blockRefIndex === undefined) {
       return next();
     }
     // skip if not exact block references
-    let blockRef: string|undefined = (req.params as string[])[blockRefIndex];
+    let blockRef: string|undefined = req.params?.[blockRefIndex];
     // omitted blockRef implies "latest"
     if (blockRef === undefined) {
       blockRef = 'latest';
@@ -70,10 +72,10 @@ function createRetryOnEmptyMiddleware(
       return next();
     }
     // create child request with specific block-ref
-    const childRequest: JsonRpcRequest<string[]> = clone(req);
+    const childRequest = clone(req);
     // attempt child request until non-empty response is received
-    const childResponse: PendingJsonRpcResponse<Record<string, unknown>> = await retry(10, async () => {
-      const attemptResponse: PendingJsonRpcResponse<Record<string, unknown>> = await pify((provider as any).sendAsync).call(provider, childRequest);
+    const childResponse: PendingJsonRpcResponse<Block> = await retry(10, async () => {
+      const attemptResponse: PendingJsonRpcResponse<Block> = await pify((provider as SafeEventEmitterProvider).sendAsync).call(provider, childRequest);
       // verify result
       if (emptyValues.includes((attemptResponse.result as unknown) as string)) {
         throw new Error(`RetryOnEmptyMiddleware - empty response "${JSON.stringify(attemptResponse)}" for request "${JSON.stringify(childRequest)}"`);
@@ -90,8 +92,8 @@ function createRetryOnEmptyMiddleware(
 
 async function retry(
   maxRetries: number,
-  asyncFn: () => Promise<PendingJsonRpcResponse<Record<string, unknown>>>
-): Promise<PendingJsonRpcResponse<Record<string, unknown>>> {
+  asyncFn: () => Promise<PendingJsonRpcResponse<Block>>
+): Promise<PendingJsonRpcResponse<Block>> {
   for (let index = 0; index < maxRetries; index++) {
     try {
       return await asyncFn();
@@ -102,6 +104,6 @@ async function retry(
   throw new Error('RetryOnEmptyMiddleware - retries exhausted');
 }
 
-function timeout(duration: number): Promise<unknown> {
+function timeout(duration: number): Promise<NodeJS.Timeout> {
   return new Promise((resolve) => setTimeout(resolve, duration));
 }

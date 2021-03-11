@@ -5,22 +5,25 @@ import {
 } from 'json-rpc-engine';
 import clone from 'clone';
 import pify from 'pify';
-import { blockTagParamIndex } from './cache-utils';
+import {
+  Block,
+  SafeEventEmitterProvider,
+  blockTagParamIndex,
+} from './cache-utils';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports
 const BlockTracker = require('eth-block-tracker');
 
 interface BlockRefMiddlewareOptions{
   blockTracker?: typeof BlockTracker;
-  provider?: Record<string, unknown>;
+  provider?: SafeEventEmitterProvider;
 }
 
 export = createBlockRefMiddleware;
 
 function createBlockRefMiddleware(
-  opts: BlockRefMiddlewareOptions = {},
-): JsonRpcMiddleware<string[], Record<string, unknown>> {
-  const { provider, blockTracker } = opts;
+  { provider, blockTracker }: BlockRefMiddlewareOptions = {},
+): JsonRpcMiddleware<string[], Block> {
 
   if (!provider) {
     throw Error('BlockRefMiddleware - mandatory "provider" option is missing.');
@@ -36,7 +39,7 @@ function createBlockRefMiddleware(
       return next();
     }
     // skip if not "latest"
-    let blockRef: string = (req.params as string[])[blockRefIndex];
+    let blockRef: string|undefined = req.params?.[blockRefIndex];
     // omitted blockRef implies "latest"
     if (blockRef === undefined) {
       blockRef = 'latest';
@@ -45,12 +48,14 @@ function createBlockRefMiddleware(
       return next();
     }
     // lookup latest block
-    const latestBlockNumber: string = await blockTracker.getLatestBlock();
+    const latestBlockNumber = await blockTracker.getLatestBlock();
     // create child request with specific block-ref
     const childRequest = clone(req);
-    (childRequest.params as string[])[blockRefIndex] = latestBlockNumber;
+    if (childRequest.params) {
+      childRequest.params[blockRefIndex] = latestBlockNumber;
+    }
     // perform child request
-    const childRes: PendingJsonRpcResponse<Record<string, unknown>> = await pify(provider.sendAsync).call(provider, childRequest);
+    const childRes: PendingJsonRpcResponse<Block> = await pify((provider as SafeEventEmitterProvider).sendAsync).call(provider, childRequest);
     // copy child response onto original response
     res.result = childRes.result;
     res.error = childRes.error;

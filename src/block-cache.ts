@@ -1,15 +1,24 @@
 import {
   createAsyncMiddleware,
   JsonRpcMiddleware,
-  JsonRpcRequest,
 } from 'json-rpc-engine';
-import * as cacheUtils from './cache-utils';
+import {
+  cacheIdentifierForPayload,
+  blockTagForPayload,
+  cacheTypeForPayload,
+  canCache,
+  Payload,
+  Block,
+  BlockCache,
+  Cache,
+  JsonRPCRequestToCache,
+} from './cache-utils';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports
 const BlockTracker = require('eth-block-tracker');
 
 // `<nil>` comes from https://github.com/ethereum/go-ethereum/issues/16925
-const emptyValues: (string|null|undefined)[] = [undefined, null, '\u003cnil\u003e'];
+const emptyValues = [undefined, null, '\u003cnil\u003e'];
 
 interface BlockCacheMiddlewareOptions{
   blockTracker?: typeof BlockTracker;
@@ -23,56 +32,58 @@ export = createBlockCacheMiddleware;
 
 class BlockCacheStrategy {
 
-  private cache: Record<string, Record<string, unknown>>;
+  private cache: Cache;
 
   constructor() {
     this.cache = {};
   }
 
-  getBlockCacheForPayload(_payload: JsonRpcRequest<string[]>, blockNumberHex: string): Record<string, unknown> {
+  getBlockCacheForPayload(_payload: Payload, blockNumberHex: string): BlockCache {
     const blockNumber: number = Number.parseInt(blockNumberHex, 16);
-    let blockCache: Record<string, unknown> = this.cache[blockNumber];
+    let blockCache: BlockCache = this.cache[blockNumber];
     // create new cache if necesary
     if (!blockCache) {
-      const newCache: Record<string, unknown> = {};
+      const newCache: BlockCache = {};
       this.cache[blockNumber] = newCache;
       blockCache = newCache;
     }
     return blockCache;
   }
 
-  async get(payload: JsonRpcRequest<string[]>, requestedBlockNumber: string): Promise<unknown> {
+  async get(payload: Payload, requestedBlockNumber: string): Promise<Block|undefined> {
     // lookup block cache
-    const blockCache: Record<string, unknown> = this.getBlockCacheForPayload(payload, requestedBlockNumber);
-    if (!blockCache) {
-      return undefined;
-    }
+    const blockCache: BlockCache = this.getBlockCacheForPayload(payload, requestedBlockNumber);
     // lookup payload in block cache
-    const identifier: string|null = cacheUtils.cacheIdentifierForPayload(payload, true);
-    const cached: unknown = identifier ? blockCache[(identifier as string)] : undefined;
-    // may be undefined
-    return cached;
+    const identifier: string|null = cacheIdentifierForPayload(payload, true);
+    if (typeof identifier === 'string') {
+      return blockCache[identifier];
+    }
+    return undefined;
   }
 
-  async set(payload: JsonRpcRequest<string[]>, requestedBlockNumber: string, result: Record<string, unknown>): Promise<void> {
+  async set(payload: Payload, requestedBlockNumber: string, result: Block): Promise<void> {
     // check if we can cached this result
-    const canCache: boolean = this.canCacheResult(payload, result);
-    if (!canCache) {
+    const canCacheResult: boolean = this.canCacheResult(payload, result);
+    if (!canCacheResult) {
+      return;
+    }
+    const identifier: string|null = cacheIdentifierForPayload(payload, true);
+    if (!identifier) {
       return;
     }
     // set the value in the cache
-    const blockCache: Record<string, unknown> = this.getBlockCacheForPayload(payload, requestedBlockNumber);
-    const identifier: string|null = cacheUtils.cacheIdentifierForPayload(payload, true);
-    blockCache[(identifier as string)] = result;
+    const blockCache: BlockCache = this.getBlockCacheForPayload(payload, requestedBlockNumber);
+    blockCache[identifier] = result;
   }
 
-  canCacheRequest(payload: JsonRpcRequest<string[]>,): boolean {
+  canCacheRequest(payload: Payload): boolean {
     // check request method
-    if (!cacheUtils.canCache(payload)) {
+    if (!canCache(payload)) {
       return false;
     }
     // check blockTag
-    const blockTag: string = cacheUtils.blockTagForPayload(payload) as string;
+    const blockTag: string|undefined = blockTagForPayload(payload);
+
     if (blockTag === 'pending') {
       return false;
     }
@@ -80,13 +91,13 @@ class BlockCacheStrategy {
     return true;
   }
 
-  canCacheResult(payload: JsonRpcRequest<string[]>, result: Record<string, unknown>): boolean {
+  canCacheResult(payload: Payload, result: Block): boolean {
     // never cache empty values (e.g. undefined)
     if (emptyValues.includes((result as unknown) as string)) {
       return false;
     }
     // check if transactions have block reference before caching
-    if (['eth_getTransactionByHash', 'eth_getTransactionReceipt'].includes(payload.method)) {
+    if (payload.method && ['eth_getTransactionByHash', 'eth_getTransactionReceipt'].includes(payload.method)) {
       if (!result || !result.blockHash || result.blockHash === '0x0000000000000000000000000000000000000000000000000000000000000000') {
         return false;
       }
@@ -97,23 +108,19 @@ class BlockCacheStrategy {
 
   // removes all block caches with block number lower than `oldBlockHex`
   clearBefore(oldBlockHex: string): void {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this;
     const oldBlockNumber: number = Number.parseInt(oldBlockHex, 16);
     // clear old caches
-    Object.keys(self.cache)
+    Object.keys(this.cache)
       .map(Number)
       .filter((num) => num < oldBlockNumber)
-      .forEach((num) => delete self.cache[num]);
+      .forEach((num) => delete this.cache[num]);
   }
 }
 
 function createBlockCacheMiddleware(
-  opts: BlockCacheMiddlewareOptions = {},
-): JsonRpcMiddleware<string[], Record<string, unknown>> {
+  { blockTracker }: BlockCacheMiddlewareOptions = {},
+): JsonRpcMiddleware<string[], Block> {
   // validate options
-  const { blockTracker } = opts;
-
   if (!blockTracker) {
     throw new Error('createBlockCacheMiddleware - No BlockTracker specified');
   }
@@ -128,11 +135,11 @@ function createBlockCacheMiddleware(
 
   return createAsyncMiddleware(async (req, res, next) => {
     // allow cach to be skipped if so specified
-    if (((req as unknown) as Record<string, unknown>).skipCache) {
+    if ((req as JsonRPCRequestToCache).skipCache) {
       return next();
     }
     // check type and matching strategy
-    const type: string = cacheUtils.cacheTypeForPayload(req);
+    const type: string = cacheTypeForPayload(req);
     const strategy: BlockCacheStrategy = strategies[type];
     // If there's no strategy in place, pass it down the chain.
     if (!strategy) {
@@ -144,8 +151,8 @@ function createBlockCacheMiddleware(
     }
 
     // get block reference (number or keyword)
-    let blockTag: string|null = cacheUtils.blockTagForPayload(req);
-    if (!blockTag) {
+    let blockTag: string|undefined = blockTagForPayload(req);
+    if (blockTag === undefined) {
       blockTag = 'latest';
     }
 
@@ -156,7 +163,7 @@ function createBlockCacheMiddleware(
       requestedBlockNumber = '0x00';
     } else if (blockTag === 'latest') {
       // fetch latest block number
-      const latestBlockNumber: string = await blockTracker.getLatestBlock();
+      const latestBlockNumber = await blockTracker.getLatestBlock();
       // clear all cache before latest block
       blockCache.clearBefore(latestBlockNumber);
       requestedBlockNumber = latestBlockNumber;
@@ -164,19 +171,22 @@ function createBlockCacheMiddleware(
       // We have a hex number
       requestedBlockNumber = blockTag;
     }
-
     // end on a hit, continue on a miss
-    const cacheResult: Record<string, unknown> = await strategy.get(req, requestedBlockNumber) as Record<string, unknown>;
+    const cacheResult: Block|undefined = await strategy.get(req, requestedBlockNumber);
     if (cacheResult === undefined) {
       // cache miss
       // wait for other middleware to handle request
       // eslint-disable-next-line node/callback-return
       await next();
+
+      if (res.result === undefined) {
+        return undefined;
+      }
       // add result to cache
-      await strategy.set(req, requestedBlockNumber, (res.result as Record<string, unknown>));
+      await strategy.set(req, requestedBlockNumber, res.result);
     } else {
       // fill in result from cache
-      res.result = (cacheResult as Record<string, unknown>);
+      res.result = cacheResult;
     }
     return undefined;
   });

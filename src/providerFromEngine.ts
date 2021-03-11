@@ -3,14 +3,17 @@ import {
   JsonRpcRequest,
 } from 'json-rpc-engine';
 import SafeEventEmitter from '@metamask/safe-event-emitter';
+import {
+  SafeEventEmitterProvider,
+} from './cache-utils';
 
 export = providerFromEngine;
 
-function providerFromEngine(engine: JsonRpcEngine): SafeEventEmitter {
-  const provider: SafeEventEmitter = new SafeEventEmitter();
+function providerFromEngine(engine: JsonRpcEngine): SafeEventEmitterProvider {
+  const provider: SafeEventEmitterProvider = (new SafeEventEmitter() as SafeEventEmitterProvider);
   // handle both rpc send methods
-  (provider as any).sendAsync = engine.handle.bind(engine);
-  (provider as any).send = (req: JsonRpcRequest<string[]>, callback: () => void) => {
+  provider.sendAsync = engine.handle.bind(engine);
+  provider.send = (req: JsonRpcRequest<string[]>, callback: VoidFunction) => {
     if (!callback) {
       throw new Error('Web3 Provider - must provider callback to "send" method');
     }

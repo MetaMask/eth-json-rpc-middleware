@@ -2,14 +2,17 @@ import {
   JsonRpcMiddleware,
   PendingJsonRpcResponse,
 } from 'json-rpc-engine';
-import SafeEventEmitter from '@metamask/safe-event-emitter';
+import {
+  Block,
+  SafeEventEmitterProvider,
+} from './cache-utils';
 
 export = providerAsMiddleware;
 
-function providerAsMiddleware(provider: SafeEventEmitter): JsonRpcMiddleware<string[], Record<string, unknown>> {
+function providerAsMiddleware(provider: SafeEventEmitterProvider): JsonRpcMiddleware<string[], Block> {
   return (req, res, _next, end) => {
     // send request to provider
-    (provider as any).sendAsync(req, (err: Error, providerRes: PendingJsonRpcResponse<Record<string, unknown>>) => {
+    provider.sendAsync(req, (err: Error, providerRes: PendingJsonRpcResponse<Block>) => {
       // forward any error
       if (err) {
         return end(err);

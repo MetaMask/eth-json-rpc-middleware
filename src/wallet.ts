@@ -7,26 +7,28 @@ import {
 } from 'json-rpc-engine';
 import * as sigUtil from 'eth-sig-util';
 import { ethErrors } from 'eth-rpc-errors';
+import { Block } from './cache-utils';
 
-type ParamsObjects = Record<string, unknown>[];
+type ParamsObject = Record<string, unknown>;
+type ParamsObjectList = ParamsObject[];
 
 interface WalletMiddlewareOptions{
   getAccounts: (req: JsonRpcRequest<unknown>) => Promise<string[]>;
-  processDecryptMessage?: (msgParams: Record<string, unknown>, req: JsonRpcRequest<unknown>) => Promise<Record<string, unknown>>;
-  processEncryptionPublicKey?: (address: string, req: JsonRpcRequest<unknown>) => Promise<Record<string, unknown>>;
-  processEthSignMessage?: (msgParams: Record<string, unknown>, req: JsonRpcRequest<unknown>) => Promise<Record<string, unknown>>;
-  processPersonalMessage?: (msgParams: Record<string, unknown>, req: JsonRpcRequest<unknown>) => Promise<Record<string, unknown>>;
-  processTransaction?: (txParams: Record<string, unknown>, req: JsonRpcRequest<unknown>) => Promise<Record<string, unknown>>;
-  processTypedMessage?: (msgParams: Record<string, unknown>, req: JsonRpcRequest<unknown>, version: string) => Promise<Record<string, unknown>>;
-  processTypedMessageV3?: (msgParams: Record<string, unknown>, req: JsonRpcRequest<unknown>, version: string) => Promise<Record<string, unknown>>;
-  processTypedMessageV4?: (msgParams: Record<string, unknown>, req: JsonRpcRequest<unknown>, version: string) => Promise<Record<string, unknown>>;
+  processDecryptMessage?: (msgParams: ParamsObject, req: JsonRpcRequest<unknown>) => Promise<ParamsObject>;
+  processEncryptionPublicKey?: (address: string, req: JsonRpcRequest<unknown>) => Promise<ParamsObject>;
+  processEthSignMessage?: (msgParams: ParamsObject, req: JsonRpcRequest<unknown>) => Promise<ParamsObject>;
+  processPersonalMessage?: (msgParams: ParamsObject, req: JsonRpcRequest<unknown>) => Promise<ParamsObject>;
+  processTransaction?: (txParams: ParamsObject, req: JsonRpcRequest<unknown>) => Promise<ParamsObject>;
+  processTypedMessage?: (msgParams: ParamsObject, req: JsonRpcRequest<unknown>, version: string) => Promise<ParamsObject>;
+  processTypedMessageV3?: (msgParams: ParamsObject, req: JsonRpcRequest<unknown>, version: string) => Promise<ParamsObject>;
+  processTypedMessageV4?: (msgParams: ParamsObject, req: JsonRpcRequest<unknown>, version: string) => Promise<ParamsObject>;
 }
 
 export = createWalletMiddleware;
 
 function createWalletMiddleware(
   opts: WalletMiddlewareOptions
-): JsonRpcMiddleware<string, Record<string, unknown>> {
+): JsonRpcMiddleware<string, Block> {
   const {
     getAccounts,
     processDecryptMessage,
@@ -83,7 +85,7 @@ function createWalletMiddleware(
       throw ethErrors.rpc.methodNotSupported({});
     }
 
-    const txParams: Record<string, unknown> = (req.params as ParamsObjects)[0] || {};
+    const txParams: ParamsObject = (req.params as ParamsObjectList)[0] || {};
     txParams.from = await validateAndNormalizeKeyholder((txParams.from as string), req);
     res.result = await processTransaction(txParams, req);
   }
@@ -100,8 +102,8 @@ function createWalletMiddleware(
 
     const address: string = await validateAndNormalizeKeyholder((req.params as string[])[0], req);
     const message: string = (req.params as string[])[1];
-    const extraParams: Record<string, unknown> = (req.params as ParamsObjects)[2] || {};
-    const msgParams: Record<string, unknown> = Object.assign({}, extraParams, {
+    const extraParams: ParamsObject = (req.params as ParamsObjectList)[2] || {};
+    const msgParams: ParamsObject = Object.assign({}, extraParams, {
       from: address,
       data: message,
     });
@@ -118,8 +120,8 @@ function createWalletMiddleware(
     const message: string = (req.params as string[])[0];
     const address: string = await validateAndNormalizeKeyholder((req.params as string[])[1], req);
     const version = 'V1';
-    const extraParams: Record<string, unknown> = (req.params as ParamsObjects)[2] || {};
-    const msgParams: Record<string, unknown> = Object.assign({}, extraParams, {
+    const extraParams: ParamsObject = (req.params as ParamsObjectList)[2] || {};
+    const msgParams: ParamsObject = Object.assign({}, extraParams, {
       from: address,
       data: message,
     });
@@ -136,7 +138,7 @@ function createWalletMiddleware(
     const address: string = await validateAndNormalizeKeyholder((req.params as string[])[0], req);
     const message: string = (req.params as string[])[1];
     const version = 'V3';
-    const msgParams: Record<string, unknown> = {
+    const msgParams: ParamsObject = {
       data: message,
       from: address,
       version,
@@ -154,7 +156,7 @@ function createWalletMiddleware(
     const address: string = await validateAndNormalizeKeyholder((req.params as string[])[0], req);
     const message: string = (req.params as string)[1];
     const version = 'V4';
-    const msgParams: Record<string, unknown> = {
+    const msgParams: ParamsObject = {
       data: message,
       from: address,
       version,
@@ -172,7 +174,7 @@ function createWalletMiddleware(
     const firstParam: string = (req.params as string[])[0];
     const secondParam: string = (req.params as string[])[1];
     // non-standard "extraParams" to be appended to our "msgParams" obj
-    const extraParams: Record<string, unknown> = (req.params as ParamsObjects)[2] || {};
+    const extraParams: ParamsObject = (req.params as ParamsObjectList)[2] || {};
 
     // We initially incorrectly ordered these parameters.
     // To gracefully respect users who adopted this API early,
@@ -187,7 +189,7 @@ function createWalletMiddleware(
       warning += `[message, address]. This was previously handled incorrectly, `;
       warning += `and has been corrected automatically. `;
       warning += `Please switch this param order for smooth behavior in the future.`;
-      ((res as unknown) as Record<string, unknown>).warning = warning;
+      ((res as unknown) as ParamsObject).warning = warning;
 
       address = firstParam;
       message = secondParam;
@@ -197,7 +199,7 @@ function createWalletMiddleware(
     }
     address = await validateAndNormalizeKeyholder(address, req);
 
-    const msgParams: Record<string, unknown> = Object.assign({}, extraParams, {
+    const msgParams: ParamsObject = Object.assign({}, extraParams, {
       from: address,
       data: message,
     });
@@ -210,12 +212,12 @@ function createWalletMiddleware(
 
     const message: string = (req.params as string)[0];
     const signature: string = (req.params as string)[1];
-    const extraParams: Record<string, unknown> = (req.params as ParamsObjects)[2] || {};
+    const extraParams: ParamsObject = (req.params as ParamsObjectList)[2] || {};
     const msgParams: sigUtil.SignedMessageData<unknown> = Object.assign({}, extraParams, {
       sig: signature,
       data: message,
     });
-    const signerAddress = sigUtil.recoverPersonalSignature(msgParams);
+    const signerAddress: string = sigUtil.recoverPersonalSignature(msgParams);
 
     res.result = signerAddress;
   }
@@ -238,8 +240,8 @@ function createWalletMiddleware(
 
     const ciphertext: string = (req.params as string)[0];
     const address: string = await validateAndNormalizeKeyholder((req.params as string)[1], req);
-    const extraParams: Record<string, unknown> = (req.params as ParamsObjects)[2] || {};
-    const msgParams: Record<string, unknown> = Object.assign({}, extraParams, {
+    const extraParams: ParamsObject = (req.params as ParamsObjectList)[2] || {};
+    const msgParams: ParamsObject = Object.assign({}, extraParams, {
       from: address,
       data: ciphertext,
     });
