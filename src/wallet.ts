@@ -9,14 +9,14 @@ import * as sigUtil from 'eth-sig-util';
 import { ethErrors } from 'eth-rpc-errors';
 import { Block } from './cache-utils';
 
-interface TransactionParam {
+interface TransactionParams {
   from: string;
 }
 
-interface MessageParams extends TransactionParam{
+interface MessageParams extends TransactionParams{
   data: string;
 }
-interface TypedMessageParam extends MessageParams{
+interface TypedMessageParams extends MessageParams{
   version: string;
 }
 
@@ -26,10 +26,10 @@ interface WalletMiddlewareOptions{
   processEncryptionPublicKey?: (address: string, req: JsonRpcRequest<unknown>) => Promise<Record<string, unknown>>;
   processEthSignMessage?: (msgParams: MessageParams, req: JsonRpcRequest<unknown>) => Promise<Record<string, unknown>>;
   processPersonalMessage?: (msgParams: MessageParams, req: JsonRpcRequest<unknown>) => Promise<Record<string, unknown>>;
-  processTransaction?: (txParams: TransactionParam, req: JsonRpcRequest<unknown>) => Promise<Record<string, unknown>>;
+  processTransaction?: (txParams: TransactionParams, req: JsonRpcRequest<unknown>) => Promise<Record<string, unknown>>;
   processTypedMessage?: (msgParams: MessageParams, req: JsonRpcRequest<unknown>, version: string) => Promise<Record<string, unknown>>;
-  processTypedMessageV3?: (msgParams: TypedMessageParam, req: JsonRpcRequest<unknown>, version: string) => Promise<Record<string, unknown>>;
-  processTypedMessageV4?: (msgParams: TypedMessageParam, req: JsonRpcRequest<unknown>, version: string) => Promise<Record<string, unknown>>;
+  processTypedMessageV3?: (msgParams: TypedMessageParams, req: JsonRpcRequest<unknown>, version: string) => Promise<Record<string, unknown>>;
+  processTypedMessageV4?: (msgParams: TypedMessageParams, req: JsonRpcRequest<unknown>, version: string) => Promise<Record<string, unknown>>;
 }
 
 export = createWalletMiddleware;
@@ -91,7 +91,7 @@ function createWalletMiddleware(
       throw ethErrors.rpc.methodNotSupported();
     }
 
-    const txParams: TransactionParam = (req.params as TransactionParam[])[0] || {};
+    const txParams: TransactionParams = (req.params as TransactionParams[])[0] || {};
     txParams.from = await validateAndNormalizeKeyholder((txParams.from as string), req);
     res.result = await processTransaction(txParams, req);
   }
@@ -146,7 +146,7 @@ function createWalletMiddleware(
     const address: string = await validateAndNormalizeKeyholder((req.params as string[])[0], req);
     const message: string = (req.params as string[])[1];
     const version = 'V3';
-    const msgParams: TypedMessageParam = {
+    const msgParams: TypedMessageParams = {
       data: message,
       from: address,
       version,
@@ -164,7 +164,7 @@ function createWalletMiddleware(
     const address: string = await validateAndNormalizeKeyholder((req.params as string[])[0], req);
     const message: string = (req.params as string)[1];
     const version = 'V4';
-    const msgParams: TypedMessageParam = {
+    const msgParams: TypedMessageParams = {
       data: message,
       from: address,
       version,
