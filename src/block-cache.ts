@@ -174,11 +174,10 @@ function createBlockCacheMiddleware(
       // eslint-disable-next-line node/callback-return
       await next();
 
-      if (!res.result) {
-        return undefined;
-      }
       // add result to cache
-      await strategy.set(req, requestedBlockNumber, res.result);
+      // it's safe to cast res.result as Block, due to runtime type checks
+      // performed when strategy.set is called
+      await strategy.set(req, requestedBlockNumber, res.result as Block);
     } else {
       // fill in result from cache
       res.result = cacheResult;
