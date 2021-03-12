@@ -11,7 +11,7 @@ import {
   Block,
   BlockCache,
   Cache,
-  JsonRPCRequestToCache,
+  JsonRpcRequestToCache,
 } from './cache-utils';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports
@@ -55,10 +55,7 @@ class BlockCacheStrategy {
     const blockCache: BlockCache = this.getBlockCacheForPayload(payload, requestedBlockNumber);
     // lookup payload in block cache
     const identifier: string|null = cacheIdentifierForPayload(payload, true);
-    if (typeof identifier === 'string') {
-      return blockCache[identifier];
-    }
-    return undefined;
+    return identifier ? blockCache[identifier] : undefined;
   }
 
   async set(payload: Payload, requestedBlockNumber: string, result: Block): Promise<void> {
@@ -67,13 +64,11 @@ class BlockCacheStrategy {
     if (!canCacheResult) {
       return;
     }
-    const identifier: string|null = cacheIdentifierForPayload(payload, true);
-    if (!identifier) {
-      return;
-    }
+
     // set the value in the cache
     const blockCache: BlockCache = this.getBlockCacheForPayload(payload, requestedBlockNumber);
-    blockCache[identifier] = result;
+    const identifier: string|null = cacheIdentifierForPayload(payload, true);
+    blockCache[identifier as any] = result;
   }
 
   canCacheRequest(payload: Payload): boolean {
@@ -93,7 +88,7 @@ class BlockCacheStrategy {
 
   canCacheResult(payload: Payload, result: Block): boolean {
     // never cache empty values (e.g. undefined)
-    if (emptyValues.includes((result as unknown) as string)) {
+    if (emptyValues.includes(result as any)) {
       return false;
     }
     // check if transactions have block reference before caching
@@ -135,7 +130,7 @@ function createBlockCacheMiddleware(
 
   return createAsyncMiddleware(async (req, res, next) => {
     // allow cach to be skipped if so specified
-    if ((req as JsonRPCRequestToCache).skipCache) {
+    if ((req as JsonRpcRequestToCache).skipCache) {
       return next();
     }
     // check type and matching strategy
@@ -152,7 +147,7 @@ function createBlockCacheMiddleware(
 
     // get block reference (number or keyword)
     let blockTag: string|undefined = blockTagForPayload(req);
-    if (blockTag === undefined) {
+    if (!blockTag) {
       blockTag = 'latest';
     }
 
@@ -179,7 +174,7 @@ function createBlockCacheMiddleware(
       // eslint-disable-next-line node/callback-return
       await next();
 
-      if (res.result === undefined) {
+      if (!res.result) {
         return undefined;
       }
       // add result to cache

@@ -27,9 +27,7 @@ interface WalletMiddlewareOptions{
 export = createWalletMiddleware;
 
 function createWalletMiddleware(
-  opts: WalletMiddlewareOptions
-): JsonRpcMiddleware<string, Block> {
-  const {
+  {
     getAccounts,
     processDecryptMessage,
     processEncryptionPublicKey,
@@ -39,8 +37,8 @@ function createWalletMiddleware(
     processTypedMessage,
     processTypedMessageV3,
     processTypedMessageV4,
-  } = opts;
-
+  }: WalletMiddlewareOptions
+): JsonRpcMiddleware<string, Block> {
   if (!getAccounts) {
     throw new Error('opts.getAccounts is required');
   }
@@ -103,10 +101,11 @@ function createWalletMiddleware(
     const address: string = await validateAndNormalizeKeyholder((req.params as string[])[0], req);
     const message: string = (req.params as string[])[1];
     const extraParams: ParamsObject = (req.params as ParamsObjectList)[2] || {};
-    const msgParams: ParamsObject = Object.assign({}, extraParams, {
+    const msgParams: ParamsObject = {
+      ...extraParams,
       from: address,
       data: message,
-    });
+    };
 
     res.result = await processEthSignMessage(msgParams, req);
   }
@@ -121,10 +120,11 @@ function createWalletMiddleware(
     const address: string = await validateAndNormalizeKeyholder((req.params as string[])[1], req);
     const version = 'V1';
     const extraParams: ParamsObject = (req.params as ParamsObjectList)[2] || {};
-    const msgParams: ParamsObject = Object.assign({}, extraParams, {
+    const msgParams: ParamsObject = {
+      ...extraParams,
       from: address,
       data: message,
-    });
+    };
 
     res.result = await processTypedMessage(msgParams, req, version);
   }
@@ -199,10 +199,11 @@ function createWalletMiddleware(
     }
     address = await validateAndNormalizeKeyholder(address, req);
 
-    const msgParams: ParamsObject = Object.assign({}, extraParams, {
+    const msgParams: ParamsObject = {
+      ...extraParams,
       from: address,
       data: message,
-    });
+    };
 
     // eslint-disable-next-line require-atomic-updates
     res.result = await processPersonalMessage(msgParams, req);
@@ -213,10 +214,11 @@ function createWalletMiddleware(
     const message: string = (req.params as string)[0];
     const signature: string = (req.params as string)[1];
     const extraParams: ParamsObject = (req.params as ParamsObjectList)[2] || {};
-    const msgParams: sigUtil.SignedMessageData<unknown> = Object.assign({}, extraParams, {
+    const msgParams: sigUtil.SignedMessageData<unknown> = {
+      ...extraParams,
       sig: signature,
       data: message,
-    });
+    };
     const signerAddress: string = sigUtil.recoverPersonalSignature(msgParams);
 
     res.result = signerAddress;
@@ -241,10 +243,11 @@ function createWalletMiddleware(
     const ciphertext: string = (req.params as string)[0];
     const address: string = await validateAndNormalizeKeyholder((req.params as string)[1], req);
     const extraParams: ParamsObject = (req.params as ParamsObjectList)[2] || {};
-    const msgParams: ParamsObject = Object.assign({}, extraParams, {
+    const msgParams: ParamsObject = {
+      ...extraParams,
       from: address,
       data: ciphertext,
-    });
+    };
 
     res.result = await processDecryptMessage(msgParams, req);
   }

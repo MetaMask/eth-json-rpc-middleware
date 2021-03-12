@@ -28,7 +28,7 @@ function createBlockTrackerInspectorMiddleware(
     // eslint-disable-next-line node/callback-return
     await next();
     // abort if no result or no block number
-    if (!res.result || !res.result.blockNumber) {
+    if (!res.result?.blockNumber) {
       return undefined;
     }
     if (typeof res.result.blockNumber === 'string') {

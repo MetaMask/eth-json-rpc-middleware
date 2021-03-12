@@ -6,16 +6,21 @@ import stringify from 'json-stable-stringify';
 import SafeEventEmitter from '@metamask/safe-event-emitter';
 
 export type Payload = Partial<JsonRpcRequest<string[]>>;
-export interface JsonRPCRequestToCache extends JsonRpcRequest<string[]>{
+
+export interface JsonRpcRequestToCache extends JsonRpcRequest<string[]>{
   skipCache: boolean;
 }
+
 export type BlockData = string | string[];
-export interface Block{
-  [field: string]: BlockData;
-}
+
+export type Block = Record<string, BlockData>;
+
 export type BlockCache = Record<string, Block>;
+
 export type Cache = Record<number, BlockCache>;
+
 export type SendAsyncCallBack = (err: Error, providerRes: PendingJsonRpcResponse<Block>) => void;
+
 export interface SafeEventEmitterProvider extends SafeEventEmitter{
   sendAsync: (req: JsonRpcRequest<string[]>, callback: SendAsyncCallBack) => void;
   send: (req: JsonRpcRequest<string[]>, callback: VoidFunction) => void;
@@ -27,7 +32,6 @@ export function cacheIdentifierForPayload(payload: Payload, skipBlockRef?: boole
     return `${payload.method}:${stringify(simpleParams)}`;
   }
   return null;
-
 }
 
 export function canCache(payload: Payload): boolean {

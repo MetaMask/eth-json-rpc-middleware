@@ -7,7 +7,7 @@ import {
 import {
   cacheIdentifierForPayload,
   Block,
-  JsonRPCRequestToCache,
+  JsonRpcRequestToCache,
 } from './cache-utils';
 
 type RequestHandlers = (handledRes: PendingJsonRpcResponse<Block>) => void;
@@ -21,7 +21,7 @@ function createInflightCache(): JsonRpcMiddleware<string[], Block> {
 
   return createAsyncMiddleware(async (req, res, next) => {
     // allow cach to be skipped if so specified
-    if ((req as JsonRPCRequestToCache).skipCache) {
+    if ((req as JsonRpcRequestToCache).skipCache) {
       return next();
     }
     // get cacheId, if cacheable

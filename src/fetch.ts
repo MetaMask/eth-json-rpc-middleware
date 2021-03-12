@@ -38,20 +38,19 @@ interface FetchConfig {
   fetchUrl: string;
   fetchParams: Request;
 }
-interface FetchMiddlewarOptions{
+interface FetchMiddlewareOptions{
   rpcUrl: string;
   originHttpHeaderKey?: string;
 }
 
-interface FetchMiddlewarFromReqOptions extends FetchMiddlewarOptions{
+interface FetchMiddlewareFromReqOptions extends FetchMiddlewareOptions{
   req: PayloadwithOrgin;
 }
 
 export function createFetchMiddleware(
-  opts: FetchMiddlewarOptions
+  { rpcUrl, originHttpHeaderKey }: FetchMiddlewareOptions
 ): JsonRpcMiddleware<string[], Block> {
   return createAsyncMiddleware(async (req, res, _next) => {
-    const { rpcUrl, originHttpHeaderKey } = opts;
     const { fetchUrl, fetchParams } = createFetchConfigFromReq({ req, rpcUrl, originHttpHeaderKey });
 
     // attempt request multiple times
@@ -129,8 +128,9 @@ function parseResponse(
   return body.result;
 }
 
-export function createFetchConfigFromReq(opts: FetchMiddlewarFromReqOptions): FetchConfig {
-  const { req, rpcUrl, originHttpHeaderKey } = opts;
+export function createFetchConfigFromReq(
+  { req, rpcUrl, originHttpHeaderKey }: FetchMiddlewareFromReqOptions
+): FetchConfig {
   const parsedUrl: URL = new URL(rpcUrl);
   const fetchUrl: string = normalizeUrlFromParsed(parsedUrl);
 

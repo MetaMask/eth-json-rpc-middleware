@@ -33,9 +33,8 @@ interface RetryOnEmptyMiddlewareOptions{
 }
 
 function createRetryOnEmptyMiddleware(
-  opts: RetryOnEmptyMiddlewareOptions = {}
+  { provider, blockTracker }: RetryOnEmptyMiddlewareOptions = {}
 ): JsonRpcMiddleware<string[], Block> {
-  const { provider, blockTracker } = opts;
   if (!provider) {
     throw Error('RetryOnEmptyMiddleware - mandatory "provider" option is missing.');
   }
@@ -77,7 +76,7 @@ function createRetryOnEmptyMiddleware(
     const childResponse: PendingJsonRpcResponse<Block> = await retry(10, async () => {
       const attemptResponse: PendingJsonRpcResponse<Block> = await pify((provider as SafeEventEmitterProvider).sendAsync).call(provider, childRequest);
       // verify result
-      if (emptyValues.includes((attemptResponse.result as unknown) as string)) {
+      if (emptyValues.includes(attemptResponse as any)) {
         throw new Error(`RetryOnEmptyMiddleware - empty response "${JSON.stringify(attemptResponse)}" for request "${JSON.stringify(childRequest)}"`);
       }
       return attemptResponse;
