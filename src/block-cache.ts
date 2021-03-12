@@ -66,11 +66,11 @@ class BlockCacheStrategy {
     }
 
     // set the value in the cache
-    const blockCache: BlockCache = this.getBlockCacheForPayload(payload, requestedBlockNumber);
     const identifier: string|null = cacheIdentifierForPayload(payload, true);
     if (!identifier) {
       return;
     }
+    const blockCache: BlockCache = this.getBlockCacheForPayload(payload, requestedBlockNumber);
     blockCache[identifier] = result;
   }
 
