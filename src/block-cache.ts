@@ -68,7 +68,10 @@ class BlockCacheStrategy {
     // set the value in the cache
     const blockCache: BlockCache = this.getBlockCacheForPayload(payload, requestedBlockNumber);
     const identifier: string|null = cacheIdentifierForPayload(payload, true);
-    blockCache[identifier as any] = result;
+    if (!identifier) {
+      return;
+    }
+    blockCache[identifier] = result;
   }
 
   canCacheRequest(payload: Payload): boolean {
