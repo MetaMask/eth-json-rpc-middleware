@@ -13,10 +13,11 @@ interface TransactionParams {
   from: string;
 }
 
-interface MessageParams extends TransactionParams{
+interface MessageParams extends TransactionParams {
   data: string;
 }
-interface TypedMessageParams extends MessageParams{
+
+interface TypedMessageParams extends MessageParams {
   version: string;
 }
 
