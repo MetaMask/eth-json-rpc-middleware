@@ -21,7 +21,7 @@ interface TypedMessageParams extends MessageParams {
   version: string;
 }
 
-interface WalletMiddlewareOptions{
+interface WalletMiddlewareOptions {
   getAccounts: (req: JsonRpcRequest<unknown>) => Promise<string[]>;
   processDecryptMessage?: (msgParams: MessageParams, req: JsonRpcRequest<unknown>) => Promise<Record<string, unknown>>;
   processEncryptionPublicKey?: (address: string, req: JsonRpcRequest<unknown>) => Promise<Record<string, unknown>>;
