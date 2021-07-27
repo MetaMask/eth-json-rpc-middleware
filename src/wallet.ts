@@ -35,6 +35,10 @@ interface WalletMiddlewareOptions {
     msgParams: MessageParams,
     req: JsonRpcRequest<unknown>
   ) => Promise<Record<string, unknown>>;
+  processEthSignTransactionMessage?: (
+    txParams: TransactionParams,
+    req: JsonRpcRequest<unknown>
+  ) => Promise<Record<string, unknown>>;
   processPersonalMessage?: (
     msgParams: MessageParams,
     req: JsonRpcRequest<unknown>
@@ -65,6 +69,7 @@ export function createWalletMiddleware({
   processDecryptMessage,
   processEncryptionPublicKey,
   processEthSignMessage,
+  processEthSignTransactionMessage,
   processPersonalMessage,
   processTransaction,
   processTypedMessage,
@@ -83,6 +88,7 @@ export function createWalletMiddleware({
     eth_sendTransaction: createAsyncMiddleware(sendTransaction),
     // message signatures
     eth_sign: createAsyncMiddleware(ethSign),
+    eth_signTransaction: createAsyncMiddleware(ethSignTransaction),
     eth_signTypedData: createAsyncMiddleware(signTypedData),
     eth_signTypedData_v3: createAsyncMiddleware(signTypedDataV3),
     eth_signTypedData_v4: createAsyncMiddleware(signTypedDataV4),
@@ -158,6 +164,25 @@ export function createWalletMiddleware({
     };
 
     res.result = await processEthSignMessage(msgParams, req);
+  }
+
+  async function ethSignTransaction(
+    req: JsonRpcRequest<unknown>,
+    res: PendingJsonRpcResponse<unknown>,
+  ): Promise<void> {
+    if (!processEthSignTransactionMessage) {
+      throw ethErrors.rpc.methodNotSupported();
+    }
+
+    const txParams: TransactionParams =
+    (req.params as TransactionParams[])[0] || {};
+
+    txParams.from = await validateAndNormalizeKeyholder(
+      txParams.from as string,
+      req,
+    );
+
+    res.result = await processEthSignTransactionMessage(txParams, req);
   }
 
   async function signTypedData(
