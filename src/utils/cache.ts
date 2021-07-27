@@ -21,17 +21,12 @@ export type SendAsyncCallBack = (
   providerRes: PendingJsonRpcResponse<Block>
 ) => void;
 
-export type SendCallBack = (
-  err: any,
-  providerRes: any
-) => void;
-
 export interface SafeEventEmitterProvider extends SafeEventEmitter {
   sendAsync: (
     req: JsonRpcRequest<string[]>,
     callback: SendAsyncCallBack
   ) => void;
-  send: (req: JsonRpcRequest<string[]>, callback: SendCallBack) => void;
+  send: (req: JsonRpcRequest<string[]>, callback: () => void) => void;
 }
 
 export function cacheIdentifierForPayload(
