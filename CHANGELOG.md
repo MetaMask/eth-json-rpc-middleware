@@ -5,7 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [8.0.0]
 ### Uncategorized
+- Add release automation, fix repo standardization issues ([#105](https://github.com/MetaMask/eth-json-rpc-middleware/pull/105))
+- Bump path-parse from 1.0.6 to 1.0.7 ([#100](https://github.com/MetaMask/eth-json-rpc-middleware/pull/100))
+- Bump tar from 4.4.15 to 4.4.19 ([#101](https://github.com/MetaMask/eth-json-rpc-middleware/pull/101))
+- Bump tar from 4.4.10 to 4.4.15 ([#98](https://github.com/MetaMask/eth-json-rpc-middleware/pull/98))
+- Bump glob-parent from 5.1.1 to 5.1.2 ([#95](https://github.com/MetaMask/eth-json-rpc-middleware/pull/95))
+- Bump normalize-url from 4.3.0 to 4.5.1 ([#94](https://github.com/MetaMask/eth-json-rpc-middleware/pull/94))
+- Bump hosted-git-info from 2.8.4 to 2.8.9 ([#93](https://github.com/MetaMask/eth-json-rpc-middleware/pull/93))
+- Repo standardization ([#90](https://github.com/MetaMask/eth-json-rpc-middleware/pull/90))
 - Add support for send call with callback so that Web3 Providers can be used ([#97](https://github.com/MetaMask/eth-json-rpc-middleware/pull/97))
 - Add support for `eth_signTransaction` so that external key stores can be used for signing ([#96](https://github.com/MetaMask/eth-json-rpc-middleware/pull/96))
 
@@ -53,7 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `json-rpc-engine@5.3.0` ([#53](https://github.com/MetaMask/eth-json-rpc-middleware/pull/53))
 - `eth-rpc-errors@3.0.0` ([#55](https://github.com/MetaMask/eth-json-rpc-middleware/pull/55))
 
-[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v7.0.1...HEAD
+[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v8.0.0...HEAD
+[8.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v7.0.1...v8.0.0
 [7.0.1]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v7.0.0...v7.0.1
 [7.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v6.0.0...v7.0.0
 [6.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v5.1.0...v6.0.0
