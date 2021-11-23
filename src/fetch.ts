@@ -1,5 +1,13 @@
-import { createAsyncMiddleware, JsonRpcMiddleware, JsonRpcRequest } from 'json-rpc-engine';
-import { EthereumRpcError, ethErrors, getMessageFromCode } from 'eth-rpc-errors';
+import {
+  createAsyncMiddleware,
+  JsonRpcMiddleware,
+  JsonRpcRequest,
+} from 'json-rpc-engine';
+import {
+  EthereumRpcError,
+  ethErrors,
+  getMessageFromCode,
+} from 'eth-rpc-errors';
 import { Payload, Block } from './utils/cache';
 
 /* eslint-disable node/global-require,@typescript-eslint/no-require-imports */
@@ -106,7 +114,11 @@ function checkForHttpErrors(fetchRes: Response): void {
   }
 }
 
-function parseResponse(fetchRes: Response, body: Record<string, Block>, req: JsonRpcRequest<unknown>): Block {
+function parseResponse(
+  fetchRes: Response,
+  body: Record<string, Block>,
+  req: JsonRpcRequest<unknown>,
+): Block {
   // check for error code
   if (fetchRes.status !== 200) {
     throw ethErrors.rpc.internal({
@@ -117,12 +129,13 @@ function parseResponse(fetchRes: Response, body: Record<string, Block>, req: Jso
 
   // check for rpc error
   if (body.error) {
-    const reqData = { req, res: body }
+    const reqData = { req, res: body };
     if (body.error.code) {
       throw new EthereumRpcError(
         Number(body.error.code),
-        String(body.error.message) || getMessageFromCode(Number(body.error.code)),
-        reqData
+        String(body.error.message) ||
+          getMessageFromCode(Number(body.error.code)),
+        reqData,
       );
     } else {
       throw ethErrors.rpc.internal({
