@@ -120,8 +120,8 @@ function parseResponse(fetchRes: Response, body: Record<string, Block>, req: Jso
     const reqData = { req, res: body }
     if (body.error.code) {
       throw new EthereumRpcError(
-        body.error.code,
-        body.error.message || getMessageFromCode(body.error.code),
+        Number(body.error.code),
+        String(body.error.message) || getMessageFromCode(Number(body.error.code)),
         reqData
       );
     } else {
