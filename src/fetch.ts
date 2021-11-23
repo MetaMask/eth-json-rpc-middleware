@@ -129,6 +129,7 @@ function parseResponse(
 
   // check for rpc error
   if (body.error) {
+    console.log('body.error', body.error)
     const reqData = { req, res: body };
     if (body.error.code) {
       throw new EthereumRpcError(
@@ -138,6 +139,7 @@ function parseResponse(
         reqData,
       );
     } else {
+      throw new Error('yabdab')
       throw ethErrors.rpc.internal({
         data: reqData,
       });
