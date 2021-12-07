@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [8.0.1]
-### Uncategorized
-- fix: add query parameters to normalized url ([#109](https://github.com/MetaMask/eth-json-rpc-middleware/pull/109))
+### Fixed
+- Restore support for query strings in fetch middleware  ([#109](https://github.com/MetaMask/eth-json-rpc-middleware/pull/109))
+  - As of `v7.0.0`, query strings were silently dropped from RPC URLs passed in. Now they are preserved, as was the case in `v6.0.0`.
 
 ## [8.0.0] - 2021-11-04
 ### Added
