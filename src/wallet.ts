@@ -9,59 +9,59 @@ import * as sigUtil from 'eth-sig-util';
 import { ethErrors } from 'eth-rpc-errors';
 import { Block } from './utils/cache';
 
-interface TransactionParams {
+export interface TransactionParams {
   from: string;
 }
 
-interface MessageParams extends TransactionParams {
+export interface MessageParams extends TransactionParams {
   data: string;
 }
 
-interface TypedMessageParams extends MessageParams {
+export interface TypedMessageParams extends MessageParams {
   version: string;
 }
 
-interface WalletMiddlewareOptions {
+export interface WalletMiddlewareOptions {
   getAccounts: (req: JsonRpcRequest<unknown>) => Promise<string[]>;
   processDecryptMessage?: (
     msgParams: MessageParams,
     req: JsonRpcRequest<unknown>,
-  ) => Promise<Record<string, unknown>>;
+  ) => Promise<string>;
   processEncryptionPublicKey?: (
     address: string,
     req: JsonRpcRequest<unknown>,
-  ) => Promise<Record<string, unknown>>;
+  ) => Promise<string>;
   processEthSignMessage?: (
     msgParams: MessageParams,
     req: JsonRpcRequest<unknown>,
-  ) => Promise<Record<string, unknown>>;
+  ) => Promise<string>;
   processPersonalMessage?: (
     msgParams: MessageParams,
     req: JsonRpcRequest<unknown>,
-  ) => Promise<Record<string, unknown>>;
+  ) => Promise<string>;
   processTransaction?: (
     txParams: TransactionParams,
     req: JsonRpcRequest<unknown>,
-  ) => Promise<Record<string, unknown>>;
+  ) => Promise<string>;
   processSignTransaction?: (
     txParams: TransactionParams,
     req: JsonRpcRequest<unknown>,
-  ) => Promise<Record<string, unknown>>;
+  ) => Promise<string>;
   processTypedMessage?: (
     msgParams: MessageParams,
     req: JsonRpcRequest<unknown>,
     version: string,
-  ) => Promise<Record<string, unknown>>;
+  ) => Promise<string>;
   processTypedMessageV3?: (
     msgParams: TypedMessageParams,
     req: JsonRpcRequest<unknown>,
     version: string,
-  ) => Promise<Record<string, unknown>>;
+  ) => Promise<string>;
   processTypedMessageV4?: (
     msgParams: TypedMessageParams,
     req: JsonRpcRequest<unknown>,
     version: string,
-  ) => Promise<Record<string, unknown>>;
+  ) => Promise<string>;
 }
 
 export function createWalletMiddleware({
