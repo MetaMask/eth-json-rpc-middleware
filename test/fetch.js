@@ -56,6 +56,31 @@ test('fetch - origin header', (t) => {
   t.end();
 });
 
+test('fetch - send credentials', (t) => {
+  const req = {
+    method: 'eth_getBlockByNumber',
+    params: ['0x482103', true],
+  };
+  const rpcUrl = 'http://www.xyz.io/rabbit:3456?id=100';
+  const { fetchUrl, fetchParams } = createFetchConfigFromReq({
+    req,
+    rpcUrl,
+    sendCredentials: true,
+  });
+
+  t.equals(fetchUrl, rpcUrl);
+  t.deepEquals(fetchParams, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(req),
+    credentials: 'include',
+  });
+  t.end();
+});
+
 test('fetch - auth in url', (t) => {
   const req = {
     method: 'eth_getBlockByNumber',
