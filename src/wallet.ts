@@ -22,7 +22,7 @@ interface TypedMessageParams extends MessageParams {
 }
 
 interface WalletMiddlewareOptions {
-  getAccounts: (req: JsonRpcRequest<unknown>) => Promise<string[]>;
+  getAccounts: (req: JsonRpcRequest<unknown>, suppressUnauthorized?: boolean) => Promise<string[]>;
   processDecryptMessage?: (
     msgParams: MessageParams,
     req: JsonRpcRequest<unknown>,
@@ -379,7 +379,7 @@ export function createWalletMiddleware({
   ): Promise<string> {
     if (typeof address === 'string' && address.length > 0) {
       // ensure address is included in provided accounts
-      const accounts: string[] = await getAccounts(req);
+      const accounts: string[] = await getAccounts(req, false);
       const normalizedAccounts: string[] = accounts.map((_address) =>
         _address.toLowerCase(),
       );
