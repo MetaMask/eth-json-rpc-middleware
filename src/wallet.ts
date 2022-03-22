@@ -22,7 +22,10 @@ interface TypedMessageParams extends MessageParams {
 }
 
 interface WalletMiddlewareOptions {
-  getAccounts: (req: JsonRpcRequest<unknown>, suppressUnauthorized?: boolean) => Promise<string[]>;
+  getAccounts: (
+    req: JsonRpcRequest<unknown>,
+    suppressUnauthorized?: boolean,
+  ) => Promise<string[]>;
   processDecryptMessage?: (
     msgParams: MessageParams,
     req: JsonRpcRequest<unknown>,
