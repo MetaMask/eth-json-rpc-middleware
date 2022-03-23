@@ -381,7 +381,9 @@ export function createWalletMiddleware({
     req: JsonRpcRequest<unknown>,
   ): Promise<string> {
     if (typeof address === 'string' && address.length > 0) {
-      // ensure address is included in provided accounts
+      // ensure address is included in provided accounts. `false` is passed to `getAccounts`
+      // so that an "unauthorized" error is thrown if the requester does not have the `eth_accounts`
+      // permission.
       const accounts: string[] = await getAccounts(req, false);
       const normalizedAccounts: string[] = accounts.map((_address) =>
         _address.toLowerCase(),
