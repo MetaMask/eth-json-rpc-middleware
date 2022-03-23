@@ -393,6 +393,7 @@ export function createWalletMiddleware({
       if (normalizedAccounts.includes(normalizedAddress)) {
         return normalizedAddress;
       }
+      throw ethErrors.provider.unauthorized();
     }
     throw ethErrors.rpc.invalidParams({
       message: `Invalid parameters: must provide an Ethereum address.`,
