@@ -25,6 +25,7 @@ interface Request {
   method: string;
   headers: Record<string, string>;
   body: string;
+  credentials?: 'include' | 'omit' | 'same-origin';
 }
 interface FetchConfig {
   fetchUrl: string;
@@ -33,6 +34,7 @@ interface FetchConfig {
 interface FetchMiddlewareOptions {
   rpcUrl: string;
   originHttpHeaderKey?: string;
+  sendCredentials?: boolean;
 }
 
 interface FetchMiddlewareFromReqOptions extends FetchMiddlewareOptions {
@@ -42,12 +44,14 @@ interface FetchMiddlewareFromReqOptions extends FetchMiddlewareOptions {
 export function createFetchMiddleware({
   rpcUrl,
   originHttpHeaderKey,
+  sendCredentials,
 }: FetchMiddlewareOptions): JsonRpcMiddleware<string[], Block> {
   return createAsyncMiddleware(async (req, res, _next) => {
     const { fetchUrl, fetchParams } = createFetchConfigFromReq({
       req,
       rpcUrl,
       originHttpHeaderKey,
+      sendCredentials,
     });
 
     // attempt request multiple times
@@ -129,6 +133,7 @@ export function createFetchConfigFromReq({
   req,
   rpcUrl,
   originHttpHeaderKey,
+  sendCredentials,
 }: FetchMiddlewareFromReqOptions): FetchConfig {
   const parsedUrl: URL = new URL(rpcUrl);
   const fetchUrl: string = normalizeUrlFromParsed(parsedUrl);
@@ -168,6 +173,10 @@ export function createFetchConfigFromReq({
   // optional: add request origin as header
   if (originHttpHeaderKey && originDomain) {
     fetchParams.headers[originHttpHeaderKey] = originDomain;
+  }
+
+  if (sendCredentials === true) {
+    fetchParams.credentials = 'include';
   }
 
   return { fetchUrl, fetchParams };
