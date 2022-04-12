@@ -1,5 +1,13 @@
-import { createAsyncMiddleware, JsonRpcMiddleware } from 'json-rpc-engine';
-import { EthereumRpcError, ethErrors } from 'eth-rpc-errors';
+import {
+  createAsyncMiddleware,
+  JsonRpcMiddleware,
+  JsonRpcRequest,
+} from 'json-rpc-engine';
+import {
+  EthereumRpcError,
+  ethErrors,
+  getMessageFromCode,
+} from 'eth-rpc-errors';
 import { Payload, Block } from './utils/cache';
 
 /* eslint-disable node/global-require,@typescript-eslint/no-require-imports */
@@ -68,7 +76,7 @@ export function createFetchMiddleware({
             `FetchMiddleware - failed to parse response body: "${rawBody}"`,
           );
         }
-        const result: Block = parseResponse(fetchRes, fetchBody);
+        const result: Block = parseResponse(fetchRes, fetchBody, req);
         // set result and exit retry loop
         res.result = result;
         return;
@@ -106,7 +114,11 @@ function checkForHttpErrors(fetchRes: Response): void {
   }
 }
 
-function parseResponse(fetchRes: Response, body: Record<string, Block>): Block {
+function parseResponse(
+  fetchRes: Response,
+  body: Record<string, Block>,
+  req: JsonRpcRequest<unknown>,
+): Block {
   // check for error code
   if (fetchRes.status !== 200) {
     throw ethErrors.rpc.internal({
@@ -117,9 +129,21 @@ function parseResponse(fetchRes: Response, body: Record<string, Block>): Block {
 
   // check for rpc error
   if (body.error) {
-    throw ethErrors.rpc.internal({
-      data: body.error,
-    });
+    console.log('body.error', body.error)
+    const reqData = { req, res: body };
+    if (body.error.code) {
+      throw new EthereumRpcError(
+        Number(body.error.code),
+        String(body.error.message) ||
+          getMessageFromCode(Number(body.error.code)),
+        reqData,
+      );
+    } else {
+      throw new Error('yabdab')
+      throw ethErrors.rpc.internal({
+        data: reqData,
+      });
+    }
   }
   // return successful result
   return body.result;

@@ -81,65 +81,141 @@ test('fetch - auth in url', (t) => {
   t.end();
 });
 
-test('fetch - server test', (t) => {
-  const rpcUrl = 'http://localhost:3000/abc/xyz';
-
-  const req = {
-    method: 'eth_getBalance',
-    params: ['0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 'latest'],
-  };
-
-  const rpcRes = { id: 1 };
-  let server;
-  let serverSideRequest;
-  let serverSidePayload;
-
-  series([createServer, makeRequest, closeServer], (err) => {
-    t.ifError(err, 'should not error');
-    // validate request
-    t.equals(serverSideRequest.headers.accept, 'application/json');
-    t.equals(serverSideRequest.headers['content-type'], 'application/json');
-    t.equals(serverSideRequest.method, 'POST');
-    // eslint-disable-next-line node/no-deprecated-api
-    t.equals(serverSideRequest.url, url.parse(rpcUrl).path);
-    t.deepEquals(serverSidePayload, req);
-    // validate response
-    t.deepEquals(rpcRes, { id: 1, result: 42 });
-    t.end();
-  });
-
-  function requestHandler(request, response) {
-    request.pipe(
-      concat((rawRequestBody) => {
-        const payload = JSON.parse(rawRequestBody.toString());
-        // save request details
-        serverSideRequest = request;
-        serverSidePayload = payload;
-        // send response
-        const responseBody = JSON.stringify({
-          id: 1,
-          result: 42,
-        });
-        response.end(responseBody);
-      }),
-    );
-  }
-
-  function createServer(cb) {
-    server = http.createServer(requestHandler);
-    server.listen(3000, cb);
-  }
-
-  function closeServer(cb) {
-    server.close(cb);
-  }
-
-  function makeRequest(cb) {
-    const middleware = createFetchMiddleware({ rpcUrl });
-    middleware(req, rpcRes, failTest, cb);
-  }
-
-  function failTest() {
-    t.fail('something broke');
-  }
+serverTest('fetch - server test', {
+  createReq() {
+    return {
+      id: 1,
+      json_rpc: '2.0',
+      method: 'eth_getBalance',
+      params: ['0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 'latest'],
+    };
+  },
+  handleReq() {
+    return {
+      id: 1,
+      result: 42,
+    };
+  },
+  afternFn(t, res) {
+    t.deepEquals(res, {
+      id: 1,
+      result: 42,
+    });
+  },
 });
+
+serverTest('fetch - server with error code', {
+  createReq() {
+    return {
+      id: 1,
+      json_rpc: '2.0',
+      method: 'eth_getBalance',
+      params: ['0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 'latest'],
+    };
+  },
+  handleReq() {
+    return {
+      id: 1,
+      error: {
+        code: 42,
+        message: 'dank',
+      },
+    };
+  },
+  afternFn(t, res) {
+    t.deepEquals(res, {
+      id: 1,
+      error: {
+        code: 42,
+        message: 'dank',
+      },
+    });
+  },
+});
+
+serverTest('fetch - server with NO error code', {
+  createReq() {
+    return {
+      id: 1,
+      json_rpc: '2.0',
+      method: 'eth_getBalance',
+      params: ['0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 'latest'],
+    };
+  },
+  handleReq() {
+    return {
+      id: 1,
+      error: {
+        message: 'big baloo',
+      },
+    };
+  },
+  afternFn(t, res) {
+    t.deepEquals(res, {
+      id: 1,
+      error: {
+        message: 'big baloo',
+      },
+    });
+  },
+});
+
+function serverTest(label, { createReq, handleReq, afternFn }) {
+  test(label, (t) => {
+    const rpcUrl = 'http://localhost:3000/abc/xyz';
+    const clientReq = createReq();
+    const clientRes = { id: clientReq.id };
+
+    let server;
+    let serverSideNetworkRequest;
+    let serverSideReq;
+    let serverSideRes;
+
+    series([createServer, makeRequest, closeServer], (err) => {
+      t.ifError(err, 'should not error');
+      // validate request
+      t.equals(serverSideNetworkRequest.headers.accept, 'application/json');
+      t.equals(
+        serverSideNetworkRequest.headers['content-type'],
+        'application/json',
+      );
+      t.equals(serverSideNetworkRequest.method, 'POST');
+      // eslint-disable-next-line node/no-deprecated-api
+      t.equals(serverSideNetworkRequest.url, url.parse(rpcUrl).path);
+      afternFn(t, serverSideRes);
+      t.end();
+    });
+
+    function requestHandler(request, response) {
+      request.pipe(
+        concat((rawRequestBody) => {
+          // save request details
+          serverSideNetworkRequest = request;
+          serverSideReq = JSON.parse(rawRequestBody.toString());
+          serverSideRes = handleReq(serverSideReq);
+          // send response
+          const responseBody = JSON.stringify(serverSideRes);
+          response.end(responseBody);
+        }),
+      );
+    }
+
+    function createServer(cb) {
+      server = http.createServer(requestHandler);
+      server.listen(3000, cb);
+    }
+
+    function closeServer(cb) {
+      server.close(cb);
+    }
+
+    function makeRequest(cb) {
+      const middleware = createFetchMiddleware({ rpcUrl });
+      middleware(clientReq, clientRes, failTest, (err) => cb());
+    }
+
+    function failTest() {
+      t.fail('something broke');
+    }
+  });
+}
