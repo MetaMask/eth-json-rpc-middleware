@@ -2,7 +2,7 @@ import { JsonRpcRequest, PendingJsonRpcResponse } from 'json-rpc-engine';
 import stringify from 'json-stable-stringify';
 import SafeEventEmitter from '@metamask/safe-event-emitter';
 
-export type Payload = Partial<JsonRpcRequest<string[]>>;
+export type Payload = Partial<JsonRpcRequest<any[]>>;
 
 export interface JsonRpcRequestToCache extends JsonRpcRequest<string[]> {
   skipCache: boolean;

@@ -18,7 +18,7 @@ const RETRIABLE_ERRORS: string[] = [
   'Failed to fetch',
 ];
 
-interface PayloadwithOrgin extends Payload {
+export interface PayloadwithOrgin extends Payload {
   origin?: string;
 }
 interface Request {
