@@ -54,7 +54,6 @@ describe('block ref', () => {
       params: [testAddresses[0], 'latest'],
     });
 
-    // expect(hitCount).toEqual(1);
     expect(providerReqs[1].params[1]).toEqual('0x0');
     expect(spy).toHaveBeenCalled();
   });
