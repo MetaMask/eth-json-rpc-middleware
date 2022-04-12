@@ -39,7 +39,6 @@ describe('block ref', () => {
 
     engine.push(createBlockRefMiddleware({ blockTracker, provider }));
 
-    // let hitCount = 0;
     engine.push((_req, res, _next, end) => {
       if (res.result) {
         end();
