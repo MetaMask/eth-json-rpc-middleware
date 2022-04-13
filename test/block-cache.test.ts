@@ -1,4 +1,4 @@
-import { PollingBlockTracker, Provider } from 'eth-block-tracker';
+import { PollingBlockTracker } from 'eth-block-tracker';
 import { JsonRpcEngine } from 'json-rpc-engine';
 import pify from 'pify';
 import { providerFromEngine, createBlockCacheMiddleware } from '../src';
@@ -12,7 +12,7 @@ function createTestSetup() {
   const provider = providerFromEngine(engine);
 
   const blockTracker = new PollingBlockTracker({
-    provider: provider as Provider,
+    provider,
     pollingInterval: 200,
   });
 
@@ -25,7 +25,7 @@ describe('block cache', () => {
     const spy = jest
       .spyOn(provider, 'sendAsync')
       .mockImplementation((req, cb) => {
-        cb(undefined as any, { id: req.id, result: '0x0' } as any);
+        cb(undefined, { id: req.id, result: '0x0', jsonrpc: '2.0' });
       });
     let hitCount = 0;
 

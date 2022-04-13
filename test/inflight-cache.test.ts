@@ -1,14 +1,13 @@
 import { JsonRpcEngine } from 'json-rpc-engine';
 import pify from 'pify';
-import { providerFromEngine, createInflightCacheMiddleware } from '../src';
+import { createInflightCacheMiddleware } from '../src';
 
 function createTestSetup() {
   // raw data source
   // create block tracker
   // create higher level
   const engine = new JsonRpcEngine();
-  const provider = providerFromEngine(engine);
-  return { engine, provider };
+  return { engine };
 }
 
 describe('inflight cache', () => {
