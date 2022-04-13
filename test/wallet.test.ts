@@ -37,7 +37,7 @@ describe('wallet', () => {
       expect(coinbaseResult.result).toEqual(null);
     });
 
-    it('wallet coinbase returns the correct value from getAccounts', async () => {
+    it('should return the correct value from getAccounts', async () => {
       const { engine } = createTestSetup();
       const getAccounts = async () => testAddresses.slice();
       engine.push(createWalletMiddleware({ getAccounts }));
@@ -47,7 +47,7 @@ describe('wallet', () => {
       expect(coinbaseResult.result).toEqual(testAddresses[0]);
     });
 
-    it('wallet coinbase returns the correct value from getAccounts with multiple accounts', async () => {
+    it('should return the correct value from getAccounts with multiple accounts', async () => {
       const { engine } = createTestSetup();
       const getAccounts = async () => testAddresses.slice(0, 2);
       engine.push(createWalletMiddleware({ getAccounts }));
@@ -59,7 +59,7 @@ describe('wallet', () => {
   });
 
   describe('transactions', () => {
-    it('valid address for processTransaction', async () => {
+    it('processes transaction with valid address', async () => {
       const { engine } = createTestSetup();
       const getAccounts = async () => testAddresses.slice(0, 2);
       const witnessedTxParams: TransactionParams[] = [];
@@ -81,7 +81,7 @@ describe('wallet', () => {
       expect(witnessedTxParams[0]).toStrictEqual(txParams);
     });
 
-    it('invalid address for processTransaction', async () => {
+    it('throws when provided an invalid address', async () => {
       const { engine } = createTestSetup();
       const getAccounts = async () => testAddresses.slice(0, 2);
       const witnessedTxParams: TransactionParams[] = [];
@@ -106,7 +106,7 @@ describe('wallet', () => {
   });
 
   describe('signTransaction', () => {
-    it('valid address for signTransaction', async () => {
+    it('should process sign transaction when provided a valid address', async () => {
       const { engine } = createTestSetup();
       const getAccounts = async () => testAddresses.slice(0, 2);
       const witnessedTxParams: TransactionParams[] = [];
@@ -131,7 +131,7 @@ describe('wallet', () => {
       expect(witnessedTxParams[0]).toStrictEqual(txParams);
     });
 
-    it('invalid address for signTransaction', async () => {
+    it('should throw when provided invalid address', async () => {
       const { engine } = createTestSetup();
       const getAccounts = async () => testAddresses.slice(0, 2);
       const witnessedTxParams: TransactionParams[] = [];
@@ -193,7 +193,7 @@ describe('wallet', () => {
       });
     });
 
-    it('invalid address for signTypedData', async () => {
+    it('should throw with invalid address', async () => {
       const { engine } = createTestSetup();
       const getAccounts = async () => testAddresses.slice();
       const witnessedMsgParams: MessageParams[] = [];
@@ -226,7 +226,7 @@ describe('wallet', () => {
   });
 
   describe('sign', () => {
-    it('valid address for sign', async () => {
+    it('should sign with a valid address', async () => {
       const { engine } = createTestSetup();
       const getAccounts = async () => testAddresses.slice();
       const witnessedMsgParams: MessageParams[] = [];
@@ -256,7 +256,7 @@ describe('wallet', () => {
       });
     });
 
-    it('invalid address for sign', async () => {
+    it('should error when provided invalid address', async () => {
       const { engine } = createTestSetup();
       const getAccounts = async () => testAddresses.slice();
       const witnessedMsgParams: MessageParams[] = [];
@@ -286,7 +286,7 @@ describe('wallet', () => {
   });
 
   describe('personalRecover', () => {
-    it('geth kumavis manual recover', async () => {
+    it('should recover with "geth kumavis manual recover"', async () => {
       const getAccounts = async () => testAddresses.slice();
       const signParams = {
         testLabel: 'geth kumavis manual I recover',
@@ -310,7 +310,7 @@ describe('wallet', () => {
       expect(ecrecoverResult).toEqual(signParams.addressHex);
     });
 
-    it('geth kumavis manual recover II', async () => {
+    it('should recover with "geth kumavis manual recover II"', async () => {
       const getAccounts = async () => testAddresses.slice();
       const signParams = {
         testLabel: 'geth kumavis manual II recover',

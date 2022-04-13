@@ -11,7 +11,7 @@ function createTestSetup() {
 }
 
 describe('inflight cache', () => {
-  it('basic', async () => {
+  it('should cache an inflight request and only hit provider once', async () => {
     const { engine } = createTestSetup();
     let hitCount = 0;
 

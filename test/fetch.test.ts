@@ -1,7 +1,7 @@
 import { createFetchConfigFromReq, PayloadWithOrigin } from '../src';
 
 describe('fetch', () => {
-  it('basic', async () => {
+  it('should create a fetch config from a request', async () => {
     const req = {
       method: 'eth_getBlockByNumber',
       params: ['0x482103', true],
@@ -19,7 +19,7 @@ describe('fetch', () => {
     });
   });
 
-  it('origin header', async () => {
+  it('should create a fetch config with origin header', async () => {
     const req: PayloadWithOrigin = {
       method: 'eth_getBlockByNumber',
       params: ['0x482103', true],
