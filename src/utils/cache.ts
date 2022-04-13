@@ -1,6 +1,6 @@
 import { JsonRpcRequest, JsonRpcResponse } from 'json-rpc-engine';
 import stringify from 'json-stable-stringify';
-import { Provider } from 'eth-block-tracker';
+import SafeEventEmitter from '@metamask/safe-event-emitter';
 
 export type Payload = Partial<JsonRpcRequest<any[]>>;
 
@@ -26,7 +26,11 @@ export type SendCallBack = (
   providerRes: JsonRpcResponse<any>,
 ) => void;
 
-export interface SafeEventEmitterProvider extends Provider {
+export interface SafeEventEmitterProvider extends SafeEventEmitter {
+  sendAsync: <T, U>(
+    req: JsonRpcRequest<T>,
+    cb: (err: unknown, response: JsonRpcResponse<U>) => void,
+  ) => void;
   send: (req: JsonRpcRequest<any>, callback: SendCallBack) => void;
 }
 

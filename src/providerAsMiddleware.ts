@@ -8,9 +8,9 @@ export function providerAsMiddleware(
     // send request to provider
     provider.sendAsync(
       req,
-      (err: Error, providerRes: PendingJsonRpcResponse<any>) => {
+      (err: unknown, providerRes: PendingJsonRpcResponse<any>) => {
         // forward any error
-        if (err) {
+        if (err instanceof Error) {
           return end(err);
         }
         // copy provider response onto original response
