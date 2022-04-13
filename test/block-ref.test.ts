@@ -17,7 +17,6 @@ function createTestSetup() {
 
   const blockTracker = new PollingBlockTracker({
     provider: provider as Provider,
-    pollingInterval: 200,
   });
 
   return { engine, provider, blockTracker };
