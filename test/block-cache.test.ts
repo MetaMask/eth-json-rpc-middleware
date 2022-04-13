@@ -19,7 +19,7 @@ function createTestSetup() {
 }
 
 describe('block cache', () => {
-  it('getBalance + undefined blockTag', async () => {
+  it('should cache a request and only hit the provider once', async () => {
     const { engine, provider, blockTracker } = createTestSetup();
     const spy = jest
       .spyOn(provider, 'sendAsync')

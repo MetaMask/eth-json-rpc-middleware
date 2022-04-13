@@ -159,13 +159,13 @@ describe('wallet', () => {
   });
 
   describe('signTypedData', () => {
-    it('valid address for signTypedData', async () => {
+    it('should sign with a valid address', async () => {
       const { engine } = createTestSetup();
       const getAccounts = async () => testAddresses.slice();
       const witnessedMsgParams: MessageParams[] = [];
       const processTypedMessage = async (msgParams: MessageParams) => {
         witnessedMsgParams.push(msgParams);
-        return testTxHash;
+        return testMsgSig;
       };
 
       engine.push(createWalletMiddleware({ getAccounts, processTypedMessage }));
@@ -185,7 +185,7 @@ describe('wallet', () => {
       const signMsgResult = signMsgResponse.result;
 
       expect(signMsgResult).toBeDefined();
-      expect(signMsgResult).toEqual(testTxHash);
+      expect(signMsgResult).toEqual(testMsgSig);
       expect(witnessedMsgParams.length).toEqual(1);
       expect(witnessedMsgParams[0]).toStrictEqual({
         from: testAddresses[0],
@@ -199,7 +199,7 @@ describe('wallet', () => {
       const witnessedMsgParams: MessageParams[] = [];
       const processTypedMessage = async (msgParams: MessageParams) => {
         witnessedMsgParams.push(msgParams);
-        return testTxHash;
+        return testMsgSig;
       };
 
       engine.push(createWalletMiddleware({ getAccounts, processTypedMessage }));
