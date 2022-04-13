@@ -1,4 +1,4 @@
-import { createFetchConfigFromReq, PayloadwithOrgin } from '../src';
+import { createFetchConfigFromReq, PayloadWithOrigin } from '../src';
 
 describe('fetch', () => {
   it('basic', async () => {
@@ -20,7 +20,7 @@ describe('fetch', () => {
   });
 
   it('origin header', async () => {
-    const req: PayloadwithOrgin = {
+    const req: PayloadWithOrigin = {
       method: 'eth_getBlockByNumber',
       params: ['0x482103', true],
       origin: 'happydapp.gov',
