@@ -16,9 +16,9 @@ export type BlockCache = Record<string, Block>;
 
 export type Cache = Record<number, BlockCache>;
 
-export type SendAsyncCallBack = (
-  err: any,
-  providerRes: JsonRpcResponse<any>,
+export type SendAsyncCallBack<T> = (
+  err: unknown,
+  providerRes: JsonRpcResponse<T>,
 ) => void;
 
 export type SendCallBack = (
@@ -27,10 +27,7 @@ export type SendCallBack = (
 ) => void;
 
 export interface SafeEventEmitterProvider extends SafeEventEmitter {
-  sendAsync: <T, U>(
-    req: JsonRpcRequest<T>,
-    cb: (err: unknown, response: JsonRpcResponse<U>) => void,
-  ) => void;
+  sendAsync: <T, U>(req: JsonRpcRequest<T>, cb: SendAsyncCallBack<U>) => void;
   send: (req: JsonRpcRequest<any>, callback: SendCallBack) => void;
 }
 
