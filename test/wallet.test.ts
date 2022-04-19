@@ -383,13 +383,8 @@ describe('wallet', () => {
         params: [message, testUnkownAddress],
       };
 
-      try {
-        await pify(engine.handle).call(engine, payload);
-      } catch (e: any) {
-        expect(e.message).toEqual(
-          'The requested account and/or method has not been authorized by the user.',
-        );
-      }
+      const promise = pify(engine.handle).call(engine, payload);
+      await expect(promise).rejects.toThrow('The requested account and/or method has not been authorized by the user.')
     });
   });
 
