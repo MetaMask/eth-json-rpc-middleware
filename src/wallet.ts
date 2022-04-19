@@ -379,7 +379,11 @@ export function createWalletMiddleware({
     address: string,
     req: JsonRpcRequest<unknown>,
   ): Promise<string> {
-    if (typeof address === 'string' && address.length > 0) {
+    if (
+      typeof address === 'string' &&
+      address.length > 0 &&
+      resemblesAddress(address)
+    ) {
       // ensure address is included in provided accounts. `false` is passed to `getAccounts`
       // so that an "unauthorized" error is thrown if the requester does not have the `eth_accounts`
       // permission.

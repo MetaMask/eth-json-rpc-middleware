@@ -91,7 +91,7 @@ describe('wallet', () => {
       };
       engine.push(createWalletMiddleware({ getAccounts, processTransaction }));
       const txParams = {
-        from: testUnkownAddress,
+        from: '0x3d',
       };
 
       const payload = { method: 'eth_sendTransaction', params: [txParams] };
@@ -100,6 +100,29 @@ describe('wallet', () => {
       } catch (e: any) {
         expect(e.message).toEqual(
           'Invalid parameters: must provide an Ethereum address.',
+        );
+      }
+    });
+
+    it('throws unauthorized for unknown addresses', async () => {
+      const { engine } = createTestSetup();
+      const getAccounts = async () => testAddresses.slice(0, 2);
+      const witnessedTxParams: TransactionParams[] = [];
+      const processTransaction = async (_txParams: TransactionParams) => {
+        witnessedTxParams.push(_txParams);
+        return testTxHash;
+      };
+      engine.push(createWalletMiddleware({ getAccounts, processTransaction }));
+      const txParams = {
+        from: testUnkownAddress,
+      };
+
+      const payload = { method: 'eth_sendTransaction', params: [txParams] };
+      try {
+        await pify(engine.handle).call(engine, payload);
+      } catch (e: any) {
+        expect(e.message).toEqual(
+          'The requested account and/or method has not been authorized by the user.',
         );
       }
     });
@@ -144,7 +167,7 @@ describe('wallet', () => {
         createWalletMiddleware({ getAccounts, processSignTransaction }),
       );
       const txParams = {
-        from: testAddresses[0],
+        from: '0x3',
       };
 
       const payload = { method: 'eth_signTransaction', params: [txParams] };
@@ -153,6 +176,32 @@ describe('wallet', () => {
       } catch (e: any) {
         expect(e.message).toEqual(
           'Invalid parameters: must provide an Ethereum address.',
+        );
+      }
+    });
+
+    it('should throw when provided unknown address', async () => {
+      const { engine } = createTestSetup();
+      const getAccounts = async () => testAddresses.slice(0, 2);
+      const witnessedTxParams: TransactionParams[] = [];
+      const processSignTransaction = async (_txParams: TransactionParams) => {
+        witnessedTxParams.push(_txParams);
+        return testTxHash;
+      };
+
+      engine.push(
+        createWalletMiddleware({ getAccounts, processSignTransaction }),
+      );
+      const txParams = {
+        from: testAddresses[0],
+      };
+
+      const payload = { method: 'eth_signTransaction', params: [txParams] };
+      try {
+        await pify(engine.handle).call(engine, payload);
+      } catch (e: any) {
+        expect(e.message).toEqual(
+          'The requested account and/or method has not been authorized by the user.',
         );
       }
     });
@@ -213,13 +262,44 @@ describe('wallet', () => {
 
       const payload = {
         method: 'eth_signTypedData',
-        params: [message, testUnkownAddress],
+        params: [message, '0x3d'],
       };
       try {
         await pify(engine.handle).call(engine, payload);
       } catch (e: any) {
         expect(e.message).toEqual(
           'Invalid parameters: must provide an Ethereum address.',
+        );
+      }
+    });
+
+    it('should throw with unknown address', async () => {
+      const { engine } = createTestSetup();
+      const getAccounts = async () => testAddresses.slice();
+      const witnessedMsgParams: MessageParams[] = [];
+      const processTypedMessage = async (msgParams: MessageParams) => {
+        witnessedMsgParams.push(msgParams);
+        return testMsgSig;
+      };
+
+      engine.push(createWalletMiddleware({ getAccounts, processTypedMessage }));
+      const message = [
+        {
+          type: 'string',
+          name: 'message',
+          value: 'Hi, Alice!',
+        },
+      ];
+
+      const payload = {
+        method: 'eth_signTypedData',
+        params: [message, testUnkownAddress],
+      };
+      try {
+        await pify(engine.handle).call(engine, payload);
+      } catch (e: any) {
+        expect(e.message).toEqual(
+          'The requested account and/or method has not been authorized by the user.',
         );
       }
     });
@@ -272,7 +352,7 @@ describe('wallet', () => {
       const message = 'haay wuurl';
       const payload = {
         method: 'personal_sign',
-        params: [message, testUnkownAddress],
+        params: [message, '0x3d'],
       };
 
       try {
@@ -280,6 +360,34 @@ describe('wallet', () => {
       } catch (e: any) {
         expect(e.message).toEqual(
           'Invalid parameters: must provide an Ethereum address.',
+        );
+      }
+    });
+
+    it('should error when provided unknown address', async () => {
+      const { engine } = createTestSetup();
+      const getAccounts = async () => testAddresses.slice();
+      const witnessedMsgParams: MessageParams[] = [];
+      const processPersonalMessage = async (msgParams: MessageParams) => {
+        witnessedMsgParams.push(msgParams);
+        return testMsgSig;
+      };
+
+      engine.push(
+        createWalletMiddleware({ getAccounts, processPersonalMessage }),
+      );
+
+      const message = 'haay wuurl';
+      const payload = {
+        method: 'personal_sign',
+        params: [message, testUnkownAddress],
+      };
+
+      try {
+        await pify(engine.handle).call(engine, payload);
+      } catch (e: any) {
+        expect(e.message).toEqual(
+          'The requested account and/or method has not been authorized by the user.',
         );
       }
     });
