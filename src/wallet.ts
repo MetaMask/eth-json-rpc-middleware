@@ -23,7 +23,9 @@ interface TypedMessageParams extends MessageParams {
 interface WalletMiddlewareOptions {
   getAccounts: (
     req: JsonRpcRequest<unknown>,
-    suppressUnauthorized?: boolean,
+    options?: {
+      suppressUnauthorized?: boolean;
+    },
   ) => Promise<string[]>;
   processDecryptMessage?: (
     msgParams: MessageParams,
@@ -384,10 +386,12 @@ export function createWalletMiddleware({
       address.length > 0 &&
       resemblesAddress(address)
     ) {
-      // ensure address is included in provided accounts. `false` is passed to `getAccounts`
+      // ensure address is included in provided accounts. `suppressUnauthorized: false` is passed to `getAccounts`
       // so that an "unauthorized" error is thrown if the requester does not have the `eth_accounts`
       // permission.
-      const accounts: string[] = await getAccounts(req, false);
+      const accounts: string[] = await getAccounts(req, {
+        suppressUnauthorized: false,
+      });
       const normalizedAccounts: string[] = accounts.map((_address) =>
         _address.toLowerCase(),
       );
