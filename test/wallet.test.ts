@@ -190,7 +190,7 @@ describe('wallet', () => {
         createWalletMiddleware({ getAccounts, processSignTransaction }),
       );
       const txParams = {
-        from: testAddresses[0],
+        from: testUnkownAddress,
       };
 
       const payload = { method: 'eth_signTransaction', params: [txParams] };
