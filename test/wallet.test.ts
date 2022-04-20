@@ -119,7 +119,9 @@ describe('wallet', () => {
 
       const payload = { method: 'eth_sendTransaction', params: [txParams] };
       const promise = pify(engine.handle).call(engine, payload);
-      await expect(promise).rejects.toThrow('The requested account and/or method has not been authorized by the user.')
+      await expect(promise).rejects.toThrow(
+        'The requested account and/or method has not been authorized by the user.',
+      );
     });
   });
 
@@ -193,7 +195,9 @@ describe('wallet', () => {
 
       const payload = { method: 'eth_signTransaction', params: [txParams] };
       const promise = pify(engine.handle).call(engine, payload);
-      await expect(promise).rejects.toThrow('The requested account and/or method has not been authorized by the user.')
+      await expect(promise).rejects.toThrow(
+        'The requested account and/or method has not been authorized by the user.',
+      );
     });
   });
 
@@ -286,7 +290,9 @@ describe('wallet', () => {
         params: [message, testUnkownAddress],
       };
       const promise = pify(engine.handle).call(engine, payload);
-      await expect(promise).rejects.toThrow('The requested account and/or method has not been authorized by the user.')
+      await expect(promise).rejects.toThrow(
+        'The requested account and/or method has not been authorized by the user.',
+      );
     });
   });
 
@@ -369,7 +375,9 @@ describe('wallet', () => {
       };
 
       const promise = pify(engine.handle).call(engine, payload);
-      await expect(promise).rejects.toThrow('The requested account and/or method has not been authorized by the user.')
+      await expect(promise).rejects.toThrow(
+        'The requested account and/or method has not been authorized by the user.',
+      );
     });
   });
 
