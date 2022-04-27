@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added `suppressUnauthorized` param to `getAccounts` ([#116](https://github.com/MetaMask/eth-json-rpc-middleware/pull/116))
 
+### Security
+- Bump `node-fetch` to resolve vulnerability ([#115](https://github.com/MetaMask/eth-json-rpc-middleware/pull/115))
+
 ## [8.0.1]
 ### Fixed
 - Restore support for query strings in fetch middleware  ([#109](https://github.com/MetaMask/eth-json-rpc-middleware/pull/109))
