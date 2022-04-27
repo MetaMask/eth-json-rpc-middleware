@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [8.0.2]
 ### Added
 - Added getAccounts suppressUnauthorized param ([#116](https://github.com/MetaMask/eth-json-rpc-middleware/pull/116))
+
 ### Changed
 - Tests to jest + ts ([#118](https://github.com/MetaMask/eth-json-rpc-middleware/pull/118))
 - async from 2.6.0 to 2.6.4 ([#121](https://github.com/MetaMask/eth-json-rpc-middleware/pull/121))
