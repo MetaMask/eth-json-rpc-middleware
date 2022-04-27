@@ -7,14 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [8.0.2]
-### Uncategorized
+### Added
 - Added getAccounts suppressUnauthorized param ([#116](https://github.com/MetaMask/eth-json-rpc-middleware/pull/116))
-- Bump async from 2.6.0 to 2.6.4 ([#121](https://github.com/MetaMask/eth-json-rpc-middleware/pull/121))
-- Changed tests to jest + ts ([#118](https://github.com/MetaMask/eth-json-rpc-middleware/pull/118))
-- Bump ajv from 6.10.2 to 6.12.6 ([#114](https://github.com/MetaMask/eth-json-rpc-middleware/pull/114))
-- Bump simple-get from 2.8.1 to 2.8.2 ([#120](https://github.com/MetaMask/eth-json-rpc-middleware/pull/120))
-- Bump minimist from 1.2.5 to 1.2.6 ([#117](https://github.com/MetaMask/eth-json-rpc-middleware/pull/117))
-- Update node-fetch minimum ([#115](https://github.com/MetaMask/eth-json-rpc-middleware/pull/115))
+### Changed
+- Tests to jest + ts ([#118](https://github.com/MetaMask/eth-json-rpc-middleware/pull/118))
+- async from 2.6.0 to 2.6.4 ([#121](https://github.com/MetaMask/eth-json-rpc-middleware/pull/121))
+- ajv from 6.10.2 to 6.12.6 ([#114](https://github.com/MetaMask/eth-json-rpc-middleware/pull/114))
+- simple-get from 2.8.1 to 2.8.2 ([#120](https://github.com/MetaMask/eth-json-rpc-middleware/pull/120))
+- minimist from 1.2.5 to 1.2.6 ([#117](https://github.com/MetaMask/eth-json-rpc-middleware/pull/117))
+- node-fetch minimum ([#115](https://github.com/MetaMask/eth-json-rpc-middleware/pull/115))
 
 ## [8.0.1]
 ### Fixed
