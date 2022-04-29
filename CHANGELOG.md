@@ -7,10 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [8.1.0]
-### Uncategorized
-- Expose SafeEventEmitterProvider type ([#127](https://github.com/MetaMask/eth-json-rpc-middleware/pull/127))
-- Move eth-block-tracker to dependencies ([#125](https://github.com/MetaMask/eth-json-rpc-middleware/pull/125))
-- Fix prepublishOnly script ([#124](https://github.com/MetaMask/eth-json-rpc-middleware/pull/124))
+### Added
+- Expose `SafeEventEmitterProvider` type ([#127](https://github.com/MetaMask/eth-json-rpc-middleware/pull/127))
+
+### Fixed
+- Move `eth-block-tracker` from `devDependencies` to `dependencies` ([#125](https://github.com/MetaMask/eth-json-rpc-middleware/pull/125))
 
 ## [8.0.2]
 ### Added
