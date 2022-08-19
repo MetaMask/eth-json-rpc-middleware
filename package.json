@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@metamask/safe-event-emitter": "^2.0.0",
+    "@metamask/utils": "^3.0.0",
     "btoa": "^1.2.1",
     "clone": "^2.1.1",
     "eth-block-tracker": "^5.0.1",
@@ -56,6 +57,7 @@
     "@metamask/eslint-config-typescript": "^8.0.0",
     "@types/btoa": "^1.2.3",
     "@types/clone": "^2.1.0",
+    "@types/debug": "^4.1.7",
     "@types/eth-sig-util": "^2.1.0",
     "@types/jest": "^27.4.1",
     "@types/json-stable-stringify": "^1.0.32",
