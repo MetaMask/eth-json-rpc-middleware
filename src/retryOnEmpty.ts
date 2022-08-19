@@ -78,7 +78,7 @@ export function createRetryOnEmptyMiddleware({
     // skip if request block number is higher than current
     if (blockRefNumber > latestBlockNumber) {
       log(
-        'requested block number %o is higher than latest block number %o, falling through to original request',
+        'Requested block number %o is higher than latest block number %o, falling through to original request',
         blockRefNumber,
         latestBlockNumber,
       );
@@ -86,7 +86,7 @@ export function createRetryOnEmptyMiddleware({
     }
 
     log(
-      'requested block number %o is not higher than latest block number %o, retrying request until non-empty response is received',
+      'Requested block number %o is not higher than latest block number %o, retrying request until non-empty response is received',
       blockRefNumber,
       latestBlockNumber,
     );
@@ -97,11 +97,11 @@ export function createRetryOnEmptyMiddleware({
     const childResponse: PendingJsonRpcResponse<Block> = await retry(
       10,
       async () => {
-        log('performing another request %o', childRequest);
+        log('Performing another request %o', childRequest);
         const attemptResponse: PendingJsonRpcResponse<Block> = await pify(
           (provider as SafeEventEmitterProvider).sendAsync,
         ).call(provider, childRequest);
-        log('response is %o', attemptResponse);
+        log('Response is %o', attemptResponse);
         // verify result
         if (emptyValues.includes(attemptResponse as any)) {
           throw new Error(

@@ -189,11 +189,11 @@ export function createBlockCacheMiddleware({
       requestedBlockNumber = '0x00';
     } else if (blockTag === 'latest') {
       // fetch latest block number
-      log('fetching latest block number to determine cache key');
+      log('Fetching latest block number to determine cache key');
       const latestBlockNumber = await blockTracker.getLatestBlock();
       // clear all cache before latest block
       log(
-        'clearing values stored under block numbers before %o',
+        'Clearing values stored under block numbers before %o',
         latestBlockNumber,
       );
       blockCache.clearBefore(latestBlockNumber);
@@ -211,7 +211,7 @@ export function createBlockCacheMiddleware({
       // cache miss
       // wait for other middleware to handle request
       log(
-        'no cache stored under block number %o, carrying request forward',
+        'No cache stored under block number %o, carrying request forward',
         requestedBlockNumber,
       );
       // eslint-disable-next-line node/callback-return
@@ -220,12 +220,12 @@ export function createBlockCacheMiddleware({
       // add result to cache
       // it's safe to cast res.result as Block, due to runtime type checks
       // performed when strategy.set is called
-      log('populating cache with', res);
+      log('Populating cache with', res);
       await strategy.set(req, requestedBlockNumber, res.result as Block);
     } else {
       // fill in result from cache
       log(
-        'cache hit, reusing cache result stored under block number %o',
+        'Cache hit, reusing cache result stored under block number %o',
         requestedBlockNumber,
       );
       res.result = cacheResult;

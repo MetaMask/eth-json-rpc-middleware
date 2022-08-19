@@ -30,7 +30,7 @@ export function createInflightCacheMiddleware(): JsonRpcMiddleware<
     const cacheId: string | null = cacheIdentifierForPayload(req);
     // if not cacheable, skip
     if (!cacheId) {
-      log('request is not cacheable, proceeding. req = %o', req);
+      log('Request is not cacheable, proceeding. req = %o', req);
       return next();
     }
     // check for matching requests
@@ -40,7 +40,7 @@ export function createInflightCacheMiddleware(): JsonRpcMiddleware<
       // setup the response listener and wait for it to be called
       // it will handle copying the result and request fields
       log(
-        'running %i handler(s) for request %o',
+        'Running %i handler(s) for request %o',
         activeRequestHandlers.length,
         req,
       );
@@ -51,14 +51,14 @@ export function createInflightCacheMiddleware(): JsonRpcMiddleware<
     activeRequestHandlers = [];
     inflightRequests[cacheId] = activeRequestHandlers;
     // allow request to be handled normally
-    log('carrying original request forward %o', req);
+    log('Carrying original request forward %o', req);
     // eslint-disable-next-line node/callback-return
     await next();
     // clear inflight requests
     delete inflightRequests[cacheId];
     // schedule activeRequestHandlers to be handled
     log(
-      'running %i collected handler(s) for request %o',
+      'Running %i collected handler(s) for request %o',
       activeRequestHandlers.length,
       req,
     );

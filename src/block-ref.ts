@@ -56,7 +56,7 @@ export function createBlockRefMiddleware({
       childRequest.params[blockRefIndex] = latestBlockNumber;
     }
     // perform child request
-    log('performing another request %o', childRequest);
+    log('Performing another request %o', childRequest);
     const childRes: PendingJsonRpcResponse<Block> = await pify(
       (provider as SafeEventEmitterProvider).sendAsync,
     ).call(provider, childRequest);
