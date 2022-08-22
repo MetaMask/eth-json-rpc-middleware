@@ -754,11 +754,12 @@
   resolved "https://registry.yarnpkg.com/@metamask/safe-event-emitter/-/safe-event-emitter-2.0.0.tgz#af577b477c683fad17c619a78208cede06f9605c"
   integrity sha512-/kSXhY692qiV1MXu6EeOZvg5nECLclxNXcKCxJ3cXQgYuRymRHpdx/t7JXfsK+JLjwA1e1c1/SBrlQYpusC29Q==
 
-"@metamask/utils@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@metamask/utils/-/utils-3.0.0.tgz#40440cc7aee9c0fb6cdd57a9421aa6d07ce0e1fb"
-  integrity sha512-QnaKWLqh7aFw06V9RbOCuRLagD+dTvNizrYjqhZB5d2AyzMbgSp0PZ7hPw85YMHSRqEj3A5WB77ueVHXwgFgeQ==
+"@metamask/utils@^4.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@metamask/utils/-/utils-3.0.1.tgz#53ed2b9cbbd12b18c1db6929728446633d6a74c4"
+  integrity sha512-FDWQ+MeeWQh0b/w2D50+oVPrRqUIvawDlPia+EH9NCOFN0Ty3KkzkQXfO6FgHKMyR4aWuS4SBOrhWFRW8km6lQ==
   dependencies:
+    "@types/debug" "^4.1.7"
     debug "^4.3.4"
     fast-deep-equal "^3.1.3"
     superstruct "^0.16.0"
