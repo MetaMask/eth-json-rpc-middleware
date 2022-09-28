@@ -493,9 +493,9 @@ function requestMatches(
   requestMatcher: Partial<JsonRpcRequest<unknown>>,
   request: JsonRpcRequest<unknown>,
 ): boolean {
-  return (
-    Object.keys(requestMatcher) as unknown as (keyof typeof requestMatcher)[]
-  ).every((key) => isDeepStrictEqual(requestMatcher[key], request[key]));
+  return (Object.keys(requestMatcher) as (keyof typeof requestMatcher)[]).every(
+    (key) => isDeepStrictEqual(requestMatcher[key], request[key]),
+  );
 }
 
 /**
