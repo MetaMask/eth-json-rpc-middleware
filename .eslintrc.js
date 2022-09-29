@@ -20,6 +20,17 @@ module.exports = {
     {
       files: ['*.test.ts', '*.test.js'],
       extends: ['@metamask/eslint-config-jest'],
+      rules: {
+        'jest/expect-expect': [
+          'error',
+          {
+            assertFunctionNames: [
+              'expect',
+              'expectProviderRequestNotToHaveBeenMade',
+            ],
+          },
+        ],
+      },
     },
   ],
 
