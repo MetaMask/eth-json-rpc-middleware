@@ -10,6 +10,7 @@ import {
   buildMockParamsWithoutBlockParamAt,
   buildSimpleFinalMiddleware,
   buildStubForBlockNumberRequest,
+  buildStubForGenericRequest,
   expectProviderRequestNotToHaveBeenMade,
   ProviderRequestStub,
   requestMatches,
@@ -199,7 +200,7 @@ describe('createRetryOnEmptyMiddleware', () => {
               };
               const sendAsyncSpy = stubProviderRequests(provider, [
                 buildStubForBlockNumberRequest(blockNumber),
-                stubGenericRequest({
+                buildStubForGenericRequest({
                   request,
                   response: (req) => {
                     return {
@@ -259,7 +260,7 @@ describe('createRetryOnEmptyMiddleware', () => {
               };
               stubProviderRequests(provider, [
                 buildStubForBlockNumberRequest(blockNumber),
-                stubGenericRequest({
+                buildStubForGenericRequest({
                   request,
                   response: (req) => {
                     return {
@@ -661,22 +662,14 @@ async function withTestSetup<T>(
     engine.push(middleware);
   }
 
-  if (callback === undefined) {
-    return undefined;
+  try {
+    if (callback === undefined) {
+      return undefined;
+    }
+    return await callback({ engine, provider, blockTracker });
+  } finally {
+    await blockTracker.destroy();
   }
-  return await callback({ engine, provider, blockTracker });
-}
-
-/**
- * Builds a canned response for a request made to `provider.sendAsync`. Intended
- * to be used in conjunction with `stubProviderRequests`. Although not strictly
- * necessary, it helps to assign a proper type to a request/response pair.
- *
- * @param requestStub - The request/response pair.
- * @returns The request/response pair, properly typed.
- */
-function stubGenericRequest<T, U>(requestStub: ProviderRequestStub<T, U>) {
-  return requestStub;
 }
 
 /**
@@ -700,7 +693,7 @@ function stubRequestThatFailsThenFinallySucceeds<T, U>({
   numberOfTimesToFail: number;
   successfulResponse: ProviderRequestStub<T, U>['response'];
 }): ProviderRequestStub<T, U> {
-  return stubGenericRequest({
+  return buildStubForGenericRequest({
     request,
     response: (req, callNumber) => {
       if (callNumber <= numberOfTimesToFail) {
