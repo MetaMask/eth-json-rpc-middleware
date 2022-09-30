@@ -6,12 +6,9 @@ import {
   PendingJsonRpcResponse,
 } from 'json-rpc-engine';
 import pify from 'pify';
-
-import {
-  Block,
-  blockTagParamIndex,
-  SafeEventEmitterProvider,
-} from './utils/cache';
+import { projectLogger, createModuleLogger } from './logging-utils';
+import { blockTagParamIndex } from './utils/cache';
+import { Block, SafeEventEmitterProvider } from './types';
 
 //
 // RetryOnEmptyMiddleware will retry any request with an empty response that has
@@ -20,6 +17,7 @@ import {
 // nodes that are not always in sync with each other.
 //
 
+const log = createModuleLogger(projectLogger, 'retry-on-empty');
 // empty values used to determine if a request should be retried
 // `<nil>` comes from https://github.com/ethereum/go-ethereum/issues/16925
 const emptyValues: (string | null | undefined)[] = [
@@ -79,19 +77,33 @@ export function createRetryOnEmptyMiddleware({
     );
     // skip if request block number is higher than current
     if (blockRefNumber > latestBlockNumber) {
+      log(
+        'Requested block number %o is higher than latest block number %o, falling through to original request',
+        blockRefNumber,
+        latestBlockNumber,
+      );
       return next();
     }
+
+    log(
+      'Requested block number %o is not higher than latest block number %o, trying request until non-empty response is received',
+      blockRefNumber,
+      latestBlockNumber,
+    );
+
     // create child request with specific block-ref
     const childRequest = clone(req);
     // attempt child request until non-empty response is received
     const childResponse: PendingJsonRpcResponse<Block> = await retry(
       10,
       async () => {
+        log('Performing request %o', childRequest);
         const attemptResponse: PendingJsonRpcResponse<Block> = await pify(
           (provider as SafeEventEmitterProvider).sendAsync,
         ).call(provider, childRequest);
+        log('Response is %o', attemptResponse);
         // verify result
-        if (emptyValues.includes(attemptResponse as any)) {
+        if (emptyValues.includes(attemptResponse.result as any)) {
           throw new Error(
             `RetryOnEmptyMiddleware - empty response "${JSON.stringify(
               attemptResponse,
@@ -101,10 +113,15 @@ export function createRetryOnEmptyMiddleware({
         return attemptResponse;
       },
     );
+    log(
+      'Copying result %o and error %o',
+      childResponse.result,
+      childResponse.error,
+    );
     // copy child response onto original response
     res.result = childResponse.result;
     res.error = childResponse.error;
-    return next();
+    return undefined;
   });
 }
 
@@ -116,9 +133,11 @@ async function retry(
     try {
       return await asyncFn();
     } catch (err) {
+      log('(call %i) Request failed, waiting 1s to retry again...', index + 1);
       await timeout(1000);
     }
   }
+  log('Retries exhausted');
   throw new Error('RetryOnEmptyMiddleware - retries exhausted');
 }
 

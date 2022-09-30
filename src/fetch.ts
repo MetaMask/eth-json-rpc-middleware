@@ -1,11 +1,11 @@
 import { createAsyncMiddleware, JsonRpcMiddleware } from 'json-rpc-engine';
 import { EthereumRpcError, ethErrors } from 'eth-rpc-errors';
-import { Payload, Block } from './utils/cache';
+import type { Payload, Block } from './types';
 
-/* eslint-disable node/global-require,@typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-require-imports,@typescript-eslint/no-shadow */
 const fetch = global.fetch || require('node-fetch');
 const btoa = global.btoa || require('btoa');
-/* eslint-enable node/global-require,@typescript-eslint/no-require-imports */
+/* eslint-enable @typescript-eslint/no-require-imports,@typescript-eslint/no-shadow */
 
 const RETRIABLE_ERRORS: string[] = [
   // ignore server overload errors
@@ -18,7 +18,7 @@ const RETRIABLE_ERRORS: string[] = [
   'Failed to fetch',
 ];
 
-interface PayloadwithOrgin extends Payload {
+export interface PayloadWithOrigin extends Payload {
   origin?: string;
 }
 interface Request {
@@ -36,7 +36,7 @@ interface FetchMiddlewareOptions {
 }
 
 interface FetchMiddlewareFromReqOptions extends FetchMiddlewareOptions {
-  req: PayloadwithOrgin;
+  req: PayloadWithOrigin;
 }
 
 export function createFetchMiddleware({

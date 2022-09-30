@@ -5,9 +5,9 @@ import {
   JsonRpcRequest,
   PendingJsonRpcResponse,
 } from 'json-rpc-engine';
-import * as sigUtil from 'eth-sig-util';
+import * as sigUtil from '@metamask/eth-sig-util';
 import { ethErrors } from 'eth-rpc-errors';
-import { Block } from './utils/cache';
+import type { Block } from './types';
 
 export interface TransactionParams {
   from: string;
@@ -22,7 +22,12 @@ export interface TypedMessageParams extends MessageParams {
 }
 
 export interface WalletMiddlewareOptions {
-  getAccounts: (req: JsonRpcRequest<unknown>) => Promise<string[]>;
+  getAccounts: (
+    req: JsonRpcRequest<unknown>,
+    options?: {
+      suppressUnauthorized?: boolean;
+    },
+  ) => Promise<string[]>;
   processDecryptMessage?: (
     msgParams: MessageParams,
     req: JsonRpcRequest<unknown>,
@@ -243,7 +248,7 @@ export function createWalletMiddleware({
       (req.params as string[])[0],
       req,
     );
-    const message: string = (req.params as string)[1];
+    const message: string = (req.params as string[])[1];
     const version = 'V4';
     const msgParams: TypedMessageParams = {
       data: message,
@@ -306,16 +311,12 @@ export function createWalletMiddleware({
     req: JsonRpcRequest<unknown>,
     res: PendingJsonRpcResponse<unknown>,
   ): Promise<void> {
-    const message: string = (req.params as string)[0];
-    const signature: string = (req.params as string)[1];
-    const extraParams: Record<string, unknown> =
-      (req.params as Record<string, unknown>[])[2] || {};
-    const msgParams: sigUtil.SignedMessageData<unknown> = {
-      ...extraParams,
-      sig: signature,
+    const message: string = (req.params as string[])[0];
+    const signature: string = (req.params as string[])[1];
+    const signerAddress: string = sigUtil.recoverPersonalSignature({
       data: message,
-    };
-    const signerAddress: string = sigUtil.recoverPersonalSignature(msgParams);
+      signature,
+    });
 
     res.result = signerAddress;
   }
@@ -329,7 +330,7 @@ export function createWalletMiddleware({
     }
 
     const address: string = await validateAndNormalizeKeyholder(
-      (req.params as string)[0],
+      (req.params as string[])[0],
       req,
     );
 
@@ -344,9 +345,9 @@ export function createWalletMiddleware({
       throw ethErrors.rpc.methodNotSupported();
     }
 
-    const ciphertext: string = (req.params as string)[0];
+    const ciphertext: string = (req.params as string[])[0];
     const address: string = await validateAndNormalizeKeyholder(
-      (req.params as string)[1],
+      (req.params as string[])[1],
       req,
     );
     const extraParams: Record<string, unknown> =
@@ -377,9 +378,17 @@ export function createWalletMiddleware({
     address: string,
     req: JsonRpcRequest<unknown>,
   ): Promise<string> {
-    if (typeof address === 'string' && address.length > 0) {
-      // ensure address is included in provided accounts
-      const accounts: string[] = await getAccounts(req);
+    if (
+      typeof address === 'string' &&
+      address.length > 0 &&
+      resemblesAddress(address)
+    ) {
+      // ensure address is included in provided accounts. `suppressUnauthorized: false` is passed to `getAccounts`
+      // so that an "unauthorized" error is thrown if the requester does not have the `eth_accounts`
+      // permission.
+      const accounts: string[] = await getAccounts(req, {
+        suppressUnauthorized: false,
+      });
       const normalizedAccounts: string[] = accounts.map((_address) =>
         _address.toLowerCase(),
       );
@@ -388,6 +397,7 @@ export function createWalletMiddleware({
       if (normalizedAccounts.includes(normalizedAddress)) {
         return normalizedAddress;
       }
+      throw ethErrors.provider.unauthorized();
     }
     throw ethErrors.rpc.invalidParams({
       message: `Invalid parameters: must provide an Ethereum address.`,

@@ -1,6 +1,6 @@
 import { JsonRpcEngine, JsonRpcRequest } from 'json-rpc-engine';
 import SafeEventEmitter from '@metamask/safe-event-emitter';
-import { SafeEventEmitterProvider } from './utils/cache';
+import type { SafeEventEmitterProvider } from './types';
 
 export function providerFromEngine(
   engine: JsonRpcEngine,
@@ -8,9 +8,12 @@ export function providerFromEngine(
   const provider: SafeEventEmitterProvider =
     new SafeEventEmitter() as SafeEventEmitterProvider;
   // handle both rpc send methods
-  provider.sendAsync = engine.handle.bind(engine);
+  provider.sendAsync = (req, cb) => {
+    engine.handle(req, cb);
+  };
+
   provider.send = (
-    req: JsonRpcRequest<string[]>,
+    req: JsonRpcRequest<any>,
     callback: (error: any, providerRes: any) => void,
   ) => {
     if (typeof callback !== 'function') {

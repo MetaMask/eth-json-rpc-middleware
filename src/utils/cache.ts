@@ -1,35 +1,5 @@
-import { JsonRpcRequest, PendingJsonRpcResponse } from 'json-rpc-engine';
 import stringify from 'json-stable-stringify';
-import SafeEventEmitter from '@metamask/safe-event-emitter';
-
-export type Payload = Partial<JsonRpcRequest<string[]>>;
-
-export interface JsonRpcRequestToCache extends JsonRpcRequest<string[]> {
-  skipCache: boolean;
-}
-
-export type BlockData = string | string[];
-
-export type Block = Record<string, BlockData>;
-
-export type BlockCache = Record<string, Block>;
-
-export type Cache = Record<number, BlockCache>;
-
-export type SendAsyncCallBack = (
-  err: Error,
-  providerRes: PendingJsonRpcResponse<Block>,
-) => void;
-
-export type SendCallBack = (err: any, providerRes: any) => void;
-
-export interface SafeEventEmitterProvider extends SafeEventEmitter {
-  sendAsync: (
-    req: JsonRpcRequest<string[]>,
-    callback: SendAsyncCallBack,
-  ) => void;
-  send: (req: JsonRpcRequest<string[]>, callback: SendCallBack) => void;
-}
+import type { Payload } from '../types';
 
 export function cacheIdentifierForPayload(
   payload: Payload,

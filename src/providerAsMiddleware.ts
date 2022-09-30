@@ -1,5 +1,5 @@
 import { JsonRpcMiddleware, PendingJsonRpcResponse } from 'json-rpc-engine';
-import { Block, SafeEventEmitterProvider } from './utils/cache';
+import type { Block, SafeEventEmitterProvider } from './types';
 
 export function providerAsMiddleware(
   provider: SafeEventEmitterProvider,
@@ -8,9 +8,9 @@ export function providerAsMiddleware(
     // send request to provider
     provider.sendAsync(
       req,
-      (err: Error, providerRes: PendingJsonRpcResponse<Block>) => {
+      (err: unknown, providerRes: PendingJsonRpcResponse<any>) => {
         // forward any error
-        if (err) {
+        if (err instanceof Error) {
           return end(err);
         }
         // copy provider response onto original response
@@ -28,7 +28,7 @@ export function ethersProviderAsMiddleware(
     // send request to provider
     provider.send(
       req,
-      (err: Error, providerRes: PendingJsonRpcResponse<Block>) => {
+      (err: Error, providerRes: PendingJsonRpcResponse<any>) => {
         // forward any error
         if (err) {
           return end(err);
