@@ -48,16 +48,16 @@ export function createBlockRefMiddleware({
     }
 
     // lookup latest block
-    const latestBlock = await blockTracker.getLatestBlock();
+    const latestBlockNumber = await blockTracker.getLatestBlock();
     log(
-      `blockRef is "latest", setting param ${blockRefIndex} to latest block ${latestBlock}`,
+      `blockRef is "latest", setting param ${blockRefIndex} to latest block ${latestBlockNumber}`,
     );
 
     // create child request with specific block-ref
     const childRequest = clone(req);
 
     if (childRequest.params) {
-      childRequest.params[blockRefIndex] = latestBlock;
+      childRequest.params[blockRefIndex] = latestBlockNumber;
     }
 
     // perform child request
@@ -65,7 +65,6 @@ export function createBlockRefMiddleware({
     const childRes: PendingJsonRpcResponse<Block> = await pify(
       (provider as SafeEventEmitterProvider).sendAsync,
     ).call(provider, childRequest);
-
     // copy child response onto original response
     res.result = childRes.result;
     res.error = childRes.error;
