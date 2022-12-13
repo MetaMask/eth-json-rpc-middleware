@@ -819,16 +819,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/eslint-config-typescript@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "@metamask/eslint-config-typescript@npm:8.0.0"
+"@metamask/eslint-config-typescript@npm:^11.0.2":
+  version: 11.0.2
+  resolution: "@metamask/eslint-config-typescript@npm:11.0.2"
   peerDependencies:
-    "@metamask/eslint-config": ^8.0.0
-    "@typescript-eslint/eslint-plugin": ^4.20.0
-    "@typescript-eslint/parser": ^4.20.0
-    eslint: ^7.23.0
-    typescript: ^4.0.7
-  checksum: 04fb43c91f07345cb8bf25b3e78eb14a355d6f33d72a9acc17d0118433bae2f4f18c5d4c34ae7c55af22a3e1d8eaa1c96348909d13e20e0fc73c03409172fef1
+    "@metamask/eslint-config": ^11.0.0
+    "@typescript-eslint/eslint-plugin": ^5.42.1
+    "@typescript-eslint/parser": ^5.42.1
+    eslint: ^8.27.0
+    typescript: ~4.8.4
+  checksum: d0354c56b0119609f931b0c7627a78969b4626c5da45a09bfe2b32ea51677c7c5625c7f55cbb65be6530e36ccc525f131816972dc4c6bcc3a11cf327f45d4ddb
   languageName: node
   linkType: hard
 
@@ -2787,7 +2787,7 @@ __metadata:
     "@metamask/eslint-config": ^8.0.0
     "@metamask/eslint-config-jest": ^8.0.0
     "@metamask/eslint-config-nodejs": ^8.0.0
-    "@metamask/eslint-config-typescript": ^8.0.0
+    "@metamask/eslint-config-typescript": ^11.0.2
     "@metamask/eth-sig-util": ^5.0.0
     "@metamask/safe-event-emitter": ^2.0.0
     "@metamask/utils": ^3.0.3
