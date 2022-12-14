@@ -472,8 +472,12 @@ async function withTestSetup<T>(
     engine.push(middleware);
   }
 
-  if (callback === undefined) {
-    return undefined;
+  try {
+    if (callback === undefined) {
+      return undefined;
+    }
+    return await callback({ engine, provider, blockTracker });
+  } finally {
+    await blockTracker.destroy();
   }
-  return await callback({ engine, provider, blockTracker });
 }
