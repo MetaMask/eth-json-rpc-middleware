@@ -1,4 +1,4 @@
-import { blockTagParamIndex, cacheTypeForMethod } from './cache';
+import { blockTagParamIndex, cacheTypeForMethod, canCache } from './cache';
 
 const knownMethods = [
   'web3_clientVersion',
@@ -37,6 +37,18 @@ const knownMethods = [
 ];
 
 describe('cache utils', () => {
+  describe('canCache', () => {
+    for (const method of knownMethods) {
+      it(`should be able to cache '${method}'`, () => {
+        expect(canCache(method)).toBe(true);
+      });
+    }
+
+    it('should not be able to cache an unknown method', () => {
+      expect(canCache('this_method_does_not_exist')).toBe(false);
+    });
+  });
+
   describe('blockTagParamIndex', () => {
     it(`should return expected block index for each known method`, () => {
       const blockTagIndexes = knownMethods.reduce((indexes, method) => {

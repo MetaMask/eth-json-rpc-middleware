@@ -8,14 +8,20 @@ export function cacheIdentifierForPayload(
   const simpleParams: string[] = skipBlockRef
     ? paramsWithoutBlockTag(payload)
     : payload.params ?? [];
-  if (canCache(payload)) {
+  if (canCache(payload.method)) {
     return `${payload.method}:${stringify(simpleParams)}`;
   }
   return null;
 }
 
-export function canCache(payload: Payload): boolean {
-  return cacheTypeForMethod(payload.method) !== 'never';
+/**
+ * Return whether a method can be cached or not.
+ *
+ * @param method - The method to check.
+ * @returns Whether the method can be cached.
+ */
+export function canCache(method?: string): boolean {
+  return cacheTypeForMethod(method) !== 'never';
 }
 
 export function blockTagForPayload(payload: Payload): string | undefined {

@@ -88,7 +88,7 @@ class BlockCacheStrategy {
 
   canCacheRequest(payload: Payload): boolean {
     // check request method
-    if (!canCache(payload)) {
+    if (!canCache(payload.method)) {
       return false;
     }
     // check blockTag
