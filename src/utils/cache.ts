@@ -15,14 +15,14 @@ export function cacheIdentifierForPayload(
 }
 
 export function canCache(payload: Payload): boolean {
-  return cacheTypeForPayload(payload) !== 'never';
+  return cacheTypeForMethod(payload.method) !== 'never';
 }
 
 export function blockTagForPayload(payload: Payload): string | undefined {
   if (!payload.params) {
     return undefined;
   }
-  const index: number | undefined = blockTagParamIndex(payload);
+  const index: number | undefined = blockTagParamIndex(payload.method);
 
   // Block tag param not passed.
   if (index === undefined || index >= payload.params.length) {
@@ -36,7 +36,7 @@ export function paramsWithoutBlockTag(payload: Payload): string[] {
   if (!payload.params) {
     return [];
   }
-  const index: number | undefined = blockTagParamIndex(payload);
+  const index: number | undefined = blockTagParamIndex(payload.method);
 
   // Block tag param not passed.
   if (index === undefined || index >= payload.params.length) {
@@ -50,8 +50,8 @@ export function paramsWithoutBlockTag(payload: Payload): string[] {
   return payload.params.slice(0, index);
 }
 
-export function blockTagParamIndex(payload: Payload): number | undefined {
-  switch (payload.method) {
+export function blockTagParamIndex(method?: string): number | undefined {
+  switch (method) {
     // blockTag is at index 2
     case 'eth_getStorageAt':
       return 2;
@@ -70,8 +70,8 @@ export function blockTagParamIndex(payload: Payload): number | undefined {
   }
 }
 
-export function cacheTypeForPayload(payload: Payload): string {
-  switch (payload.method) {
+export function cacheTypeForMethod(method?: string): string {
+  switch (method) {
     // cache permanently
     case 'web3_clientVersion':
     case 'web3_sha3':

@@ -4,7 +4,7 @@ import { projectLogger, createModuleLogger } from './logging-utils';
 import {
   cacheIdentifierForPayload,
   blockTagForPayload,
-  cacheTypeForPayload,
+  cacheTypeForMethod,
   canCache,
 } from './utils/cache';
 import type {
@@ -162,7 +162,7 @@ export function createBlockCacheMiddleware({
       return next();
     }
     // check type and matching strategy
-    const type: string = cacheTypeForPayload(req);
+    const type: string = cacheTypeForMethod(req.method);
     const strategy: BlockCacheStrategy = strategies[type];
     // If there's no strategy in place, pass it down the chain.
     if (!strategy) {
