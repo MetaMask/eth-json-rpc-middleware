@@ -50,6 +50,13 @@ export function paramsWithoutBlockTag(payload: Payload): string[] {
   return payload.params.slice(0, index);
 }
 
+/**
+ * Returns the index of the block parameter for the given method.
+ *
+ * @param method - A JSON-RPC method.
+ * @returns The index of the block parameter for that method, or `undefined` if
+ * there is no known block parameter.
+ */
 export function blockTagParamIndex(method?: string): number | undefined {
   switch (method) {
     // blockTag is at index 2
@@ -70,6 +77,12 @@ export function blockTagParamIndex(method?: string): number | undefined {
   }
 }
 
+/**
+ * Return the cache type used for the given method.
+ *
+ * @param method - A JSON-RPC method.
+ * @returns The cache type to use for that method.
+ */
 export function cacheTypeForMethod(method?: string): string {
   switch (method) {
     // cache permanently
