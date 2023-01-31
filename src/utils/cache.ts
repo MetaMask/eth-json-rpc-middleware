@@ -53,9 +53,7 @@ export function canCache(method?: string): boolean {
  * @param request - The JSON-RPC request.
  * @returns The block parameter in the given request, or `undefined` if none was found.
  */
-export function blockTagForRequest(
-  request: JsonRpcRequest<unknown>,
-): string | undefined {
+export function blockTagForRequest(request: JsonRpcRequest<unknown>): unknown {
   if (!request.params) {
     return undefined;
   }

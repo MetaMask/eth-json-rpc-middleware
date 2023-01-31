@@ -94,7 +94,7 @@ class BlockCacheStrategy {
       return false;
     }
     // check blockTag
-    const blockTag: string | undefined = blockTagForRequest(request);
+    const blockTag = blockTagForRequest(request);
 
     if (blockTag === 'pending') {
       return false;
@@ -179,10 +179,11 @@ export function createBlockCacheMiddleware({
       }
 
       // get block reference (number or keyword)
-      let blockTag: string | undefined = blockTagForRequest(req);
-      if (!blockTag) {
-        blockTag = 'latest';
-      }
+      const requestBlockTag = blockTagForRequest(req);
+      const blockTag =
+        requestBlockTag && typeof requestBlockTag === 'string'
+          ? requestBlockTag
+          : 'latest';
 
       log('blockTag = %o, req = %o', blockTag, req);
 
