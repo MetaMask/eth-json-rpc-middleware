@@ -58,7 +58,7 @@ export function cacheIdentifierForRequest(
  * @param method - The method to check.
  * @returns Whether the method can be cached.
  */
-export function canCache(method?: string): boolean {
+export function canCache(method: string): boolean {
   return cacheTypeForMethod(method) !== CacheStrategy.Never;
 }
 
@@ -121,7 +121,7 @@ function paramsWithoutBlockTag(request: JsonRpcRequest<unknown>): unknown {
  * @returns The index of the block parameter for that method, or `undefined` if
  * there is no known block parameter.
  */
-export function blockTagParamIndex(method?: string): number | undefined {
+export function blockTagParamIndex(method: string): number | undefined {
   switch (method) {
     // blockTag is at index 2
     case 'eth_getStorageAt':
@@ -147,7 +147,7 @@ export function blockTagParamIndex(method?: string): number | undefined {
  * @param method - A JSON-RPC method.
  * @returns The cache type to use for that method.
  */
-export function cacheTypeForMethod(method?: string): CacheStrategy {
+export function cacheTypeForMethod(method: string): CacheStrategy {
   switch (method) {
     // cache permanently
     case 'web3_clientVersion':
