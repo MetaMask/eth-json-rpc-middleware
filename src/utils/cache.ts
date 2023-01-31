@@ -2,7 +2,6 @@ import stringify from 'json-stable-stringify';
 import { JsonRpcRequest } from 'json-rpc-engine';
 
 /**
-<<<<<<< HEAD
  * The cache strategy to use for a given method.
  */
 export enum CacheStrategy {
