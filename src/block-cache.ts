@@ -131,7 +131,7 @@ class BlockCacheStrategy {
 
 export function createBlockCacheMiddleware({
   blockTracker,
-}: BlockCacheMiddlewareOptions = {}): JsonRpcCacheMiddleware<string[], Block> {
+}: BlockCacheMiddlewareOptions = {}): JsonRpcCacheMiddleware<unknown, unknown> {
   // validate options
   if (!blockTracker) {
     throw new Error(
@@ -148,7 +148,7 @@ export function createBlockCacheMiddleware({
   };
 
   return createAsyncMiddleware(
-    async (req: JsonRpcRequestToCache<string[]>, res, next) => {
+    async (req: JsonRpcRequestToCache<unknown>, res, next) => {
       // allow cach to be skipped if so specified
       if (req.skipCache) {
         return next();
