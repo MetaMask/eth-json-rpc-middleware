@@ -24,15 +24,15 @@ type ValidPropertyType = string | number | symbol;
 /**
  * Determines whether the given object has the given property.
  *
- * @param object - The object to check.
+ * @param objectToCheck - The object to check.
  * @param property - The property to look for.
  * @returns - Whether the object has the property.
  */
-function hasProperty<Property extends ValidPropertyType>(
-  object: unknown,
+function hasProperty<ObjectToCheck, Property extends ValidPropertyType>(
+  objectToCheck: ObjectToCheck,
   property: Property,
-): object is Record<Property | ValidPropertyType, unknown> {
-  return Object.hasOwnProperty.call(object, property);
+): objectToCheck is ObjectToCheck & Record<Property, unknown> {
+  return Object.hasOwnProperty.call(objectToCheck, property);
 }
 
 function getResultBlockNumber(
