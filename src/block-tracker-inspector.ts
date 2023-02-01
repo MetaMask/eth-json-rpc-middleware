@@ -16,10 +16,22 @@ interface BlockTrackerInspectorMiddlewareOptions {
   blockTracker: PollingBlockTracker;
 }
 
-function hasProperty<Property extends string>(
+/**
+ * Any type that can be used as the name of an object property.
+ */
+type ValidPropertyType = string | number | symbol;
+
+/**
+ * Determines whether the given object has the given property.
+ *
+ * @param object - The object to check.
+ * @param property - The property to look for.
+ * @returns - Whether the object has the property.
+ */
+function hasProperty<Property extends ValidPropertyType>(
   object: unknown,
   property: Property,
-): object is Record<Property, unknown> {
+): object is Record<Property | ValidPropertyType, unknown> {
   return Object.hasOwnProperty.call(object, property);
 }
 
