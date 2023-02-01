@@ -58,7 +58,7 @@ export function createBlockRefMiddleware({
     // create child request with specific block-ref
     const childRequest = clone(req);
 
-    if (childRequest.params && Array.isArray(childRequest.params)) {
+    if (Array.isArray(childRequest.params)) {
       childRequest.params[blockRefIndex] = latestBlockNumber;
     }
 

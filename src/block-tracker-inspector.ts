@@ -47,7 +47,7 @@ function getResultBlockNumber(
     return undefined;
   }
 
-  if (result.blockNumber && typeof result.blockNumber === 'string') {
+  if (typeof result.blockNumber === 'string') {
     return result.blockNumber;
   }
   return undefined;
