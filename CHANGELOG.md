@@ -7,21 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [10.0.0]
-### Uncategorized
-- Use unknown JSON-RPC requests and responses ([#183](https://github.com/MetaMask/eth-json-rpc-middleware/pull/183))
-- Refactor function to get cache identifier ([#182](https://github.com/MetaMask/eth-json-rpc-middleware/pull/182))
-- Rename `blockTagForPayload` to `blockTagForRequest` ([#181](https://github.com/MetaMask/eth-json-rpc-middleware/pull/181))
-- Add a cache strategy enum ([#184](https://github.com/MetaMask/eth-json-rpc-middleware/pull/184))
-- Fix types for middleware supporting `skipCache` property ([#178](https://github.com/MetaMask/eth-json-rpc-middleware/pull/178))
-- Update repository to match latest module template ([#179](https://github.com/MetaMask/eth-json-rpc-middleware/pull/179))
-- Rename the package to be under the `@metamask` scope ([#180](https://github.com/MetaMask/eth-json-rpc-middleware/pull/180))
-- Refactor cache helper methods ([#177](https://github.com/MetaMask/eth-json-rpc-middleware/pull/177))
-- Bump @metamask/utils from 3.4.0 to 3.4.1 ([#175](https://github.com/MetaMask/eth-json-rpc-middleware/pull/175))
-- Bump json5 from 1.0.1 to 1.0.2 ([#174](https://github.com/MetaMask/eth-json-rpc-middleware/pull/174))
-- Bump @metamask/auto-changelog from 2.6.1 to 3.1.0 ([#165](https://github.com/MetaMask/eth-json-rpc-middleware/pull/165))
-- Bump @metamask/utils from 3.0.3 to 3.4.0 ([#173](https://github.com/MetaMask/eth-json-rpc-middleware/pull/173))
-- Bump @metamask/eth-sig-util from 5.0.0 to 5.0.2 ([#161](https://github.com/MetaMask/eth-json-rpc-middleware/pull/161))
-- Update README.md ([#158](https://github.com/MetaMask/eth-json-rpc-middleware/pull/158))
+### Changed
+- **BREAKING:** Rename the package from `eth-json-rpc-middleware` to `@metamask/eth-json-rpc-middleware` ([#180](https://github.com/MetaMask/eth-json-rpc-middleware/pull/180))
+- Change all middleware request and response types to `unknown` ([#183](https://github.com/MetaMask/eth-json-rpc-middleware/pull/183))
+  - This more accurately reflects the expectations of the middleware, and the way they had been used. This was required to more easily compose this middleware with others that had non-matching types.
+- The block cache and the inflight cache middleware types have been updated to include the `skipCache` request property ([#178](https://github.com/MetaMask/eth-json-rpc-middleware/pull/178))
+  - This property was always supported, but it was missing from the type.
 
 ## [9.0.1]
 ### Changed
