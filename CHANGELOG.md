@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.0.2]
+### Uncategorized
+- Use unknown JSON-RPC requests and responses ([#183](https://github.com/MetaMask/eth-json-rpc-middleware/pull/183))
+- Refactor function to get cache identifier ([#182](https://github.com/MetaMask/eth-json-rpc-middleware/pull/182))
+- Rename `blockTagForPayload` to `blockTagForRequest` ([#181](https://github.com/MetaMask/eth-json-rpc-middleware/pull/181))
+- Add a cache strategy enum ([#184](https://github.com/MetaMask/eth-json-rpc-middleware/pull/184))
+- Fix types for middleware supporting `skipCache` property ([#178](https://github.com/MetaMask/eth-json-rpc-middleware/pull/178))
+- Update repository to match latest module template ([#179](https://github.com/MetaMask/eth-json-rpc-middleware/pull/179))
+- Rename the package to be under the `@metamask` scope ([#180](https://github.com/MetaMask/eth-json-rpc-middleware/pull/180))
+- Refactor cache helper methods ([#177](https://github.com/MetaMask/eth-json-rpc-middleware/pull/177))
+- Bump @metamask/utils from 3.4.0 to 3.4.1 ([#175](https://github.com/MetaMask/eth-json-rpc-middleware/pull/175))
+- Bump json5 from 1.0.1 to 1.0.2 ([#174](https://github.com/MetaMask/eth-json-rpc-middleware/pull/174))
+- Bump @metamask/auto-changelog from 2.6.1 to 3.1.0 ([#165](https://github.com/MetaMask/eth-json-rpc-middleware/pull/165))
+- Bump @metamask/utils from 3.0.3 to 3.4.0 ([#173](https://github.com/MetaMask/eth-json-rpc-middleware/pull/173))
+- Bump @metamask/eth-sig-util from 5.0.0 to 5.0.2 ([#161](https://github.com/MetaMask/eth-json-rpc-middleware/pull/161))
+- Update README.md ([#158](https://github.com/MetaMask/eth-json-rpc-middleware/pull/158))
+
 ## [9.0.1]
 ### Changed
 - Update `@metamask/eth-sig-util` from v3 to v5 ([#133](https://github.com/MetaMask/eth-json-rpc-middleware/pull/133), [#150](https://github.com/MetaMask/eth-json-rpc-middleware/pull/150))
@@ -93,7 +110,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `json-rpc-engine@5.3.0` ([#53](https://github.com/MetaMask/eth-json-rpc-middleware/pull/53))
 - `eth-rpc-errors@3.0.0` ([#55](https://github.com/MetaMask/eth-json-rpc-middleware/pull/55))
 
-[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v9.0.1...HEAD
+[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v9.0.2...HEAD
+[9.0.2]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v9.0.1...v9.0.2
 [9.0.1]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v9.0.0...v9.0.1
 [9.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v8.1.0...v9.0.0
 [8.1.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v8.0.2...v8.1.0
