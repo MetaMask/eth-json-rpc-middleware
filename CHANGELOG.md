@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [10.1.0]
+### Uncategorized
+- Update `eth-block-tracker` from v5 to v6 ([#188](https://github.com/MetaMask/eth-json-rpc-middleware/pull/188))
+- Bump http-cache-semantics from 4.1.0 to 4.1.1 ([#187](https://github.com/MetaMask/eth-json-rpc-middleware/pull/187))
+
 ## [10.0.0]
 ### Changed
 - **BREAKING:** Rename the package from `eth-json-rpc-middleware` to `@metamask/eth-json-rpc-middleware` ([#180](https://github.com/MetaMask/eth-json-rpc-middleware/pull/180))
@@ -101,7 +106,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `json-rpc-engine@5.3.0` ([#53](https://github.com/MetaMask/eth-json-rpc-middleware/pull/53))
 - `eth-rpc-errors@3.0.0` ([#55](https://github.com/MetaMask/eth-json-rpc-middleware/pull/55))
 
-[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v10.0.0...HEAD
+[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v10.1.0...HEAD
+[10.1.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v10.0.0...v10.1.0
 [10.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v9.0.1...v10.0.0
 [9.0.1]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v9.0.0...v9.0.1
 [9.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v8.1.0...v9.0.0
