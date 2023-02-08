@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [10.1.0]
-### Uncategorized
+### Changed
 - Update `eth-block-tracker` from v5 to v6 ([#188](https://github.com/MetaMask/eth-json-rpc-middleware/pull/188))
-- Bump http-cache-semantics from 4.1.0 to 4.1.1 ([#187](https://github.com/MetaMask/eth-json-rpc-middleware/pull/187))
+ - Breaking changes do not affect this package.
 
 ## [10.0.0]
 ### Changed
