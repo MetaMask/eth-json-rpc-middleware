@@ -2,8 +2,7 @@ declare global {
   // Using `namespace` here is okay because this is how the Jest types are
   // defined.
   namespace jest {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/ban-types
-    interface Matchers<R, T = {}> {
+    interface Matchers<R> {
       toNeverResolve(): Promise<R>;
     }
   }
