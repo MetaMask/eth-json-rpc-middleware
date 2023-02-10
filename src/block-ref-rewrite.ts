@@ -1,7 +1,6 @@
 import { PollingBlockTracker } from 'eth-block-tracker';
 import { createAsyncMiddleware, JsonRpcMiddleware } from 'json-rpc-engine';
 import { blockTagParamIndex } from './utils/cache';
-import type { Block } from './types';
 
 interface BlockRefRewriteMiddlewareOptions {
   blockTracker?: PollingBlockTracker;
@@ -9,7 +8,7 @@ interface BlockRefRewriteMiddlewareOptions {
 
 export function createBlockRefRewriteMiddleware({
   blockTracker,
-}: BlockRefRewriteMiddlewareOptions = {}): JsonRpcMiddleware<string[], Block> {
+}: BlockRefRewriteMiddlewareOptions = {}): JsonRpcMiddleware<unknown, unknown> {
   if (!blockTracker) {
     throw Error(
       'BlockRefRewriteMiddleware - mandatory "blockTracker" option is missing.',
@@ -17,13 +16,15 @@ export function createBlockRefRewriteMiddleware({
   }
 
   return createAsyncMiddleware(async (req, _res, next) => {
-    const blockRefIndex: number | undefined = blockTagParamIndex(req);
+    const blockRefIndex: number | undefined = blockTagParamIndex(req.method);
     // skip if method does not include blockRef
     if (blockRefIndex === undefined) {
       return next();
     }
     // skip if not "latest"
-    let blockRef: string | undefined = req.params?.[blockRefIndex];
+    let blockRef: string | undefined = Array.isArray(req.params)
+      ? req.params[blockRefIndex]
+      : undefined;
     // omitted blockRef implies "latest"
     if (blockRef === undefined) {
       blockRef = 'latest';
@@ -34,7 +35,7 @@ export function createBlockRefRewriteMiddleware({
     }
     // rewrite blockRef to block-tracker's block number
     const latestBlockNumber = await blockTracker.getLatestBlock();
-    if (req.params) {
+    if (Array.isArray(req.params)) {
       // eslint-disable-next-line require-atomic-updates
       req.params[blockRefIndex] = latestBlockNumber;
     }

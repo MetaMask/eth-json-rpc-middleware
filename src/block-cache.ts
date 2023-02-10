@@ -1,17 +1,18 @@
 import { PollingBlockTracker } from 'eth-block-tracker';
-import { createAsyncMiddleware, JsonRpcMiddleware } from 'json-rpc-engine';
+import { createAsyncMiddleware, JsonRpcRequest } from 'json-rpc-engine';
 import { projectLogger, createModuleLogger } from './logging-utils';
 import {
-  cacheIdentifierForPayload,
-  blockTagForPayload,
-  cacheTypeForPayload,
+  cacheIdentifierForRequest,
+  blockTagForRequest,
+  cacheTypeForMethod,
   canCache,
+  CacheStrategy,
 } from './utils/cache';
 import type {
-  Payload,
   Block,
   BlockCache,
   Cache,
+  JsonRpcCacheMiddleware,
   JsonRpcRequestToCache,
 } from './types';
 
@@ -34,10 +35,7 @@ class BlockCacheStrategy {
     this.cache = {};
   }
 
-  getBlockCacheForPayload(
-    _payload: Payload,
-    blockNumberHex: string,
-  ): BlockCache {
+  getBlockCache(blockNumberHex: string): BlockCache {
     const blockNumber: number = Number.parseInt(blockNumberHex, 16);
     let blockCache: BlockCache = this.cache[blockNumber];
     // create new cache if necesary
@@ -50,49 +48,43 @@ class BlockCacheStrategy {
   }
 
   async get(
-    payload: Payload,
+    request: JsonRpcRequest<unknown>,
     requestedBlockNumber: string,
   ): Promise<Block | undefined> {
     // lookup block cache
-    const blockCache: BlockCache = this.getBlockCacheForPayload(
-      payload,
-      requestedBlockNumber,
-    );
+    const blockCache: BlockCache = this.getBlockCache(requestedBlockNumber);
     // lookup payload in block cache
-    const identifier: string | null = cacheIdentifierForPayload(payload, true);
+    const identifier: string | null = cacheIdentifierForRequest(request, true);
     return identifier ? blockCache[identifier] : undefined;
   }
 
   async set(
-    payload: Payload,
+    request: JsonRpcRequest<unknown>,
     requestedBlockNumber: string,
     result: Block,
   ): Promise<void> {
     // check if we can cached this result
-    const canCacheResult: boolean = this.canCacheResult(payload, result);
+    const canCacheResult: boolean = this.canCacheResult(request, result);
     if (!canCacheResult) {
       return;
     }
 
     // set the value in the cache
-    const identifier: string | null = cacheIdentifierForPayload(payload, true);
+    const identifier: string | null = cacheIdentifierForRequest(request, true);
     if (!identifier) {
       return;
     }
-    const blockCache: BlockCache = this.getBlockCacheForPayload(
-      payload,
-      requestedBlockNumber,
-    );
+    const blockCache: BlockCache = this.getBlockCache(requestedBlockNumber);
     blockCache[identifier] = result;
   }
 
-  canCacheRequest(payload: Payload): boolean {
+  canCacheRequest(request: JsonRpcRequest<unknown>): boolean {
     // check request method
-    if (!canCache(payload)) {
+    if (!canCache(request.method)) {
       return false;
     }
     // check blockTag
-    const blockTag: string | undefined = blockTagForPayload(payload);
+    const blockTag = blockTagForRequest(request);
 
     if (blockTag === 'pending') {
       return false;
@@ -101,7 +93,7 @@ class BlockCacheStrategy {
     return true;
   }
 
-  canCacheResult(payload: Payload, result: Block): boolean {
+  canCacheResult(request: JsonRpcRequest<unknown>, result: Block): boolean {
     // never cache empty values (e.g. undefined)
     if (emptyValues.includes(result as any)) {
       return false;
@@ -109,9 +101,9 @@ class BlockCacheStrategy {
 
     // check if transactions have block reference before caching
     if (
-      payload.method &&
+      request.method &&
       ['eth_getTransactionByHash', 'eth_getTransactionReceipt'].includes(
-        payload.method,
+        request.method,
       )
     ) {
       if (
@@ -140,7 +132,7 @@ class BlockCacheStrategy {
 
 export function createBlockCacheMiddleware({
   blockTracker,
-}: BlockCacheMiddlewareOptions = {}): JsonRpcMiddleware<string[], Block> {
+}: BlockCacheMiddlewareOptions = {}): JsonRpcCacheMiddleware<unknown, unknown> {
   // validate options
   if (!blockTracker) {
     throw new Error(
@@ -150,86 +142,90 @@ export function createBlockCacheMiddleware({
 
   // create caching strategies
   const blockCache: BlockCacheStrategy = new BlockCacheStrategy();
-  const strategies: Record<string, BlockCacheStrategy> = {
-    perma: blockCache,
-    block: blockCache,
-    fork: blockCache,
+  const strategies: Record<CacheStrategy, BlockCacheStrategy | undefined> = {
+    [CacheStrategy.Permanent]: blockCache,
+    [CacheStrategy.Block]: blockCache,
+    [CacheStrategy.Fork]: blockCache,
+    [CacheStrategy.Never]: undefined,
   };
 
-  return createAsyncMiddleware(async (req, res, next) => {
-    // allow cach to be skipped if so specified
-    if ((req as JsonRpcRequestToCache).skipCache) {
-      return next();
-    }
-    // check type and matching strategy
-    const type: string = cacheTypeForPayload(req);
-    const strategy: BlockCacheStrategy = strategies[type];
-    // If there's no strategy in place, pass it down the chain.
-    if (!strategy) {
-      return next();
-    }
+  return createAsyncMiddleware(
+    async (req: JsonRpcRequestToCache<unknown>, res, next) => {
+      // allow cach to be skipped if so specified
+      if (req.skipCache) {
+        return next();
+      }
+      // check type and matching strategy
+      const type = cacheTypeForMethod(req.method);
+      const strategy = strategies[type];
+      // If there's no strategy in place, pass it down the chain.
+      if (!strategy) {
+        return next();
+      }
 
-    // If the strategy can't cache this request, ignore it.
-    if (!strategy.canCacheRequest(req)) {
-      return next();
-    }
+      // If the strategy can't cache this request, ignore it.
+      if (!strategy.canCacheRequest(req)) {
+        return next();
+      }
 
-    // get block reference (number or keyword)
-    let blockTag: string | undefined = blockTagForPayload(req);
-    if (!blockTag) {
-      blockTag = 'latest';
-    }
+      // get block reference (number or keyword)
+      const requestBlockTag = blockTagForRequest(req);
+      const blockTag =
+        requestBlockTag && typeof requestBlockTag === 'string'
+          ? requestBlockTag
+          : 'latest';
 
-    log('blockTag = %o, req = %o', blockTag, req);
+      log('blockTag = %o, req = %o', blockTag, req);
 
-    // get exact block number
-    let requestedBlockNumber: string;
-    if (blockTag === 'earliest') {
-      // this just exists for symmetry with "latest"
-      requestedBlockNumber = '0x00';
-    } else if (blockTag === 'latest') {
-      // fetch latest block number
-      log('Fetching latest block number to determine cache key');
-      const latestBlockNumber = await blockTracker.getLatestBlock();
-      // clear all cache before latest block
-      log(
-        'Clearing values stored under block numbers before %o',
-        latestBlockNumber,
-      );
-      blockCache.clearBefore(latestBlockNumber);
-      requestedBlockNumber = latestBlockNumber;
-    } else {
-      // We have a hex number
-      requestedBlockNumber = blockTag;
-    }
-    // end on a hit, continue on a miss
-    const cacheResult: Block | undefined = await strategy.get(
-      req,
-      requestedBlockNumber,
-    );
-    if (cacheResult === undefined) {
-      // cache miss
-      // wait for other middleware to handle request
-      log(
-        'No cache stored under block number %o, carrying request forward',
+      // get exact block number
+      let requestedBlockNumber: string;
+      if (blockTag === 'earliest') {
+        // this just exists for symmetry with "latest"
+        requestedBlockNumber = '0x00';
+      } else if (blockTag === 'latest') {
+        // fetch latest block number
+        log('Fetching latest block number to determine cache key');
+        const latestBlockNumber = await blockTracker.getLatestBlock();
+        // clear all cache before latest block
+        log(
+          'Clearing values stored under block numbers before %o',
+          latestBlockNumber,
+        );
+        blockCache.clearBefore(latestBlockNumber);
+        requestedBlockNumber = latestBlockNumber;
+      } else {
+        // We have a hex number
+        requestedBlockNumber = blockTag;
+      }
+      // end on a hit, continue on a miss
+      const cacheResult: Block | undefined = await strategy.get(
+        req,
         requestedBlockNumber,
       );
-      // eslint-disable-next-line node/callback-return
-      await next();
+      if (cacheResult === undefined) {
+        // cache miss
+        // wait for other middleware to handle request
+        log(
+          'No cache stored under block number %o, carrying request forward',
+          requestedBlockNumber,
+        );
+        // eslint-disable-next-line node/callback-return
+        await next();
 
-      // add result to cache
-      // it's safe to cast res.result as Block, due to runtime type checks
-      // performed when strategy.set is called
-      log('Populating cache with', res);
-      await strategy.set(req, requestedBlockNumber, res.result as Block);
-    } else {
-      // fill in result from cache
-      log(
-        'Cache hit, reusing cache result stored under block number %o',
-        requestedBlockNumber,
-      );
-      res.result = cacheResult;
-    }
-    return undefined;
-  });
+        // add result to cache
+        // it's safe to cast res.result as Block, due to runtime type checks
+        // performed when strategy.set is called
+        log('Populating cache with', res);
+        await strategy.set(req, requestedBlockNumber, res.result as Block);
+      } else {
+        // fill in result from cache
+        log(
+          'Cache hit, reusing cache result stored under block number %o',
+          requestedBlockNumber,
+        );
+        res.result = cacheResult;
+      }
+      return undefined;
+    },
+  );
 }
