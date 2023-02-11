@@ -69,6 +69,5 @@ expect.extend({
   },
 });
 
-// Export something so that TypeScript thinks that we are performing type
-// augmentation
+// Export something so that TypeScript knows to interpret this as a module
 export {};
