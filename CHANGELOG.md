@@ -7,17 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [11.0.0]
-### Uncategorized
-- Update `eth-block-tracker` to v7 ([#196](https://github.com/MetaMask/eth-json-rpc-middleware/pull/196))
-- Remove `providerFromEngine` and `providerFromMiddleware` ([#194](https://github.com/MetaMask/eth-json-rpc-middleware/pull/194))
-- Remove return value from `timeout` ([#191](https://github.com/MetaMask/eth-json-rpc-middleware/pull/191))
-- Remove unnecessary `suppressUnauthorized` option ([#193](https://github.com/MetaMask/eth-json-rpc-middleware/pull/193))
-- chore: replace json-stable-stringify with safe-stable-stringify ([#104](https://github.com/MetaMask/eth-json-rpc-middleware/pull/104))
-- Remove `btoa` ([#192](https://github.com/MetaMask/eth-json-rpc-middleware/pull/192))
-- Remove `node-fetch`. ([#190](https://github.com/MetaMask/eth-json-rpc-middleware/pull/190))
-- fix: fix to correct type in walle.ts ([#111](https://github.com/MetaMask/eth-json-rpc-middleware/pull/111))
-- Update `eth-block-tracker` from v5 to v6 ([#188](https://github.com/MetaMask/eth-json-rpc-middleware/pull/188))
-- Bump http-cache-semantics from 4.1.0 to 4.1.1 ([#187](https://github.com/MetaMask/eth-json-rpc-middleware/pull/187))
+### Changed
+- **BREAKING:** Update `eth-block-tracker` to v7 ([#196](https://github.com/MetaMask/eth-json-rpc-middleware/pull/196), [#188](https://github.com/MetaMask/eth-json-rpc-middleware/pull/188))
+  - This changes the expected type of the `blockTracker` parameter for the following functinos:
+    - `createBlockCacheMiddleware`
+    - `createBlockRefMiddleware`
+    - `createBlockRefRewriteMiddleware`
+    - `createBlockTrackerInspectorMiddleware`
+    - `createRetryOnEmptyMiddleware`
+  - Only the type change is breaking; there is no functional change here.
+- **BREAKING:** Add new required parameters for the `fetch` middleware ([#192](https://github.com/MetaMask/eth-json-rpc-middleware/pull/192), [#190](https://github.com/MetaMask/eth-json-rpc-middleware/pull/190))
+  - The required parameters are `fetch` and `btoa`. Previously we would either use the global by that name (if one existed), or a polyfill. Those polyfills have been removed.
+- Replace `json-stable-stringify` with `safe-stable-stringify` ([#104](https://github.com/MetaMask/eth-json-rpc-middleware/pull/104))
+  - This should slightly improve performance of the inlight cache and block cache middleware
+
+### Fixed
+- **BREAKING:** Fix types for `createWalletMiddleware` ([#111](https://github.com/MetaMask/eth-json-rpc-middleware/pull/111))
+  - This middleware had previously included a number of errors, where the type contradicted the Ethereum JSON-RPC specification and how we've been using this middleware in practice. They should all now match the specification.
+
+### Removed
+- **BREAKING:** Remove `providerFromEngine` and `providerFromMiddleware` ([#194](https://github.com/MetaMask/eth-json-rpc-middleware/pull/194))
+  - These are now provided by the package `@metamask/eth-json-rpc-provider` instead
+- **BREAKING:** Remove unnecessary `suppressUnauthorized` option ([#193](https://github.com/MetaMask/eth-json-rpc-middleware/pull/193))
 
 ### Changed
 - Replace `fast-stable-stringify` dependency with `safe-stable-stringify`
