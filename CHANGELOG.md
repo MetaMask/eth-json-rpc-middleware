@@ -30,9 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - These are now provided by the package `@metamask/eth-json-rpc-provider` instead
 - **BREAKING:** Remove unnecessary `suppressUnauthorized` option ([#193](https://github.com/MetaMask/eth-json-rpc-middleware/pull/193))
 
-### Changed
-- Replace `fast-stable-stringify` dependency with `safe-stable-stringify`
-
 ## [10.0.0]
 ### Changed
 - **BREAKING:** Rename the package from `eth-json-rpc-middleware` to `@metamask/eth-json-rpc-middleware` ([#180](https://github.com/MetaMask/eth-json-rpc-middleware/pull/180))
