@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [11.0.0]
 ### Changed
 - **BREAKING:** Update `eth-block-tracker` to v7 ([#196](https://github.com/MetaMask/eth-json-rpc-middleware/pull/196), [#188](https://github.com/MetaMask/eth-json-rpc-middleware/pull/188))
-  - This changes the expected type of the `blockTracker` parameter for the following functinos:
+  - This changes the expected type of the `blockTracker` parameter for the following functions:
     - `createBlockCacheMiddleware`
     - `createBlockRefMiddleware`
     - `createBlockRefRewriteMiddleware`
