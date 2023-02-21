@@ -21,14 +21,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replace `json-stable-stringify` with `safe-stable-stringify` ([#104](https://github.com/MetaMask/eth-json-rpc-middleware/pull/104))
   - This should slightly improve performance of the inlight cache and block cache middleware
 
-### Fixed
-- **BREAKING:** Fix types for `createWalletMiddleware` ([#111](https://github.com/MetaMask/eth-json-rpc-middleware/pull/111))
-  - This middleware had previously included a number of errors, where the type contradicted the Ethereum JSON-RPC specification and how we've been using this middleware in practice. They should all now match the specification.
-
 ### Removed
 - **BREAKING:** Remove `providerFromEngine` and `providerFromMiddleware` ([#194](https://github.com/MetaMask/eth-json-rpc-middleware/pull/194))
   - These are now provided by the package `@metamask/eth-json-rpc-provider` instead
 - **BREAKING:** Remove unnecessary `suppressUnauthorized` option ([#193](https://github.com/MetaMask/eth-json-rpc-middleware/pull/193))
+
+### Fixed
+- **BREAKING:** Fix types for `createWalletMiddleware` ([#111](https://github.com/MetaMask/eth-json-rpc-middleware/pull/111))
+  - This middleware had previously included a number of errors, where the type contradicted the Ethereum JSON-RPC specification and how we've been using this middleware in practice. They should all now match the specification.
 
 ## [10.0.0]
 ### Changed
