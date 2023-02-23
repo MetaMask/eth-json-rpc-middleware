@@ -412,3 +412,94 @@ describe('wallet', () => {
     });
   });
 });
+
+describe('getPlumeSignature', () => {
+  it('should sign with a valid address', async () => {
+    const { engine } = createTestSetup();
+    const getAccounts = async () => testAddresses.slice();
+    const witnessedMsgParams: MessageParams[] = [];
+    const processPlumeSignature = async (msgParams: MessageParams) => {
+      witnessedMsgParams.push(msgParams);
+      return testMsgSig;
+    };
+
+    engine.push(createWalletMiddleware({ getAccounts, processPlumeSignature }));
+    const message = [
+      {
+        type: 'string',
+        name: 'message',
+        value: 'Hi, Alice!',
+      },
+    ];
+
+    const payload = {
+      method: 'eth_getPlumeSignature',
+      params: [message, testAddresses[0]],
+    };
+    const signMsgResponse = await pify(engine.handle).call(engine, payload);
+    const signMsgResult = signMsgResponse.result;
+
+    expect(signMsgResult).toBeDefined();
+    expect(signMsgResult).toStrictEqual(testMsgSig);
+    expect(witnessedMsgParams).toHaveLength(1);
+    expect(witnessedMsgParams[0]).toStrictEqual({
+      from: testAddresses[0],
+      data: message,
+    });
+  });
+
+  it('should throw with invalid address', async () => {
+    const { engine } = createTestSetup();
+    const getAccounts = async () => testAddresses.slice();
+    const witnessedMsgParams: MessageParams[] = [];
+    const processPlumeSignature = async (msgParams: MessageParams) => {
+      witnessedMsgParams.push(msgParams);
+      return testMsgSig;
+    };
+
+    engine.push(createWalletMiddleware({ getAccounts, processPlumeSignature }));
+    const message = [
+      {
+        type: 'string',
+        name: 'message',
+        value: 'Hi, Alice!',
+      },
+    ];
+
+    const payload = {
+      method: 'eth_getPlumeSignature',
+      params: [message, '0x3d'],
+    };
+    await expect(pify(engine.handle).call(engine, payload)).rejects.toThrow(
+      new Error('Invalid parameters: must provide an Ethereum address.'),
+    );
+  });
+
+  it('should throw with unknown address', async () => {
+    const { engine } = createTestSetup();
+    const getAccounts = async () => testAddresses.slice();
+    const witnessedMsgParams: MessageParams[] = [];
+    const processPlumeSignature = async (msgParams: MessageParams) => {
+      witnessedMsgParams.push(msgParams);
+      return testMsgSig;
+    };
+
+    engine.push(createWalletMiddleware({ getAccounts, processPlumeSignature }));
+    const message = [
+      {
+        type: 'string',
+        name: 'message',
+        value: 'Hi, Alice!',
+      },
+    ];
+
+    const payload = {
+      method: 'eth_getPlumeSignature',
+      params: [message, testUnkownAddress],
+    };
+    const promise = pify(engine.handle).call(engine, payload);
+    await expect(promise).rejects.toThrow(
+      'The requested account and/or method has not been authorized by the user.',
+    );
+  });
+});
