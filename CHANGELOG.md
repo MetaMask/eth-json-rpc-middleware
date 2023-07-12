@@ -9,9 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [11.0.1]
 ### Changed
 - Bump @metamask/utils from ^3.5.0 to ^5.0.2 ([#201](https://github.com/MetaMask/eth-json-rpc-middleware/pull/201))
-- Bump @metamask/eth-sig-util from ^5.0.3 to ^5.1.0 ([#205](https://github.com/MetaMask/eth-json-rpc-middleware/pull/205))
 - Bump eth-block-tracker from ^7.0.0 to ^7.0.1 ([#204](https://github.com/MetaMask/eth-json-rpc-middleware/pull/204))
-- Bump @metamask/eth-sig-util from ^5.0.2 to ^5.0.3 ([#203](https://github.com/MetaMask/eth-json-rpc-middleware/pull/203))
 
 ## [11.0.0]
 ### Changed
