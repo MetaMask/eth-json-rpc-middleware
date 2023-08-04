@@ -974,7 +974,7 @@ __metadata:
     "@metamask/eslint-config-typescript": ^12.1.0
     "@metamask/eth-json-rpc-provider": ^1.0.0
     "@metamask/eth-sig-util": ^5.0.0
-    "@metamask/utils": ^5.0.1
+    "@metamask/utils": ^7.1.0
     "@types/btoa": ^1.2.3
     "@types/clone": ^2.1.0
     "@types/jest": ^27.4.1
@@ -1057,6 +1057,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@metamask/utils@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "@metamask/utils@npm:7.1.0"
+  dependencies:
+    "@ethereumjs/tx": ^4.1.2
+    "@noble/hashes": ^1.3.1
+    "@types/debug": ^4.1.7
+    debug: ^4.3.4
+    semver: ^7.5.4
+    superstruct: ^1.0.3
+  checksum: 165ed378f4ac5ca42c241d32154e15b609f9e772a9dc069b870613c005dc0e7e4fa92204c30e98ec2317f1e38c77747057671a26fd0a5ba36a288e3c9ef03790
+  languageName: node
+  linkType: hard
+
 "@noble/curves@npm:1.0.0, @noble/curves@npm:~1.0.0":
   version: 1.0.0
   resolution: "@noble/curves@npm:1.0.0"
@@ -1070,6 +1084,13 @@ __metadata:
   version: 1.3.0
   resolution: "@noble/hashes@npm:1.3.0"
   checksum: d7ddb6d7c60f1ce1f87facbbef5b724cdea536fc9e7f59ae96e0fc9de96c8f1a2ae2bdedbce10f7dcc621338dfef8533daa73c873f2b5c87fa1a4e05a95c2e2e
+  languageName: node
+  linkType: hard
+
+"@noble/hashes@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "@noble/hashes@npm:1.3.1"
+  checksum: 7fdefc0f7a0c1ec27acc6ff88841793e3f93ec4ce6b8a6a12bfc0dd70ae6b7c4c82fe305fdfeda1735d5ad4a9eebe761e6693b3d355689c559e91242f4bc95b1
   languageName: node
   linkType: hard
 
@@ -5804,7 +5825,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:7.x, semver@npm:^7.0.0, semver@npm:^7.3.2, semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.3.8":
+"semver@npm:7.x, semver@npm:^7.0.0, semver@npm:^7.3.2, semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.3.8, semver@npm:^7.5.4":
   version: 7.5.4
   resolution: "semver@npm:7.5.4"
   dependencies:
