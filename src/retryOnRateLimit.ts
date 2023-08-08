@@ -1,9 +1,8 @@
-import { EthereumRpcError } from 'eth-rpc-errors';
-import { errorCodes } from 'eth-rpc-errors';
+import { EthereumRpcError, errorCodes } from 'eth-rpc-errors';
 import type { JsonRpcMiddleware } from 'json-rpc-engine';
 import { createAsyncMiddleware } from 'json-rpc-engine';
-
 import { timeout } from './utils/timeout';
+
 export function createRetryOnRateLimitMiddleware<T, U>(
     provider: JsonRpcMiddleware<T, U>,
 ): JsonRpcMiddleware<T, U> {
@@ -21,7 +20,6 @@ export function createRetryOnRateLimitMiddleware<T, U>(
                 }
                 await timeout(retryInterval);
             }
-
         }
     });
 }
