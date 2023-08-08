@@ -3,9 +3,7 @@ import type { JsonRpcMiddleware } from 'json-rpc-engine';
 import { createAsyncMiddleware } from 'json-rpc-engine';
 import { timeout } from './utils/timeout';
 
-export function createRetryOnRateLimitMiddleware<T, U>(
-    provider: JsonRpcMiddleware<T, U>,
-): JsonRpcMiddleware<T, U> {
+export function createRetryOnRateLimitMiddleware(): JsonRpcMiddleware<unknown, unknown> {
     return createAsyncMiddleware(async (_req, _res, next) => {
         const maxAttempts = 5;
         const retryInterval = 800;
