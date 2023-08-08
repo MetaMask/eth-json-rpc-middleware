@@ -6,4 +6,5 @@ export * from './fetch';
 export * from './inflight-cache';
 export * from './providerAsMiddleware';
 export * from './retryOnEmpty';
+export * from './retryOnRateLimit';
 export * from './wallet';
