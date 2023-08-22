@@ -1,12 +1,15 @@
-import {
-  createAsyncMiddleware,
-  createScaffoldMiddleware,
+import * as sigUtil from '@metamask/eth-sig-util';
+import { ethErrors } from 'eth-rpc-errors';
+import type {
   JsonRpcMiddleware,
   JsonRpcRequest,
   PendingJsonRpcResponse,
 } from 'json-rpc-engine';
-import * as sigUtil from '@metamask/eth-sig-util';
-import { ethErrors } from 'eth-rpc-errors';
+import {
+  createAsyncMiddleware,
+  createScaffoldMiddleware,
+} from 'json-rpc-engine';
+
 import type { Block } from './types';
 
 export interface TransactionParams {
@@ -137,10 +140,7 @@ export function createWalletMiddleware({
 
     const txParams: TransactionParams =
       (req.params as TransactionParams[])[0] || {};
-    txParams.from = await validateAndNormalizeKeyholder(
-      txParams.from as string,
-      req,
-    );
+    txParams.from = await validateAndNormalizeKeyholder(txParams.from, req);
     res.result = await processTransaction(txParams, req);
   }
 
@@ -154,10 +154,7 @@ export function createWalletMiddleware({
 
     const txParams: TransactionParams =
       (req.params as TransactionParams[])[0] || {};
-    txParams.from = await validateAndNormalizeKeyholder(
-      txParams.from as string,
-      req,
-    );
+    txParams.from = await validateAndNormalizeKeyholder(txParams.from, req);
     res.result = await processSignTransaction(txParams, req);
   }
 
@@ -394,8 +391,8 @@ export function createWalletMiddleware({
    * Validates the keyholder address, and returns a normalized (i.e. lowercase)
    * copy of it.
    *
-   * @param {string} address - The address to validate and normalize.
-   * @param {Object} req - The request object.
+   * @param address - The address to validate and normalize.
+   * @param req - The request object.
    * @returns {string} - The normalized address, if valid. Otherwise, throws
    * an error
    */
