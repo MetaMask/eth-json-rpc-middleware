@@ -993,7 +993,7 @@ __metadata:
     "@metamask/eslint-config-jest": ^12.1.0
     "@metamask/eslint-config-nodejs": ^12.1.0
     "@metamask/eslint-config-typescript": ^12.1.0
-    "@metamask/eth-json-rpc-provider": ^1.0.0
+    "@metamask/eth-json-rpc-provider": ^2.0.0
     "@metamask/eth-sig-util": ^7.0.0
     "@metamask/utils": ^8.1.0
     "@types/btoa": ^1.2.3
@@ -1037,6 +1037,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@metamask/eth-json-rpc-provider@npm:^2.0.0":
+  version: 2.1.0
+  resolution: "@metamask/eth-json-rpc-provider@npm:2.1.0"
+  dependencies:
+    "@metamask/json-rpc-engine": ^7.1.0
+    "@metamask/safe-event-emitter": ^3.0.0
+    "@metamask/utils": ^8.1.0
+  checksum: 020f7c4d9d305b590aa7d7c2198b3487e3e609110b43b04802cdf42c09fb8300b5989c9cb2dc15d50bcc244d44d26a779de6b5171e5f2fe7001eab83a5028874
+  languageName: node
+  linkType: hard
+
 "@metamask/eth-sig-util@npm:^7.0.0":
   version: 7.0.0
   resolution: "@metamask/eth-sig-util@npm:7.0.0"
@@ -1049,6 +1060,27 @@ __metadata:
     tweetnacl: ^1.0.3
     tweetnacl-util: ^0.15.1
   checksum: bcb6bd23333e0b4dcb49f8772483dcb4c27e75405a2b111f1eafe0b341b221cf86ba4843e91c567d8836e80b6049d8e2f89c6766c62bbd256533e0f256f6d846
+  languageName: node
+  linkType: hard
+
+"@metamask/json-rpc-engine@npm:^7.1.0":
+  version: 7.1.1
+  resolution: "@metamask/json-rpc-engine@npm:7.1.1"
+  dependencies:
+    "@metamask/rpc-errors": ^6.0.0
+    "@metamask/safe-event-emitter": ^3.0.0
+    "@metamask/utils": ^8.1.0
+  checksum: 9dddd9142965ccd86313cda5bf13f15bf99c6c14631f93aab78de353317d548a334b5b125cdc134edd7d54e2f2e4961a0bdcd24fba997b2913083955df8fefa1
+  languageName: node
+  linkType: hard
+
+"@metamask/rpc-errors@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@metamask/rpc-errors@npm:6.0.0"
+  dependencies:
+    "@metamask/utils": ^8.0.0
+    fast-safe-stringify: ^2.0.6
+  checksum: 7e1ee1a98972266af4a34f0bbc842cdc11dc565056f0b8fbc93aa95663a7027eab8ff1fecbe3e09c38a1dc199f8219a6c69b2237015b2fdb8de0e5b35027c3f8
   languageName: node
   linkType: hard
 
