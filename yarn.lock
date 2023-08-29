@@ -974,7 +974,7 @@ __metadata:
     "@metamask/eslint-config-typescript": ^12.1.0
     "@metamask/eth-json-rpc-provider": ^1.0.0
     "@metamask/eth-sig-util": ^5.0.0
-    "@metamask/utils": ^7.1.0
+    "@metamask/utils": ^8.0.0
     "@types/btoa": ^1.2.3
     "@types/clone": ^2.1.0
     "@types/jest": ^27.4.1
@@ -1057,9 +1057,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/utils@npm:^7.1.0":
-  version: 7.1.0
-  resolution: "@metamask/utils@npm:7.1.0"
+"@metamask/utils@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "@metamask/utils@npm:8.0.0"
   dependencies:
     "@ethereumjs/tx": ^4.1.2
     "@noble/hashes": ^1.3.1
@@ -1067,7 +1067,7 @@ __metadata:
     debug: ^4.3.4
     semver: ^7.5.4
     superstruct: ^1.0.3
-  checksum: 165ed378f4ac5ca42c241d32154e15b609f9e772a9dc069b870613c005dc0e7e4fa92204c30e98ec2317f1e38c77747057671a26fd0a5ba36a288e3c9ef03790
+  checksum: 01c956b150b454f648868cb08e850822d526fcf7d33dd04e156ed06d9b2829d0bd42a766f7bcc98c7b21d4990b00c6adb0474b23515a927131a460d50237eb52
   languageName: node
   linkType: hard
 
