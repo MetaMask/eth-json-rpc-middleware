@@ -27,6 +27,9 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
+  "resolutions": {
+    "@metamask/utils@^8.0.0": "patch:@metamask/utils@npm:8.0.0#.yarn/patches/@metamask-utils-npm-8.0.0-7a3c3a899a.patch"
+  },
   "dependencies": {
     "@metamask/eth-json-rpc-provider": "^1.0.0",
     "@metamask/eth-sig-util": "^5.0.0",
