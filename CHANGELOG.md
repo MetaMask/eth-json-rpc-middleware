@@ -7,13 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [11.0.2]
-### Uncategorized
-- deps: @metamask/eth-sig-util@^5.0.0->^6.0.0 ([#236](https://github.com/MetaMask/eth-json-rpc-middleware/pull/236))
-- Bump word-wrap from 1.2.3 to 1.2.4 ([#230](https://github.com/MetaMask/eth-json-rpc-middleware/pull/230))
-- Bump tough-cookie from 4.1.2 to 4.1.3 ([#231](https://github.com/MetaMask/eth-json-rpc-middleware/pull/231))
-- devDeps: bump @metamask/eslint-config* to ^12.0.0 ([#223](https://github.com/MetaMask/eth-json-rpc-middleware/pull/223))
-- devDeps: @lavamoat/allow-scripts@^2.0.3->^2.3.1 ([#224](https://github.com/MetaMask/eth-json-rpc-middleware/pull/224))
-- Bump @metamask/auto-changelog from 3.1.0 to 3.2.0 ([#228](https://github.com/MetaMask/eth-json-rpc-middleware/pull/228))
+### Changed
+- Bump @metamask/eth-sig-util from ^5.0.0 to ^6.0.0 ([#236](https://github.com/MetaMask/eth-json-rpc-middleware/pull/236))
 
 ## [11.0.1]
 ### Changed
