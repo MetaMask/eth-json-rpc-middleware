@@ -104,7 +104,7 @@ function checkForHttpErrors(fetchRes: Response): void {
   // check for errors
   switch (fetchRes.status) {
     case 405:
-      throw ethErrors.rpc.methodNotFound();
+      throw rpcErrors.methodNotFound();
 
     case 418:
       throw createRatelimitError();
@@ -121,7 +121,7 @@ function checkForHttpErrors(fetchRes: Response): void {
 function parseResponse(fetchRes: Response, body: Record<string, Block>): Block {
   // check for error code
   if (fetchRes.status !== 200) {
-    throw ethErrors.rpc.internal({
+    throw rpcErrors.internal({
       message: `Non-200 status code: '${fetchRes.status}'`,
       data: body,
     });
@@ -129,7 +129,7 @@ function parseResponse(fetchRes: Response, body: Record<string, Block>): Block {
 
   // check for rpc error
   if (body.error) {
-    throw ethErrors.rpc.internal({
+    throw rpcErrors.internal({
       data: body.error,
     });
   }
@@ -216,11 +216,11 @@ function normalizeUrlFromParsed(parsedUrl: URL): string {
 }
 
 function createRatelimitError(): EthereumRpcError<unknown> {
-  return ethErrors.rpc.internal({ message: `Request is being rate limited.` });
+  return rpcErrors.internal({ message: `Request is being rate limited.` });
 }
 
 function createTimeoutError(): EthereumRpcError<unknown> {
   let msg = `Gateway timeout. The request took too long to process. `;
   msg += `This can happen when querying logs over too wide a block range.`;
-  return ethErrors.rpc.internal({ message: msg });
+  return rpcErrors.internal({ message: msg });
 }
