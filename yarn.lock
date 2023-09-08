@@ -1012,7 +1012,7 @@ __metadata:
     eslint-plugin-n: ^15.7.0
     eslint-plugin-prettier: ^4.2.1
     eslint-plugin-promise: ^6.1.1
-    eth-block-tracker: ^7.0.1
+    eth-block-tracker: ^8.0.0
     eth-rpc-errors: ^4.0.3
     jest: ^27.5.1
     json-rpc-engine: ^6.1.0
@@ -1026,16 +1026,6 @@ __metadata:
     typescript: ~4.8.4
   languageName: unknown
   linkType: soft
-
-"@metamask/eth-json-rpc-provider@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@metamask/eth-json-rpc-provider@npm:1.0.0"
-  dependencies:
-    "@metamask/safe-event-emitter": ^2.0.0
-    json-rpc-engine: ^6.1.0
-  checksum: 27865d84d90030db1a9e5a66bc0b0ae079706fb7be635ec1e9bd4f64771e819aae78f0a026c6629d3a1a2eb277fcd51977315c049c47a70df1dd95d1d4106982
-  languageName: node
-  linkType: hard
 
 "@metamask/eth-json-rpc-provider@npm:^2.1.0":
   version: 2.1.0
@@ -1095,19 +1085,6 @@ __metadata:
   version: 3.0.0
   resolution: "@metamask/safe-event-emitter@npm:3.0.0"
   checksum: 8dc58a76f9f75bf2405931465fc311c68043d851e6b8ebe9f82ae339073a08a83430dba9338f8e3adc4bfc8067607125074bcafa32baee3a5157f42343dc89e5
-  languageName: node
-  linkType: hard
-
-"@metamask/utils@npm:^5.0.1":
-  version: 5.0.2
-  resolution: "@metamask/utils@npm:5.0.2"
-  dependencies:
-    "@ethereumjs/tx": ^4.1.2
-    "@types/debug": ^4.1.7
-    debug: ^4.3.4
-    semver: ^7.3.8
-    superstruct: ^1.0.3
-  checksum: eca82e42911b2840deb4f32f0f215c5ffd14d22d68afbbe92d3180e920e509e310777b15eab29def3448f3535b66596ceb4c23666ec846adacc8e1bb093ff882
   languageName: node
   linkType: hard
 
@@ -3128,16 +3105,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eth-block-tracker@npm:^7.0.1":
-  version: 7.0.1
-  resolution: "eth-block-tracker@npm:7.0.1"
+"eth-block-tracker@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "eth-block-tracker@npm:8.0.0"
   dependencies:
-    "@metamask/eth-json-rpc-provider": ^1.0.0
+    "@metamask/eth-json-rpc-provider": ^2.1.0
     "@metamask/safe-event-emitter": ^3.0.0
-    "@metamask/utils": ^5.0.1
+    "@metamask/utils": ^8.1.0
     json-rpc-random-id: ^1.0.1
-    pify: ^3.0.0
-  checksum: b8ecdaebed26423fa8444a779ecf34fb102f873fd1a29135189a3c553f679e34c19151f6b8d1cbbe180fdcc9ba967a7a55af6a72678140d6e3c8e725e630771e
+    pify: ^5.0.0
+  checksum: 3416c2ee653f81d1f71f3a9b80e04837fb516494f64ded45c053dfc24c6c6ce8dac7e5b8376cd57f52838f43a93d20a8e17d4d875e50d1e4c267543ffe0e6ad8
   languageName: node
   linkType: hard
 
@@ -5588,6 +5565,13 @@ __metadata:
   version: 3.0.0
   resolution: "pify@npm:3.0.0"
   checksum: 6cdcbc3567d5c412450c53261a3f10991665d660961e06605decf4544a61a97a54fefe70a68d5c37080ff9d6f4cf51444c90198d1ba9f9309a6c0d6e9f5c4fde
+  languageName: node
+  linkType: hard
+
+"pify@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "pify@npm:5.0.0"
+  checksum: 443e3e198ad6bfa8c0c533764cf75c9d5bc976387a163792fb553ffe6ce923887cf14eebf5aea9b7caa8eab930da8c33612990ae85bd8c2bc18bedb9eae94ecb
   languageName: node
   linkType: hard
 
