@@ -993,7 +993,7 @@ __metadata:
     "@metamask/eslint-config-jest": ^12.1.0
     "@metamask/eslint-config-nodejs": ^12.1.0
     "@metamask/eslint-config-typescript": ^12.1.0
-    "@metamask/eth-json-rpc-provider": ^2.0.0
+    "@metamask/eth-json-rpc-provider": ^2.1.0
     "@metamask/eth-sig-util": ^7.0.0
     "@metamask/utils": ^8.1.0
     "@types/btoa": ^1.2.3
@@ -1037,7 +1037,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/eth-json-rpc-provider@npm:^2.0.0":
+"@metamask/eth-json-rpc-provider@npm:^2.1.0":
   version: 2.1.0
   resolution: "@metamask/eth-json-rpc-provider@npm:2.1.0"
   dependencies:
