@@ -1,6 +1,10 @@
 import type { JsonRpcMiddleware } from '@metamask/json-rpc-engine';
 import { createAsyncMiddleware } from '@metamask/json-rpc-engine';
-import type { JsonRpcParams, PendingJsonRpcResponse } from '@metamask/utils';
+import type {
+  Json,
+  JsonRpcParams,
+  PendingJsonRpcResponse,
+} from '@metamask/utils';
 import type { PollingBlockTracker } from 'eth-block-tracker';
 
 import { projectLogger, createModuleLogger } from './logging-utils';
@@ -35,7 +39,7 @@ function hasProperty<ObjectToCheck, Property extends ValidPropertyType>(
 }
 
 function getResultBlockNumber(
-  response: PendingJsonRpcResponse<JsonRpcParams>,
+  response: PendingJsonRpcResponse<Json>,
 ): string | undefined {
   const { result } = response;
   if (
@@ -57,7 +61,7 @@ export function createBlockTrackerInspectorMiddleware({
   blockTracker,
 }: BlockTrackerInspectorMiddlewareOptions): JsonRpcMiddleware<
   JsonRpcParams,
-  JsonRpcParams
+  Json
 > {
   return createAsyncMiddleware(async (req, res, next) => {
     if (!futureBlockRefRequests.includes(req.method)) {

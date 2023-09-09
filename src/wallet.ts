@@ -7,7 +7,6 @@ import {
 import { providerErrors, rpcErrors } from '@metamask/rpc-errors';
 import type {
   Json,
-  JsonRpcParams,
   JsonRpcRequest,
   PendingJsonRpcResponse,
 } from '@metamask/utils';
