@@ -990,7 +990,7 @@ __metadata:
     "@types/clone": ^2.1.0
     "@types/jest": ^27.4.1
     "@types/node": ^17.0.23
-    "@types/pify": ^3.0.2
+    "@types/pify": ^5.0.2
     "@typescript-eslint/eslint-plugin": ^5.42.1
     "@typescript-eslint/parser": ^5.42.1
     clone: ^2.1.1
@@ -1004,7 +1004,7 @@ __metadata:
     eslint-plugin-promise: ^6.1.1
     eth-block-tracker: ^8.0.0
     jest: ^27.5.1
-    pify: ^3.0.0
+    pify: ^5.0.0
     prettier: ^2.2.1
     prettier-plugin-packagejson: ^2.2.11
     rimraf: ^3.0.2
@@ -1448,10 +1448,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pify@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "@types/pify@npm:3.0.2"
-  checksum: 965f0fb0d7e414332cf952c8e7e3af002878ebf99811845ab78750d574119abc3ccf7d5e7ad7d71f579b1e43c2c40f9ac9ba89c3d55a5d8e4688f43fb1213044
+"@types/pify@npm:^5.0.2":
+  version: 5.0.2
+  resolution: "@types/pify@npm:5.0.2"
+  checksum: dcfa7aad04cdab4cf006d7c4af651137080749678ab87abdb768d3f3228872c23fa7516e4a169b20b325ef3fe38668ca28b9a00155c3911eb1c2c1ba1bdc59af
   languageName: node
   linkType: hard
 
@@ -5471,13 +5471,6 @@ __metadata:
   version: 2.3.1
   resolution: "picomatch@npm:2.3.1"
   checksum: 050c865ce81119c4822c45d3c84f1ced46f93a0126febae20737bd05ca20589c564d6e9226977df859ed5e03dc73f02584a2b0faad36e896936238238b0446cf
-  languageName: node
-  linkType: hard
-
-"pify@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "pify@npm:3.0.0"
-  checksum: 6cdcbc3567d5c412450c53261a3f10991665d660961e06605decf4544a61a97a54fefe70a68d5c37080ff9d6f4cf51444c90198d1ba9f9309a6c0d6e9f5c4fde
   languageName: node
   linkType: hard
 
