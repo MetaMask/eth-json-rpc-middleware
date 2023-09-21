@@ -987,7 +987,6 @@ __metadata:
     "@metamask/rpc-errors": ^6.0.0
     "@metamask/utils": ^8.1.0
     "@types/btoa": ^1.2.3
-    "@types/clone": ^2.1.0
     "@types/jest": ^27.4.1
     "@types/node": ^17.0.23
     "@types/pify": ^5.0.2
@@ -1004,6 +1003,7 @@ __metadata:
     eslint-plugin-promise: ^6.1.1
     eth-block-tracker: ^8.0.0
     jest: ^27.5.1
+    klona: ^2.0.6
     pify: ^5.0.0
     prettier: ^2.2.1
     prettier-plugin-packagejson: ^2.2.11
@@ -1333,13 +1333,6 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 76fff64a9a91639d124eaf36b6389af12c8717c81221d03524eadac056710a9d0aa076e99c553ec83c251cf215d8e38413c0f4e6fb6be36b0d761c5130e06d0f
-  languageName: node
-  linkType: hard
-
-"@types/clone@npm:^2.1.0":
-  version: 2.1.1
-  resolution: "@types/clone@npm:2.1.1"
-  checksum: bda9668b9d6e0875d64bbe00763676f566e8647bc224333a03ac7fd66655dfed56a98a9f8304d0145c4411b964649c84c4d1a03adbdb6547eafb9ab8f303d254
   languageName: node
   linkType: hard
 
@@ -4731,6 +4724,13 @@ __metadata:
   version: 3.0.3
   resolution: "kleur@npm:3.0.3"
   checksum: df82cd1e172f957bae9c536286265a5cdbd5eeca487cb0a3b2a7b41ef959fc61f8e7c0e9aeea9c114ccf2c166b6a8dd45a46fd619c1c569d210ecd2765ad5169
+  languageName: node
+  linkType: hard
+
+"klona@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "klona@npm:2.0.6"
+  checksum: ac9ee3732e42b96feb67faae4d27cf49494e8a3bf3fa7115ce242fe04786788e0aff4741a07a45a2462e2079aa983d73d38519c85d65b70ef11447bbc3c58ce7
   languageName: node
   linkType: hard
 
