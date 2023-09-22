@@ -65,6 +65,10 @@ export interface WalletMiddlewareOptions {
     req: JsonRpcRequest<unknown>,
     version: string,
   ) => Promise<string>;
+  processPlumeSignature?: (
+    msgParams: MessageParams,
+    req: JsonRpcRequest<unknown>,
+  ) => Promise<string>;
 }
 
 export function createWalletMiddleware({
@@ -78,6 +82,7 @@ export function createWalletMiddleware({
   processTypedMessage,
   processTypedMessageV3,
   processTypedMessageV4,
+  processPlumeSignature,
 }: WalletMiddlewareOptions): JsonRpcMiddleware<string, Block> {
   if (!getAccounts) {
     throw new Error('opts.getAccounts is required');
@@ -99,6 +104,7 @@ export function createWalletMiddleware({
     eth_getEncryptionPublicKey: createAsyncMiddleware(encryptionPublicKey),
     eth_decrypt: createAsyncMiddleware(decryptMessage),
     personal_ecRecover: createAsyncMiddleware(personalRecover),
+    eth_getPlumeSignature: createAsyncMiddleware(plumeSignature),
   });
 
   //
@@ -351,6 +357,30 @@ export function createWalletMiddleware({
     };
 
     res.result = await processDecryptMessage(msgParams, req);
+  }
+
+  async function plumeSignature(
+    req: JsonRpcRequest<unknown>,
+    res: PendingJsonRpcResponse<unknown>,
+  ): Promise<void> {
+    if (!processPlumeSignature) {
+      throw ethErrors.rpc.methodNotSupported();
+    }
+
+    const message: string = (req.params as string[])[0];
+    const address: string = await validateAndNormalizeKeyholder(
+      (req.params as string[])[1],
+      req,
+    );
+    const extraParams: Record<string, unknown> =
+      (req.params as Record<string, unknown>[])[2] || {};
+    const msgParams: MessageParams = {
+      ...extraParams,
+      from: address,
+      data: message,
+    };
+
+    res.result = await processPlumeSignature(msgParams, req);
   }
 
   //
