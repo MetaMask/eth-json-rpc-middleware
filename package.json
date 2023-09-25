@@ -33,7 +33,6 @@
     "@metamask/json-rpc-engine": "^7.1.1",
     "@metamask/rpc-errors": "^6.0.0",
     "@metamask/utils": "^8.1.0",
-    "clone": "^2.1.1",
     "eth-block-tracker": "^8.0.0",
     "klona": "^2.0.6",
     "pify": "^5.0.0",
