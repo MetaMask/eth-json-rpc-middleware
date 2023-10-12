@@ -140,7 +140,10 @@ async function retry(
   for (let index = 0; index < maxRetries; index++) {
     try {
       return await asyncFn();
-    } catch (err) {
+    } catch (err: any) {
+      if (err.code === -32000) {
+        throw err;
+      }
       log('(call %i) Request failed, waiting 1s to retry again...', index + 1);
       await timeout(1000);
     }
