@@ -13,6 +13,7 @@ import pify from 'pify';
 import { projectLogger, createModuleLogger } from './logging-utils';
 import type { Block } from './types';
 import { blockTagParamIndex } from './utils/cache';
+import { isExecutionRevertedError } from './utils/error';
 import { timeout } from './utils/timeout';
 
 //
@@ -77,6 +78,7 @@ export function createRetryOnEmptyMiddleware({
     if (Number.isNaN(blockRefNumber)) {
       return next();
     }
+
     // lookup latest block
     const latestBlockNumberHex: string = await blockTracker.getLatestBlock();
     const latestBlockNumber: number = Number.parseInt(
@@ -102,6 +104,7 @@ export function createRetryOnEmptyMiddleware({
     // create child request with specific block-ref
     const childRequest = klona(req);
     // attempt child request until non-empty response is received
+
     const childResponse: PendingJsonRpcResponse<Block> = await retry(
       10,
       async () => {
@@ -141,7 +144,7 @@ async function retry(
     try {
       return await asyncFn();
     } catch (err: any) {
-      if (err.code === -32000) {
+      if (isExecutionRevertedError(err)) {
         throw err;
       }
       log('(call %i) Request failed, waiting 1s to retry again...', index + 1);
