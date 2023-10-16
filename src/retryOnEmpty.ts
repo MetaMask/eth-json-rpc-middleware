@@ -145,7 +145,7 @@ async function retry(
       return await asyncFn();
     } catch (err: any) {
       if (isExecutionRevertedError(err)) {
-        throw err;
+        throw err as unknown;
       }
       log('(call %i) Request failed, waiting 1s to retry again...', index + 1);
       await timeout(1000);
