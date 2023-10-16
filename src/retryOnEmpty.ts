@@ -78,7 +78,6 @@ export function createRetryOnEmptyMiddleware({
     if (Number.isNaN(blockRefNumber)) {
       return next();
     }
-
     // lookup latest block
     const latestBlockNumberHex: string = await blockTracker.getLatestBlock();
     const latestBlockNumber: number = Number.parseInt(
@@ -104,7 +103,6 @@ export function createRetryOnEmptyMiddleware({
     // create child request with specific block-ref
     const childRequest = klona(req);
     // attempt child request until non-empty response is received
-
     const childResponse: PendingJsonRpcResponse<Block> = await retry(
       10,
       async () => {

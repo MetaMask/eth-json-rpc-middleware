@@ -204,8 +204,8 @@ describe('createRetryOnEmptyMiddleware', () => {
                       id: req.id,
                       jsonrpc: '2.0',
                       error: {
-                        code: errorCodes.rpc.invalidInput,
-                        message: 'execution reverted',
+                        code: -1,
+                        message: 'oops',
                       },
                     };
                   },
