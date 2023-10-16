@@ -1,6 +1,6 @@
+import { errorCodes } from '@metamask/rpc-errors';
 import { isJsonRpcError } from '@metamask/utils';
 import type { JsonRpcError } from '@metamask/utils';
-import { errorCodes } from '@metamask/rpc-errors';
 
 export function isExecutionRevertedError(
   error: unknown,
