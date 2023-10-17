@@ -141,9 +141,9 @@ async function retry(
   for (let index = 0; index < maxRetries; index++) {
     try {
       return await asyncFn();
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (isExecutionRevertedError(err)) {
-        throw err as unknown;
+        throw err;
       }
       log('(call %i) Request failed, waiting 1s to retry again...', index + 1);
       await timeout(1000);
