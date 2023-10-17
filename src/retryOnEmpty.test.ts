@@ -2,7 +2,7 @@ import { providerFromEngine } from '@metamask/eth-json-rpc-provider';
 import type { SafeEventEmitterProvider } from '@metamask/eth-json-rpc-provider';
 import type { JsonRpcMiddleware } from '@metamask/json-rpc-engine';
 import { JsonRpcEngine } from '@metamask/json-rpc-engine';
-import { errorCodes } from '@metamask/rpc-errors';
+import { errorCodes, rpcErrors } from '@metamask/rpc-errors';
 import type { Json, JsonRpcParams, JsonRpcRequest } from '@metamask/utils';
 import { PollingBlockTracker } from 'eth-block-tracker';
 
@@ -647,7 +647,7 @@ describe('createRetryOnEmptyMiddleware', () => {
             id: 123,
             jsonrpc: '2.0',
             method: 'eth_call',
-            params: buildMockParamsWithoutBlockParamAt(2, '100'),
+            params: buildMockParamsWithBlockParamAt(1, '100'),
           };
           stubProviderRequests(provider, [
             buildStubForBlockNumberRequest(),
