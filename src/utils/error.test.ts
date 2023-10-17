@@ -7,7 +7,7 @@ const executionRevertedError = {
   message: 'execution reverted',
 };
 
-describe('error', () => {
+describe('isExecutionRevertedError', () => {
   it('return false if object is not valid JSON RPC error', async () => {
     const result = isExecutionRevertedError({ test: 'dummy' });
     expect(result).toBe(false);
