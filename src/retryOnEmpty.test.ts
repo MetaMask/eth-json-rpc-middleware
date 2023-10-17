@@ -654,10 +654,7 @@ describe('createRetryOnEmptyMiddleware', () => {
             {
               request,
               response: () => {
-                throw {
-                  code: errorCodes.rpc.invalidInput,
-                  message: 'execution reverted',
-                } as any;
+                throw rpcErrors.invalidInput('execution reverted');
               },
             },
           ]);
