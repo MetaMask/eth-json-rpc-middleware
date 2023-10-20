@@ -121,12 +121,11 @@ export function buildMockParamsWithBlockParamAt(
  */
 export function buildMockParamsWithoutBlockParamAt(
   blockParamIndex: number,
-  value?: string,
 ): string[] {
   const params = [];
 
   for (let i = 0; i < blockParamIndex; i++) {
-    params.push(value ?? 'some value');
+    params.push('some value');
   }
 
   return params;
