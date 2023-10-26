@@ -156,6 +156,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
     const params = req.params as [TransactionParams?];
     const txParams: TransactionParams = {
+      ...params[0],
       from: await validateAndNormalizeKeyholder(params[0]?.from || '', req),
     };
     res.result = await processTransaction(txParams, req);
@@ -178,6 +179,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
     const params = req.params as [TransactionParams?];
     const txParams: TransactionParams = {
+      ...params[0],
       from: await validateAndNormalizeKeyholder(params[0]?.from || '', req),
     };
     res.result = await processSignTransaction(txParams, req);
