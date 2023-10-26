@@ -154,10 +154,10 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
       throw rpcErrors.invalidInput();
     }
 
-    const params = req.params as [TransactionParams?];
+    const params = req.params[0] as TransactionParams | undefined;
     const txParams: TransactionParams = {
-      ...params[0],
-      from: await validateAndNormalizeKeyholder(params[0]?.from || '', req),
+      ...params,
+      from: await validateAndNormalizeKeyholder(params?.from || '', req),
     };
     res.result = await processTransaction(txParams, req);
   }
@@ -177,10 +177,10 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
       throw rpcErrors.invalidInput();
     }
 
-    const params = req.params as [TransactionParams?];
+    const params = req.params[0] as TransactionParams | undefined;
     const txParams: TransactionParams = {
-      ...params[0],
-      from: await validateAndNormalizeKeyholder(params[0]?.from || '', req),
+      ...params,
+      from: await validateAndNormalizeKeyholder(params?.from || '', req),
     };
     res.result = await processSignTransaction(txParams, req);
   }
