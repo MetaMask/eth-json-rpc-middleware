@@ -32,7 +32,7 @@ export type TransactionParams = {
 
 export type MessageParams = TransactionParams & {
   data: string;
-  signatureMethod: string;
+  signatureMethod?: string;
 };
 
 export type TypedMessageParams = MessageParams & {
@@ -42,7 +42,7 @@ export type TypedMessageParams = MessageParams & {
 export interface WalletMiddlewareOptions {
   getAccounts: (req: JsonRpcRequest) => Promise<string[]>;
   processDecryptMessage?: (
-    msgParams: Omit<MessageParams, 'signatureMethod'>,
+    msgParams: MessageParams,
     req: JsonRpcRequest,
   ) => Promise<string>;
   processEncryptionPublicKey?: (
@@ -430,7 +430,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     const ciphertext: string = params[0];
     const address: string = await validateAndNormalizeKeyholder(params[1], req);
     const extraParams = params[2] || {};
-    const msgParams: Omit<MessageParams, 'signatureMethod'> = {
+    const msgParams: MessageParams = {
       ...extraParams,
       from: address,
       data: ciphertext,
