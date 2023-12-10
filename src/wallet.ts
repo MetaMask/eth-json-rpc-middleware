@@ -32,6 +32,7 @@ export type TransactionParams = {
 
 export type MessageParams = TransactionParams & {
   data: string;
+  signatureMethod?: string;
 };
 
 export type TypedMessageParams = MessageParams & {
@@ -154,9 +155,10 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
       throw rpcErrors.invalidInput();
     }
 
-    const params = req.params as [TransactionParams?];
+    const params = req.params[0] as TransactionParams | undefined;
     const txParams: TransactionParams = {
-      from: await validateAndNormalizeKeyholder(params[0]?.from || '', req),
+      ...params,
+      from: await validateAndNormalizeKeyholder(params?.from || '', req),
     };
     res.result = await processTransaction(txParams, req);
   }
@@ -176,9 +178,10 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
       throw rpcErrors.invalidInput();
     }
 
-    const params = req.params as [TransactionParams?];
+    const params = req.params[0] as TransactionParams | undefined;
     const txParams: TransactionParams = {
-      from: await validateAndNormalizeKeyholder(params[0]?.from || '', req),
+      ...params,
+      from: await validateAndNormalizeKeyholder(params?.from || '', req),
     };
     res.result = await processSignTransaction(txParams, req);
   }
@@ -210,6 +213,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
       ...extraParams,
       from: address,
       data: message,
+      signatureMethod: 'eth_sign',
     };
 
     res.result = await processEthSignMessage(msgParams, req);
@@ -239,6 +243,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
       ...extraParams,
       from: address,
       data: message,
+      signatureMethod: 'eth_signTypedData',
     };
 
     res.result = await processTypedMessage(msgParams, req, version);
@@ -268,6 +273,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
       data: message,
       from: address,
       version,
+      signatureMethod: 'eth_signTypedData_v3',
     };
 
     res.result = await processTypedMessageV3(msgParams, req, version);
@@ -297,6 +303,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
       data: message,
       from: address,
       version,
+      signatureMethod: 'eth_signTypedData_v4',
     };
 
     res.result = await processTypedMessageV4(msgParams, req, version);
@@ -352,6 +359,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
       ...extraParams,
       from: address,
       data: message,
+      signatureMethod: 'personal_sign',
     };
 
     // eslint-disable-next-line require-atomic-updates
