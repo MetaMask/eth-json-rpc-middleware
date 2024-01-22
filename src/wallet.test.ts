@@ -266,6 +266,7 @@ describe('wallet', () => {
         from: testAddresses[0],
         data: message,
         signatureMethod: 'eth_signTypedData',
+        version: "V1",
       });
     });
 
