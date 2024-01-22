@@ -7,12 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [12.2.0]
-### Uncategorized
+### Changed
 - Update message types ([#282](https://github.com/MetaMask/eth-json-rpc-middleware/pull/282))
-- Bump @metamask/eth-json-rpc-provider from 2.3.0 to 2.3.1 ([#278](https://github.com/MetaMask/eth-json-rpc-middleware/pull/278))
-- Bump @metamask/json-rpc-engine from 7.3.0 to 7.3.1 ([#279](https://github.com/MetaMask/eth-json-rpc-middleware/pull/279))
-- Bump @metamask/auto-changelog from 3.4.3 to 3.4.4 ([#277](https://github.com/MetaMask/eth-json-rpc-middleware/pull/277))
-- devDeps: lockbump babel, json5, and related ([#276](https://github.com/MetaMask/eth-json-rpc-middleware/pull/276))
+  - This also adds the `version` property to the params for `eth_signTypedData`.
 
 ## [12.1.0]
 ### Added
