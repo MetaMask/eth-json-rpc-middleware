@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.1.0]
+### Uncategorized
+- Revert "12.1.0" ([#285](https://github.com/MetaMask/eth-json-rpc-middleware/pull/285))
+- Update message types ([#282](https://github.com/MetaMask/eth-json-rpc-middleware/pull/282))
+- Bump @metamask/eth-json-rpc-provider from 2.3.0 to 2.3.1 ([#278](https://github.com/MetaMask/eth-json-rpc-middleware/pull/278))
+- Bump @metamask/json-rpc-engine from 7.3.0 to 7.3.1 ([#279](https://github.com/MetaMask/eth-json-rpc-middleware/pull/279))
+- Bump @metamask/auto-changelog from 3.4.3 to 3.4.4 ([#277](https://github.com/MetaMask/eth-json-rpc-middleware/pull/277))
+- devDeps: lockbump babel, json5, and related ([#276](https://github.com/MetaMask/eth-json-rpc-middleware/pull/276))
+- 12.1.0 ([#275](https://github.com/MetaMask/eth-json-rpc-middleware/pull/275))
+- Add `signatureMethod` property to `MessageParams` ([#273](https://github.com/MetaMask/eth-json-rpc-middleware/pull/273))
+- Bump @metamask/eth-sig-util from 7.0.0 to 7.0.1 ([#272](https://github.com/MetaMask/eth-json-rpc-middleware/pull/272))
+- Bump @metamask/eth-json-rpc-provider from 2.2.0 to 2.3.0 ([#269](https://github.com/MetaMask/eth-json-rpc-middleware/pull/269))
+- Bump @metamask/auto-changelog from 3.4.2 to 3.4.3 ([#268](https://github.com/MetaMask/eth-json-rpc-middleware/pull/268))
+- Bump @metamask/json-rpc-engine from 7.2.0 to 7.3.0 ([#271](https://github.com/MetaMask/eth-json-rpc-middleware/pull/271))
+- Bump @metamask/utils from 8.2.0 to 8.2.1 ([#270](https://github.com/MetaMask/eth-json-rpc-middleware/pull/270))
+
 ## [12.0.1]
 ### Changed
 - Bump @metamask/json-rpc-engine from 7.1.1 to 7.2.0 ([#256](https://github.com/MetaMask/eth-json-rpc-middleware/pull/256))
@@ -156,7 +172,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `json-rpc-engine@5.3.0` ([#53](https://github.com/MetaMask/eth-json-rpc-middleware/pull/53))
 - `eth-rpc-errors@3.0.0` ([#55](https://github.com/MetaMask/eth-json-rpc-middleware/pull/55))
 
-[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v12.0.1...HEAD
+[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v12.1.0...HEAD
+[12.1.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v12.0.1...v12.1.0
 [12.0.1]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v12.0.0...v12.0.1
 [12.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v11.0.2...v12.0.0
 [11.0.2]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v11.0.1...v11.0.2
