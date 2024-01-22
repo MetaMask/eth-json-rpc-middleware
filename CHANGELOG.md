@@ -7,20 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [12.1.0]
-### Uncategorized
-- Revert "12.1.0" ([#285](https://github.com/MetaMask/eth-json-rpc-middleware/pull/285))
+### Changed
 - Update message types ([#282](https://github.com/MetaMask/eth-json-rpc-middleware/pull/282))
-- Bump @metamask/eth-json-rpc-provider from 2.3.0 to 2.3.1 ([#278](https://github.com/MetaMask/eth-json-rpc-middleware/pull/278))
-- Bump @metamask/json-rpc-engine from 7.3.0 to 7.3.1 ([#279](https://github.com/MetaMask/eth-json-rpc-middleware/pull/279))
-- Bump @metamask/auto-changelog from 3.4.3 to 3.4.4 ([#277](https://github.com/MetaMask/eth-json-rpc-middleware/pull/277))
-- devDeps: lockbump babel, json5, and related ([#276](https://github.com/MetaMask/eth-json-rpc-middleware/pull/276))
-- 12.1.0 ([#275](https://github.com/MetaMask/eth-json-rpc-middleware/pull/275))
+
+### Added
 - Add `signatureMethod` property to `MessageParams` ([#273](https://github.com/MetaMask/eth-json-rpc-middleware/pull/273))
-- Bump @metamask/eth-sig-util from 7.0.0 to 7.0.1 ([#272](https://github.com/MetaMask/eth-json-rpc-middleware/pull/272))
-- Bump @metamask/eth-json-rpc-provider from 2.2.0 to 2.3.0 ([#269](https://github.com/MetaMask/eth-json-rpc-middleware/pull/269))
-- Bump @metamask/auto-changelog from 3.4.2 to 3.4.3 ([#268](https://github.com/MetaMask/eth-json-rpc-middleware/pull/268))
-- Bump @metamask/json-rpc-engine from 7.2.0 to 7.3.0 ([#271](https://github.com/MetaMask/eth-json-rpc-middleware/pull/271))
-- Bump @metamask/utils from 8.2.0 to 8.2.1 ([#270](https://github.com/MetaMask/eth-json-rpc-middleware/pull/270))
+- Add `version` property to `eth_signTypedData` message params ([#282](https://github.com/MetaMask/eth-json-rpc-middleware/pull/282))
 
 ## [12.0.1]
 ### Changed
