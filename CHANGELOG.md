@@ -7,12 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [12.1.0]
-### Changed
-- Update message types ([#282](https://github.com/MetaMask/eth-json-rpc-middleware/pull/282))
-
 ### Added
 - Add `signatureMethod` property to `MessageParams` ([#273](https://github.com/MetaMask/eth-json-rpc-middleware/pull/273))
 - Add `version` property to `eth_signTypedData` message params ([#282](https://github.com/MetaMask/eth-json-rpc-middleware/pull/282))
+
+### Changed
+- Update message types ([#282](https://github.com/MetaMask/eth-json-rpc-middleware/pull/282))
 
 ## [12.0.1]
 ### Changed
