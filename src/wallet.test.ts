@@ -67,6 +67,7 @@ describe('wallet', () => {
       engine.push(createWalletMiddleware({ getAccounts, processTransaction }));
       const txParams = {
         from: testAddresses[0],
+        data: '0x0',
       };
 
       const payload = { method: 'eth_sendTransaction', params: [txParams] };
@@ -117,6 +118,103 @@ describe('wallet', () => {
       );
     });
 
+    it('processes transaction with data field but without input field', async () => {
+      const { engine } = createTestSetup();
+      const getAccounts = async () => testAddresses.slice(0, 2);
+      const witnessedTxParams: TransactionParams[] = [];
+      const processTransaction = async (_txParams: TransactionParams) => {
+        witnessedTxParams.push(_txParams);
+        return testTxHash;
+      };
+      engine.push(createWalletMiddleware({ getAccounts, processTransaction }));
+      const txParams = {
+        from: testAddresses[0],
+        data: '0x0',
+      };
+
+      const payload = { method: 'eth_sendTransaction', params: [txParams] };
+      const sendTxResponse = await pify(engine.handle).call(engine, payload);
+      const sendTxResult = sendTxResponse.result;
+      expect(sendTxResult).toBeDefined();
+      expect(sendTxResult).toStrictEqual(testTxHash);
+      expect(witnessedTxParams).toHaveLength(1);
+      expect(witnessedTxParams[0]).toStrictEqual(txParams);
+    });
+
+    it('processes transaction with input field but without data field', async () => {
+      const { engine } = createTestSetup();
+      const getAccounts = async () => testAddresses.slice(0, 2);
+      const witnessedTxParams: TransactionParams[] = [];
+      const processTransaction = async (_txParams: TransactionParams) => {
+        witnessedTxParams.push(_txParams);
+        return testTxHash;
+      };
+      engine.push(createWalletMiddleware({ getAccounts, processTransaction }));
+      const txParams = {
+        from: testAddresses[0],
+        input: '0x0',
+      };
+
+      const payload = { method: 'eth_sendTransaction', params: [txParams] };
+      const sendTxResponse = await pify(engine.handle).call(engine, payload);
+      const sendTxResult = sendTxResponse.result;
+      expect(sendTxResult).toBeDefined();
+      expect(sendTxResult).toStrictEqual(testTxHash);
+      expect(witnessedTxParams).toHaveLength(1);
+      expect(witnessedTxParams[0]).toStrictEqual({
+        from: txParams.from,
+        data: txParams.input,
+      });
+    });
+
+    it('processes transaction with matching input and data field', async () => {
+      const { engine } = createTestSetup();
+      const getAccounts = async () => testAddresses.slice(0, 2);
+      const witnessedTxParams: TransactionParams[] = [];
+      const processTransaction = async (_txParams: TransactionParams) => {
+        witnessedTxParams.push(_txParams);
+        return testTxHash;
+      };
+      engine.push(createWalletMiddleware({ getAccounts, processTransaction }));
+      const txParams = {
+        from: testAddresses[0],
+        data: '0x0',
+        input: '0x0',
+      };
+
+      const payload = { method: 'eth_sendTransaction', params: [txParams] };
+      const sendTxResponse = await pify(engine.handle).call(engine, payload);
+      const sendTxResult = sendTxResponse.result;
+      expect(sendTxResult).toBeDefined();
+      expect(sendTxResult).toStrictEqual(testTxHash);
+      expect(witnessedTxParams).toHaveLength(1);
+      expect(witnessedTxParams[0]).toStrictEqual({
+        from: txParams.from,
+        data: txParams.data,
+      });
+    });
+
+    it('throws when input and data fields are both defined but do not match', async () => {
+      const { engine } = createTestSetup();
+      const getAccounts = async () => testAddresses.slice(0, 2);
+      const witnessedTxParams: TransactionParams[] = [];
+      const processTransaction = async (_txParams: TransactionParams) => {
+        witnessedTxParams.push(_txParams);
+        return testTxHash;
+      };
+      engine.push(createWalletMiddleware({ getAccounts, processTransaction }));
+      const txParams = {
+        from: testAddresses[0],
+        data: '0x0',
+        input: '0x1',
+      };
+
+      const payload = { method: 'eth_sendTransaction', params: [txParams] };
+      await expect(pify(engine.handle).call(engine, payload)).rejects.toThrow(
+        new Error('Invalid input.'),
+      );
+    });
+
     it('should not override other request params', async () => {
       const { engine } = createTestSetup();
       const getAccounts = async () => testAddresses.slice(0, 2);
@@ -129,6 +227,7 @@ describe('wallet', () => {
       const txParams = {
         from: testAddresses[0],
         to: testAddresses[1],
+        data: '0x0',
       };
 
       const payload = { method: 'eth_sendTransaction', params: [txParams] };
