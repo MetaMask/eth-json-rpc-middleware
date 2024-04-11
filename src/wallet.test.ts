@@ -56,7 +56,7 @@ describe('wallet', () => {
   });
 
   describe('transactions', () => {
-    it('processes transaction with valid address and data field', async () => {
+    it('processes transaction with valid address', async () => {
       const { engine } = createTestSetup();
       const getAccounts = async () => testAddresses.slice(0, 2);
       const witnessedTxParams: TransactionParams[] = [];
@@ -67,7 +67,6 @@ describe('wallet', () => {
       engine.push(createWalletMiddleware({ getAccounts, processTransaction }));
       const txParams = {
         from: testAddresses[0],
-        data: '0x0',
       };
 
       const payload = { method: 'eth_sendTransaction', params: [txParams] };
@@ -90,7 +89,6 @@ describe('wallet', () => {
       engine.push(createWalletMiddleware({ getAccounts, processTransaction }));
       const txParams = {
         from: '0x3d',
-        data: '0x0',
       };
 
       const payload = { method: 'eth_sendTransaction', params: [txParams] };
@@ -110,7 +108,6 @@ describe('wallet', () => {
       engine.push(createWalletMiddleware({ getAccounts, processTransaction }));
       const txParams = {
         from: testUnkownAddress,
-        data: '0x0',
       };
 
       const payload = { method: 'eth_sendTransaction', params: [txParams] };
@@ -118,6 +115,29 @@ describe('wallet', () => {
       await expect(promise).rejects.toThrow(
         'The requested account and/or method has not been authorized by the user.',
       );
+    });
+
+    it('processes transaction with data field but without input field', async () => {
+      const { engine } = createTestSetup();
+      const getAccounts = async () => testAddresses.slice(0, 2);
+      const witnessedTxParams: TransactionParams[] = [];
+      const processTransaction = async (_txParams: TransactionParams) => {
+        witnessedTxParams.push(_txParams);
+        return testTxHash;
+      };
+      engine.push(createWalletMiddleware({ getAccounts, processTransaction }));
+      const txParams = {
+        from: testAddresses[0],
+        data: '0x0',
+      };
+
+      const payload = { method: 'eth_sendTransaction', params: [txParams] };
+      const sendTxResponse = await pify(engine.handle).call(engine, payload);
+      const sendTxResult = sendTxResponse.result;
+      expect(sendTxResult).toBeDefined();
+      expect(sendTxResult).toStrictEqual(testTxHash);
+      expect(witnessedTxParams).toHaveLength(1);
+      expect(witnessedTxParams[0]).toStrictEqual(txParams);
     });
 
     it('processes transaction with input field but without data field', async () => {
