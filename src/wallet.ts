@@ -172,9 +172,11 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     }
 
     const txParamsData = data || input;
-    const txParams: TransactionParams & { data?: string } = {
+    const txParams: TransactionParams & { data?: string; input?: string } = {
       ...restParams,
-      ...(txParamsData ? { data: txParamsData } : undefined),
+      ...(txParamsData
+        ? { data: txParamsData, input: txParamsData }
+        : undefined),
       from: await validateAndNormalizeKeyholder(from || '', req),
     };
     res.result = await processTransaction(txParams, req);

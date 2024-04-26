@@ -137,7 +137,11 @@ describe('wallet', () => {
       expect(sendTxResult).toBeDefined();
       expect(sendTxResult).toStrictEqual(testTxHash);
       expect(witnessedTxParams).toHaveLength(1);
-      expect(witnessedTxParams[0]).toStrictEqual(txParams);
+      expect(witnessedTxParams[0]).toStrictEqual({
+        from: testAddresses[0],
+        data: '0x0',
+        input: '0x0',
+      });
     });
 
     it('processes transaction with input field but without data field', async () => {
@@ -161,8 +165,9 @@ describe('wallet', () => {
       expect(sendTxResult).toStrictEqual(testTxHash);
       expect(witnessedTxParams).toHaveLength(1);
       expect(witnessedTxParams[0]).toStrictEqual({
-        from: txParams.from,
-        data: txParams.input,
+        from: testAddresses[0],
+        data: '0x0',
+        input: '0x0',
       });
     });
 
@@ -188,8 +193,9 @@ describe('wallet', () => {
       expect(sendTxResult).toStrictEqual(testTxHash);
       expect(witnessedTxParams).toHaveLength(1);
       expect(witnessedTxParams[0]).toStrictEqual({
-        from: txParams.from,
-        data: txParams.data,
+        from: testAddresses[0],
+        data: '0x0',
+        input: '0x0',
       });
     });
 
@@ -227,6 +233,7 @@ describe('wallet', () => {
         from: testAddresses[0],
         to: testAddresses[1],
         data: '0x0',
+        input: '0x0',
       };
 
       const payload = { method: 'eth_sendTransaction', params: [txParams] };
