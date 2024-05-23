@@ -145,7 +145,6 @@ export function buildStubForBlockNumberRequest(
   return {
     request: {
       method: 'eth_blockNumber',
-      params: [],
     },
     response: (req) => ({
       id: req.id,
