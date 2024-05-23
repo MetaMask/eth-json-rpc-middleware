@@ -7,10 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [12.1.1]
-### Uncategorized
-- deps: eth-block-tracker@^8.0.0 -> @metamask/eth-block-tracker@^9.0.2 ([#303](https://github.com/MetaMask/eth-json-rpc-middleware/pull/303))
-- Enabling MetaMask security code scanner ([#292](https://github.com/MetaMask/eth-json-rpc-middleware/pull/292))
-- Add Shared Libraries team in codeowners file ([#289](https://github.com/MetaMask/eth-json-rpc-middleware/pull/289))
+### Fixed
+- Update from `eth-block-tracker@^8.0.0` to `@metamask/eth-block-tracker@^9.0.2` ([#303](https://github.com/MetaMask/eth-json-rpc-middleware/pull/303))
+  - Mitigates polling-loop related concurrency issue in the block tracker.
 
 ## [12.1.0]
 ### Added
