@@ -953,7 +953,7 @@ __metadata:
     "@metamask/eslint-config-nodejs": ^12.1.0
     "@metamask/eslint-config-typescript": ^12.1.0
     "@metamask/eth-block-tracker": ^9.0.2
-    "@metamask/eth-json-rpc-provider": ^2.1.0
+    "@metamask/eth-json-rpc-provider": ^3.0.2
     "@metamask/eth-sig-util": ^7.0.0
     "@metamask/json-rpc-engine": ^8.0.1
     "@metamask/rpc-errors": ^6.0.0
@@ -985,7 +985,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@metamask/eth-json-rpc-provider@npm:^2.1.0, @metamask/eth-json-rpc-provider@npm:^2.3.1":
+"@metamask/eth-json-rpc-provider@npm:^2.3.1":
   version: 2.3.2
   resolution: "@metamask/eth-json-rpc-provider@npm:2.3.2"
   dependencies:
@@ -993,6 +993,17 @@ __metadata:
     "@metamask/safe-event-emitter": ^3.0.0
     "@metamask/utils": ^8.3.0
   checksum: e6731271aad3b972d85b9230c26d35a9b88722f3bd3024675ad2f568e634e9fdfef4717ef2892f3cc512d381cf17a4e20dbd5eb808ced765082bea3379ad6ddc
+  languageName: node
+  linkType: hard
+
+"@metamask/eth-json-rpc-provider@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@metamask/eth-json-rpc-provider@npm:3.0.2"
+  dependencies:
+    "@metamask/json-rpc-engine": ^8.0.2
+    "@metamask/safe-event-emitter": ^3.0.0
+    "@metamask/utils": ^8.3.0
+  checksum: 0321eaad6fa205a9d3ddcfaf28e63c05291614893cb2e116151185a4acbd6bb6a508d6e556b3cb8bc4d3caef4bf0a638202d9b6bdc127fbcb81715eb2660a809
   languageName: node
   linkType: hard
 
@@ -1021,7 +1032,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/json-rpc-engine@npm:^8.0.1":
+"@metamask/json-rpc-engine@npm:^8.0.1, @metamask/json-rpc-engine@npm:^8.0.2":
   version: 8.0.2
   resolution: "@metamask/json-rpc-engine@npm:8.0.2"
   dependencies:
