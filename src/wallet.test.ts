@@ -5,8 +5,8 @@ import pify from 'pify';
 import type { TransactionParams, MessageParams, TypedMessageV1Params } from '.';
 import { createWalletMiddleware } from '.';
 
-jest.mock('./utils/normalizer', () => ({
-  normalizeEIP712TypedMessageData: jest.fn().mockImplementation((data) => data),
+jest.mock('./utils/normalize', () => ({
+  normalizeTypedMessage: jest.fn().mockImplementation((data) => data),
 }));
 
 const testAddresses = [
