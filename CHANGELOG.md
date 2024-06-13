@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [13.0.0]
-### Uncategorized
-- chore(devdeps): @lavamoat/allow-scripts@^2.3.1->^3.0.4 ([#302](https://github.com/MetaMask/eth-json-rpc-middleware/pull/302))
+### Changed
+- **BREAKING**: Drop support for Node.js v16; add support for Node.js v20, v22 ([#312](https://github.com/MetaMask/eth-json-rpc-middleware/pull/312))
+- Update `@metamask/eth-json-rpc-provider` from `^3.0.2` to `^4.0.0` ([#313](https://github.com/MetaMask/eth-json-rpc-middleware/pull/313))
+- Update `@metamask/eth-block-tracker` from `^9.0.3` to `^10.0.0` ([#313](https://github.com/MetaMask/eth-json-rpc-middleware/pull/313))
+- Update `@metamask/json-rpc-engine` from `^8.0.2` to `^9.0.0` ([#313](https://github.com/MetaMask/eth-json-rpc-middleware/pull/313))
 
 ## [12.1.2]
 ### Fixed
