@@ -307,12 +307,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     const params = req.params as [string, string];
 
     const address = await validateAndNormalizeKeyholder(params[0], req);
-    let message = params[1];
-    try {
-      message = normalizeTypedMessage(message);
-    } catch (e) {
-      // Ignore normalization errors and pass the message as is
-    }
+    const message = normalizeTypedMessage(params[1]);
     const version = 'V4';
     const msgParams: TypedMessageParams = {
       data: message,
