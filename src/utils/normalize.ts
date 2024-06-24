@@ -22,9 +22,7 @@ type SignTypedMessageDataV3V4 = {
 export function normalizeTypedMessage(messageData: string) {
   let data;
   try {
-    data = parseTypedMessage(
-      messageData,
-    ) as unknown as SignTypedMessageDataV3V4;
+    data = parseTypedMessage(messageData);
   } catch (e) {
     // Ignore normalization errors and pass the message as is
     return messageData;
@@ -53,7 +51,7 @@ function parseTypedMessage(data: string) {
   }
 
   try {
-    return JSON.parse(data);
+    return JSON.parse(data) as unknown as SignTypedMessageDataV3V4;
   } catch (e) {
     throw new Error(`Invalid message data for normalization. data: ${data}`);
   }
