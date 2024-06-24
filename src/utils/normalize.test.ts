@@ -119,6 +119,24 @@ describe('normalizeTypedMessage', () => {
     );
   });
 
+  it('should not modify if verifyingContract is not parsable', () => {
+    const expectedVerifyingContract =
+      'Notparsableaddress1234567890123456789012345678901234567890';
+    const messageDataWithHexAddress = {
+      ...MESSAGE_DATA_MOCK,
+      domain: {
+        ...MESSAGE_DATA_MOCK.domain,
+        verifyingContract: expectedVerifyingContract,
+      },
+    };
+
+    const normalizedData = parseNormalizerResult(messageDataWithHexAddress);
+
+    expect(normalizedData.domain.verifyingContract).toBe(
+      expectedVerifyingContract,
+    );
+  });
+
   it('should not modify other parts of the message data', () => {
     const normalizedData = parseNormalizerResult(MESSAGE_DATA_MOCK);
     expect(normalizedData.message).toStrictEqual(MESSAGE_DATA_MOCK.message);
