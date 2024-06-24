@@ -72,6 +72,18 @@ describe('normalizeTypedMessage', () => {
     );
   });
 
+  it('should normalize verifyingContract address in domain when provided data is an object', () => {
+    const NON_STRINGIFIED_MESSAGE_DATA_MOCK = MESSAGE_DATA_MOCK;
+    const normalizedData = JSON.parse(
+      normalizeTypedMessage(
+        NON_STRINGIFIED_MESSAGE_DATA_MOCK as unknown as string,
+      ),
+    );
+    expect(normalizedData.domain.verifyingContract).toBe(
+      '0xae7ab96520de3a18e5e111b5eaab095312d7fe84',
+    );
+  });
+
   it('should handle octal verifyingContract address by normalizing it', () => {
     const expectedNormalizedOctalAddress = '0x53';
     const messageDataWithOctalAddress = {
