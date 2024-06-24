@@ -50,11 +50,7 @@ function parseTypedMessage(data: string) {
     return data;
   }
 
-  try {
-    return JSON.parse(data) as unknown as SignTypedMessageDataV3V4;
-  } catch (e) {
-    throw new Error(`Invalid message data for normalization. data: ${data}`);
-  }
+  return JSON.parse(data) as unknown as SignTypedMessageDataV3V4;
 }
 
 /**
