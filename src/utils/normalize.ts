@@ -1,4 +1,4 @@
-import { add0x, isValidHexAddress } from '@metamask/utils';
+import { add0x, isValidHexAddress, isStrictHexString } from '@metamask/utils';
 import type { Hex } from '@metamask/utils';
 import BN from 'bn.js';
 
@@ -63,27 +63,26 @@ function parseTypedMessage(data: string) {
  * @param address - The address to normalize.
  * @returns The normalized address.
  */
-function normalizeContractAddress(address: string): Hex {
-  const addressHex = address as Hex;
-  if (isValidHexAddress(addressHex)) {
-    return addressHex;
+function normalizeContractAddress(address: string): Hex | string {
+  if (isStrictHexString(address) && isValidHexAddress(address)) {
+    return address;
   }
 
   // Check if the address is in octal format, convert to hexadecimal
-  if (addressHex.startsWith('0o')) {
+  if (address.startsWith('0o')) {
     // If octal, convert to hexadecimal
-    return octalToHex(addressHex as string);
+    return octalToHex(address as string);
   }
 
   // Check if the address is in decimal format, convert to hexadecimal
-  const parsedAddress = parseInt(addressHex, 10);
+  const parsedAddress = parseInt(address, 10);
   if (!isNaN(parsedAddress)) {
-    const hexString = new BN(addressHex.toString(), 10).toString(16);
+    const hexString = new BN(address.toString(), 10).toString(16);
     return add0x(hexString);
   }
 
   // Returning the original address without normalization
-  return addressHex;
+  return address;
 }
 
 function octalToHex(octalAddress: string): Hex {
