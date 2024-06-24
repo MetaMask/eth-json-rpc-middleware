@@ -71,7 +71,7 @@ function normalizeContractAddress(address: string): Hex | string {
   // Check if the address is in octal format, convert to hexadecimal
   if (address.startsWith('0o')) {
     // If octal, convert to hexadecimal
-    return octalToHex(address as string);
+    return octalToHex(address);
   }
 
   // Check if the address is in decimal format, convert to hexadecimal
