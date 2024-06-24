@@ -75,10 +75,12 @@ function normalizeContractAddress(address: string): Hex | string {
   }
 
   // Check if the address is in decimal format, convert to hexadecimal
-  const parsedAddress = parseInt(address, 10);
-  if (!isNaN(parsedAddress)) {
-    const hexString = new BN(address.toString(), 10).toString(16);
+  try {
+    const decimalBN = new BN(address, 10);
+    const hexString = decimalBN.toString(16);
     return add0x(hexString);
+  } catch (e) {
+    // Ignore errors and return the original address
   }
 
   // Returning the original address without normalization
