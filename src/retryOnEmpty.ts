@@ -2,7 +2,7 @@ import type { PollingBlockTracker } from '@metamask/eth-block-tracker';
 import type { SafeEventEmitterProvider } from '@metamask/eth-json-rpc-provider';
 import type { JsonRpcMiddleware } from '@metamask/json-rpc-engine';
 import { createAsyncMiddleware } from '@metamask/json-rpc-engine';
-import type { Json, JsonRpcParams, JsonRpcRequest } from '@metamask/utils';
+import type { Json, JsonRpcParams } from '@metamask/utils';
 import { klona } from 'klona/full';
 
 import { projectLogger, createModuleLogger } from './logging-utils';
