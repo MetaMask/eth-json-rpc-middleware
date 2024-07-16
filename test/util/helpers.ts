@@ -1,17 +1,12 @@
 import type { SafeEventEmitterProvider } from '@metamask/eth-json-rpc-provider';
 import type { JsonRpcMiddleware } from '@metamask/json-rpc-engine';
-import type {
-  Json,
-  JsonRpcParams,
-  JsonRpcRequest,
-  JsonRpcResponse,
-} from '@metamask/utils';
+import type { Json, JsonRpcParams, JsonRpcRequest } from '@metamask/utils';
 import { klona } from 'klona/full';
 import { isDeepStrictEqual } from 'util';
 
 /**
  * An object that can be used to assign a canned response to a request made via
- * `provider.sendAsync`.
+ * `provider.request`.
  *
  * @template Params - The type that represents the request params.
  * @template Result - The type that represents the response result.
@@ -23,7 +18,7 @@ import { isDeepStrictEqual } from 'util';
  * (counting the first request as 1). This latter argument be used to specify
  * different responses for different instances of the same request.
  * @property remainAfterUse - Usually, when a request is made via
- * `provider.sendAsync`, the ProviderRequestStub which matches that request is
+ * `provider.request`, the ProviderRequestStub which matches that request is
  * removed from the list of stubs, so that if the same request comes through
  * again, there will be no matching stub and an error will be thrown. This
  * feature is useful for making sure that all requests have canned responses.
@@ -33,10 +28,7 @@ export interface ProviderRequestStub<
   Result extends Json,
 > {
   request: Partial<JsonRpcRequest<Params>>;
-  response: (
-    request: JsonRpcRequest<Params>,
-    callNumber: number,
-  ) => JsonRpcResponse<Result>;
+  response: (callNumber: number) => Result;
   remainAfterUse?: boolean;
 }
 
@@ -133,7 +125,7 @@ export function buildMockParamsWithoutBlockParamAt(
 
 /**
  * Builds a canned response for a `eth_blockNumber` request made to
- * `provider.sendAsync` such that the response will return the given block
+ * `provider.request` such that the response will return the given block
  * number. Intended to be used in conjunction with `stubProviderRequests`.
  *
  * @param blockNumber - The block number (default: '0x0').
@@ -141,22 +133,18 @@ export function buildMockParamsWithoutBlockParamAt(
  */
 export function buildStubForBlockNumberRequest(
   blockNumber = '0x0',
-): ProviderRequestStub<JsonRpcParams, string> {
+): ProviderRequestStub<JsonRpcParams, Json> {
   return {
     request: {
       method: 'eth_blockNumber',
       params: [],
     },
-    response: (req) => ({
-      id: req.id,
-      jsonrpc: '2.0',
-      result: blockNumber,
-    }),
+    response: () => blockNumber,
   };
 }
 
 /**
- * Builds a canned response for a request made to `provider.sendAsync`. Intended
+ * Builds a canned response for a request made to `provider.request`. Intended
  * to be used in conjunction with `stubProviderRequests`. Although not strictly
  * necessary, it helps to assign a proper type to a request/response pair.
  *
@@ -173,20 +161,20 @@ export function buildStubForGenericRequest<
 }
 
 /**
- * Asserts that `provider.sendAsync` has not been called with the given request
+ * Asserts that `provider.request` has not been called with the given request
  * object (or an object that can matched to that request).
  *
- * @param sendAsyncSpy - The Jest spy object that represents
- * `provider.sendAsync`.
+ * @param requestSpy - The Jest spy object that represents
+ * `provider.request`.
  * @param requestMatcher - An object that can be matched to a request passed to
- * `provider.sendAsync`.
+ * `provider.request`.
  */
 export function expectProviderRequestNotToHaveBeenMade(
-  sendAsyncSpy: jest.SpyInstance,
+  requestSpy: jest.SpyInstance,
   requestMatcher: Partial<JsonRpcRequest>,
 ) {
   expect(
-    sendAsyncSpy.mock.calls.some((args) =>
+    requestSpy.mock.calls.some((args) =>
       requestMatches(requestMatcher, args[0]),
     ),
   ).toBe(false);
@@ -194,7 +182,7 @@ export function expectProviderRequestNotToHaveBeenMade(
 
 /**
  * Provides a way to assign specific responses to specific requests that are
- * made through a provider. When `provider.sendAsync` is called, a stub matching
+ * made through a provider. When `provider.request` is called, a stub matching
  * the request will be looked for; if one is found, it is used and then
  * discarded, unless `remainAfterUse` is set for the stub.
  *
@@ -205,16 +193,16 @@ export function expectProviderRequestNotToHaveBeenMade(
  * number of times that that request has been made (counting the first as 1).
  * This latter argument be used to specify different responses for different
  * instances of the same request. The function should return a response object.
- * @returns The Jest spy object that represents `provider.sendAsync` (so that
+ * @returns The Jest spy object that represents `provider.request` (so that
  * you can make assertions on the method later, if you like).
  */
 export function stubProviderRequests(
   provider: SafeEventEmitterProvider,
-  stubs: ProviderRequestStub<any, any>[],
+  stubs: ProviderRequestStub<any, Json>[],
 ) {
   const remainingStubs = klona(stubs);
   const callNumbersByRequest = new Map<Partial<JsonRpcRequest>, number>();
-  return jest.spyOn(provider, 'sendAsync').mockImplementation((request, cb) => {
+  return jest.spyOn(provider, 'request').mockImplementation(async (request) => {
     const stubIndex = remainingStubs.findIndex((stub) =>
       requestMatches(stub.request, request),
     );
@@ -225,22 +213,24 @@ export function stubProviderRequests(
       const stub = remainingStubs[stubIndex];
       const callNumber = callNumbersByRequest.get(stub.request) ?? 1;
 
-      cb(undefined, stub.response(request, callNumber));
+      const res = stub.response(callNumber);
 
       callNumbersByRequest.set(stub.request, callNumber + 1);
 
       if (!stub.remainAfterUse) {
         remainingStubs.splice(stubIndex, 1);
       }
+
+      return Promise.resolve(res);
     }
   });
 }
 
 /**
  * When using `stubProviderRequests` to list canned responses for specific
- * requests that are made to `provider.sendAsync`, you don't need to provide the
+ * requests that are made to `provider.request`, you don't need to provide the
  * full request object to go along with the response, but only part of that
- * request object. When `provider.sendAsync` is then called, we can look up the
+ * request object. When `provider.request` is then called, we can look up the
  * compare the real request object to the request object that was specified to
  * find a match. This function is used to do that comparison (and other
  * like comparisons).
@@ -252,7 +242,7 @@ export function stubProviderRequests(
  */
 export function requestMatches(
   requestMatcher: Partial<JsonRpcRequest>,
-  request: JsonRpcRequest,
+  request: Partial<JsonRpcRequest>,
 ): boolean {
   return (Object.keys(requestMatcher) as (keyof typeof requestMatcher)[]).every(
     (key) => isDeepStrictEqual(requestMatcher[key], request[key]),

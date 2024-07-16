@@ -106,11 +106,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: (req) => ({
-                      id: req.id,
-                      jsonrpc: '2.0' as const,
-                      result: 'something',
-                    }),
+                    response: () => 'something',
                   }),
                 ]);
 
@@ -161,11 +157,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: (req) => ({
-                      id: req.id,
-                      jsonrpc: '2.0' as const,
-                      result: 'something',
-                    }),
+                    response: () => 'something',
                   }),
                 ]);
 
@@ -207,11 +199,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: (req) => ({
-                      id: req.id,
-                      jsonrpc: '2.0' as const,
-                      result: 'something',
-                    }),
+                    response: () => 'something',
                   }),
                 ]);
 
@@ -259,11 +247,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: (req) => ({
-                      id: req.id,
-                      jsonrpc: '2.0' as const,
-                      result: 'something',
-                    }),
+                    response: () => 'something',
                   }),
                 ]);
 
@@ -303,13 +287,13 @@ describe('createBlockRefMiddleware', () => {
                       blockParam,
                     ),
                   };
-                  const sendAsyncSpy = stubProviderRequests(provider, [
+                  const requestSpy = stubProviderRequests(provider, [
                     buildStubForBlockNumberRequest('0x100'),
                   ]);
 
                   await engine.handle(request);
 
-                  expectProviderRequestNotToHaveBeenMade(sendAsyncSpy, request);
+                  expectProviderRequestNotToHaveBeenMade(requestSpy, request);
                 },
               );
             });
@@ -387,13 +371,13 @@ describe('createBlockRefMiddleware', () => {
             method: 'a_non_block_param_method',
             params: ['some value', '0x200'],
           };
-          const sendAsyncSpy = stubProviderRequests(provider, [
+          const requestSpy = stubProviderRequests(provider, [
             buildStubForBlockNumberRequest('0x100'),
           ]);
 
           await engine.handle(request);
 
-          expectProviderRequestNotToHaveBeenMade(sendAsyncSpy, request);
+          expectProviderRequestNotToHaveBeenMade(requestSpy, request);
         },
       );
     });

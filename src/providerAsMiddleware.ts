@@ -10,19 +10,15 @@ export function providerAsMiddleware(
   provider: SafeEventEmitterProvider,
 ): JsonRpcMiddleware<JsonRpcParams, Json> {
   return (req, res, _next, end) => {
-    // send request to provider
-    provider.sendAsync(
-      req,
-      (err: unknown, providerRes: PendingJsonRpcResponse<any>) => {
-        // forward any error
-        if (err instanceof Error) {
-          return end(err);
-        }
-        // copy provider response onto original response
-        Object.assign(res, providerRes);
-        return end();
-      },
-    );
+    provider
+      .request(req)
+      .then((result) => {
+        res.result = result;
+        end();
+      })
+      .catch((error) => {
+        end(error);
+      });
   };
 }
 

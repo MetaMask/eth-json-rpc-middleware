@@ -2,13 +2,8 @@ import type { PollingBlockTracker } from '@metamask/eth-block-tracker';
 import type { SafeEventEmitterProvider } from '@metamask/eth-json-rpc-provider';
 import type { JsonRpcMiddleware } from '@metamask/json-rpc-engine';
 import { createAsyncMiddleware } from '@metamask/json-rpc-engine';
-import type {
-  Json,
-  JsonRpcParams,
-  PendingJsonRpcResponse,
-} from '@metamask/utils';
+import type { Json, JsonRpcParams, JsonRpcRequest } from '@metamask/utils';
 import { klona } from 'klona/full';
-import pify from 'pify';
 
 import { projectLogger, createModuleLogger } from './logging-utils';
 import type { Block } from './types';
@@ -103,41 +98,40 @@ export function createRetryOnEmptyMiddleware({
     // create child request with specific block-ref
     const childRequest = klona(req);
     // attempt child request until non-empty response is received
-    const childResponse: PendingJsonRpcResponse<Block> = await retry(
-      10,
-      async () => {
+    try {
+      const childResponse = await retry(10, async () => {
         log('Performing request %o', childRequest);
-        const attemptResponse: PendingJsonRpcResponse<Block> = await pify(
-          provider.sendAsync,
-        ).call(provider, childRequest);
-        log('Response is %o', attemptResponse);
+        const result = await provider.request<JsonRpcParams, Block>(
+          childRequest,
+        );
+        log('Result is %o', result);
         // verify result
-        if (emptyValues.includes(attemptResponse.result as any)) {
+        if (emptyValues.includes(result as any)) {
           throw new Error(
-            `RetryOnEmptyMiddleware - empty response "${JSON.stringify(
-              attemptResponse,
+            `RetryOnEmptyMiddleware - empty result "${JSON.stringify(
+              result,
             )}" for request "${JSON.stringify(childRequest)}"`,
           );
         }
-        return attemptResponse;
-      },
-    );
-    log(
-      'Copying result %o and error %o',
-      childResponse.result,
-      childResponse.error,
-    );
-    // copy child response onto original response
-    res.result = childResponse.result;
-    res.error = childResponse.error;
+        return result;
+      });
+      log(
+        'Copying result %o and error %o',
+        childResponse.result,
+        childResponse.error,
+      );
+      res.result = childResponse.result;
+    } catch (error: any) {
+      res.error = error;
+    }
     return undefined;
   });
 }
 
 async function retry(
   maxRetries: number,
-  asyncFn: () => Promise<PendingJsonRpcResponse<Block>>,
-): Promise<PendingJsonRpcResponse<Block>> {
+  asyncFn: () => Promise<Block>,
+): Promise<Block> {
   for (let index = 0; index < maxRetries; index++) {
     try {
       return await asyncFn();
