@@ -158,12 +158,7 @@ describe('createRetryOnEmptyMiddleware', () => {
                 numberOfTimes: 10,
               });
 
-              expect(await promiseForResponse).toStrictEqual({
-                id: 1,
-                jsonrpc: '2.0',
-                result: 'something',
-                error: undefined,
-              });
+              expect(await promiseForResponse).toBe('something');
             },
           );
         });

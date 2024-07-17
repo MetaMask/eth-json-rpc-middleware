@@ -112,12 +112,7 @@ describe('createBlockRefMiddleware', () => {
 
                 const response = await engine.handle(request);
 
-                expect(response).toStrictEqual({
-                  id: 1,
-                  jsonrpc: '2.0',
-                  result: 'something',
-                  error: undefined,
-                });
+                expect(response).toBe('something');
               },
             );
           });
@@ -205,12 +200,7 @@ describe('createBlockRefMiddleware', () => {
 
                 const response = await engine.handle(request);
 
-                expect(response).toStrictEqual({
-                  id: 1,
-                  jsonrpc: '2.0',
-                  result: 'something',
-                  error: undefined,
-                });
+                expect(response).toBe('something');
               },
             );
           });
