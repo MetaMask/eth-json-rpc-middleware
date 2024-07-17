@@ -987,18 +987,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@metamask/eth-json-rpc-provider@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@metamask/eth-json-rpc-provider@npm:4.0.0"
-  dependencies:
-    "@metamask/json-rpc-engine": ^9.0.0
-    "@metamask/safe-event-emitter": ^3.0.0
-    "@metamask/utils": ^8.3.0
-  checksum: 4f8ad6a1737d54aeb83c5a1c7073a5cb17223e9cdacb0da4549aac7b57704b8239d9670c438eadf7974fe1167e59a9c54e6c32cce44b111c6514aae71429d6dd
-  languageName: node
-  linkType: hard
-
-"@metamask/eth-json-rpc-provider@npm:^4.1.0":
+"@metamask/eth-json-rpc-provider@npm:^4.0.0, @metamask/eth-json-rpc-provider@npm:^4.1.0":
   version: 4.1.0
   resolution: "@metamask/eth-json-rpc-provider@npm:4.1.0"
   dependencies:
