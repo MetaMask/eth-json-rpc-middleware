@@ -276,6 +276,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     }
 
     const params = req.params as [string, string];
+
     const address = await validateAndNormalizeKeyholder(params[0], req);
     const message = normalizeTypedMessage(params[1]);
     validateVerifyingContract(message);
@@ -306,6 +307,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     }
 
     const params = req.params as [string, string];
+
     const address = await validateAndNormalizeKeyholder(params[0], req);
     const message = normalizeTypedMessage(params[1]);
     validateVerifyingContract(message);
