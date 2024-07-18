@@ -69,7 +69,9 @@ export function createBlockRefMiddleware({
         childRequest,
       );
       res.result = childResult;
+      res.error = undefined;
     } catch (error: any) {
+      res.result = undefined;
       res.error = error;
     }
 

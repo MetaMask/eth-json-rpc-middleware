@@ -116,6 +116,7 @@ describe('createBlockRefMiddleware', () => {
                   id: 1,
                   jsonrpc: '2.0',
                   result: 'something',
+                  error: undefined,
                 });
               },
             );
@@ -208,6 +209,7 @@ describe('createBlockRefMiddleware', () => {
                   id: 1,
                   jsonrpc: '2.0',
                   result: 'something',
+                  error: undefined,
                 });
               },
             );
