@@ -66,14 +66,14 @@ describe('normalizeTypedMessage', () => {
   }
 
   it('should normalize verifyingContract address in domain', () => {
-    const msg_mock = {
+    const msgMock = {
       ...MESSAGE_DATA_MOCK,
       domain: {
         ...MESSAGE_DATA_MOCK.domain,
         verifyingContract: '0Xae7ab96520de3a18e5e111b5eaab095312d7fe84',
       },
     };
-    const normalizedData = parseNormalizerResult(msg_mock);
+    const normalizedData = parseNormalizerResult(msgMock);
     expect(normalizedData.domain.verifyingContract).toBe(
       '0xae7ab96520de3a18e5e111b5eaab095312d7fe84',
     );
