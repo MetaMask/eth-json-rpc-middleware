@@ -115,13 +115,12 @@ export function createRetryOnEmptyMiddleware({
         }
         return result;
       });
-      log(
-        'Copying result %o and error %o',
-        childResponse.result,
-        childResponse.error,
-      );
-      res.result = childResponse.result;
+      log('Copying result %o', childResponse.result);
+      res.result = childResponse;
+      res.error = undefined;
     } catch (error: any) {
+      log('Copying error %o', error);
+      res.result = undefined;
       res.error = error;
     }
     return undefined;

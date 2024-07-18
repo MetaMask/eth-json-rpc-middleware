@@ -28,7 +28,7 @@ export interface ProviderRequestStub<
   Result extends Json,
 > {
   request: Partial<JsonRpcRequest<Params>>;
-  response: (callNumber: number) => Result;
+  response: (callNumber: number) => Promise<Result>;
   remainAfterUse?: boolean;
 }
 
@@ -139,7 +139,7 @@ export function buildStubForBlockNumberRequest(
       method: 'eth_blockNumber',
       params: [],
     },
-    response: () => blockNumber,
+    response: async () => Promise.resolve(blockNumber),
   };
 }
 

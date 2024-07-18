@@ -147,7 +147,7 @@ describe('createRetryOnEmptyMiddleware', () => {
                 stubRequestThatFailsThenFinallySucceeds({
                   request,
                   numberOfTimesToFail: 9,
-                  successfulResponse: () => 'something',
+                  successfulResponse: async () => Promise.resolve('something'),
                 }),
               ]);
 
@@ -158,7 +158,12 @@ describe('createRetryOnEmptyMiddleware', () => {
                 numberOfTimes: 10,
               });
 
-              expect(await promiseForResponse).toBe('something');
+              expect(await promiseForResponse).toStrictEqual({
+                id: 1,
+                jsonrpc: '2.0',
+                result: 'something',
+                error: undefined,
+              });
             },
           );
         });
@@ -247,7 +252,7 @@ describe('createRetryOnEmptyMiddleware', () => {
                 buildStubForBlockNumberRequest(blockNumber),
                 stubGenericRequest({
                   request,
-                  response: () => 'success',
+                  response: async () => Promise.resolve('success'),
                 }),
               ]);
 
@@ -728,12 +733,12 @@ function stubRequestThatFailsThenFinallySucceeds<
 }): ProviderRequestStub<T, U> {
   return stubGenericRequest({
     request,
-    response: (callNumber) => {
+    response: async (callNumber) => {
       if (callNumber <= numberOfTimesToFail) {
         throw new JsonRpcError(-1, 'oops');
       }
 
-      return successfulResponse(callNumber);
+      return await successfulResponse(callNumber);
     },
     remainAfterUse: true,
   });

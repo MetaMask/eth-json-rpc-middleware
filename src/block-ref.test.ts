@@ -106,13 +106,17 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: () => 'something',
+                    response: async () => Promise.resolve('something'),
                   }),
                 ]);
 
                 const response = await engine.handle(request);
 
-                expect(response).toBe('something');
+                expect(response).toStrictEqual({
+                  id: 1,
+                  jsonrpc: '2.0',
+                  result: 'something',
+                });
               },
             );
           });
@@ -152,7 +156,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: () => 'something',
+                    response: async () => Promise.resolve('something'),
                   }),
                 ]);
 
@@ -194,13 +198,17 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: () => 'something',
+                    response: async () => Promise.resolve('something'),
                   }),
                 ]);
 
                 const response = await engine.handle(request);
 
-                expect(response).toBe('something');
+                expect(response).toStrictEqual({
+                  id: 1,
+                  jsonrpc: '2.0',
+                  result: 'something',
+                });
               },
             );
           });
@@ -237,7 +245,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: () => 'something',
+                    response: async () => Promise.resolve('something'),
                   }),
                 ]);
 
