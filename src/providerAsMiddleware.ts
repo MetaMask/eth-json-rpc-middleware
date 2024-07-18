@@ -17,7 +17,11 @@ export function providerAsMiddleware(
         end();
       })
       .catch((error) => {
-        end(error);
+        if (error instanceof Error) {
+          end(error);
+        } else {
+          end();
+        }
       });
   };
 }
