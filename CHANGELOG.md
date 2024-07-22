@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.0.1]
+### Uncategorized
+- fix: restore pipeline node version to 22.x ([#322](https://github.com/MetaMask/eth-json-rpc-middleware/pull/322))
+- Temporarily use Node 22.5.1 to get CI to run ([#321](https://github.com/MetaMask/eth-json-rpc-middleware/pull/321))
+
 ## [13.0.0]
 ### Changed
 - **BREAKING**: Drop support for Node.js v16; add support for Node.js v20, v22 ([#312](https://github.com/MetaMask/eth-json-rpc-middleware/pull/312))
@@ -185,7 +190,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `json-rpc-engine@5.3.0` ([#53](https://github.com/MetaMask/eth-json-rpc-middleware/pull/53))
 - `eth-rpc-errors@3.0.0` ([#55](https://github.com/MetaMask/eth-json-rpc-middleware/pull/55))
 
-[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v13.0.0...HEAD
+[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v13.0.1...HEAD
+[13.0.1]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v13.0.0...v13.0.1
 [13.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v12.1.2...v13.0.0
 [12.1.2]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v12.1.1...v12.1.2
 [12.1.1]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v12.1.0...v12.1.1
