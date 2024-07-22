@@ -2,7 +2,6 @@ import type { PollingBlockTracker } from '@metamask/eth-block-tracker';
 import type { SafeEventEmitterProvider } from '@metamask/eth-json-rpc-provider';
 import type { JsonRpcMiddleware } from '@metamask/json-rpc-engine';
 import { createAsyncMiddleware } from '@metamask/json-rpc-engine';
-import { serializeError } from '@metamask/rpc-errors';
 import type { Json, JsonRpcParams } from '@metamask/utils';
 import { klona } from 'klona/full';
 
@@ -65,14 +64,7 @@ export function createBlockRefMiddleware({
     // perform child request
     log('Performing another request %o', childRequest);
     // copy child result onto original response
-    try {
-      const childResult = await provider.request<JsonRpcParams, Block>(
-        childRequest,
-      );
-      res.result = childResult;
-    } catch (error) {
-      res.error = serializeError(error);
-    }
+    res.result = await provider.request<JsonRpcParams, Block>(childRequest);
 
     return undefined;
   });
