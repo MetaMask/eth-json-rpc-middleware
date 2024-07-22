@@ -106,7 +106,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: async () => Promise.resolve('something'),
+                    response: async () => 'something',
                   }),
                 ]);
 
@@ -157,7 +157,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: async () => Promise.resolve('something'),
+                    response: async () => 'something',
                   }),
                 ]);
 
@@ -199,7 +199,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: async () => Promise.resolve('something'),
+                    response: async () => 'something',
                   }),
                 ]);
 
@@ -247,7 +247,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: async () => Promise.resolve('something'),
+                    response: async () => 'something',
                   }),
                 ]);
 

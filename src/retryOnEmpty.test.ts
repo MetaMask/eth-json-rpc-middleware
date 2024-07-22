@@ -147,7 +147,7 @@ describe('createRetryOnEmptyMiddleware', () => {
                 stubRequestThatFailsThenFinallySucceeds({
                   request,
                   numberOfTimesToFail: 9,
-                  successfulResponse: async () => Promise.resolve('something'),
+                  successfulResponse: async () => 'something',
                 }),
               ]);
 
@@ -252,7 +252,7 @@ describe('createRetryOnEmptyMiddleware', () => {
                 buildStubForBlockNumberRequest(blockNumber),
                 stubGenericRequest({
                   request,
-                  response: async () => Promise.resolve('success'),
+                  response: async () => 'success',
                 }),
               ]);
 

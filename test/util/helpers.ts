@@ -139,7 +139,7 @@ export function buildStubForBlockNumberRequest(
       method: 'eth_blockNumber',
       params: [],
     },
-    response: async () => Promise.resolve(blockNumber),
+    response: async () => blockNumber,
   };
 }
 
@@ -221,7 +221,7 @@ export function stubProviderRequests(
         remainingStubs.splice(stubIndex, 1);
       }
 
-      return Promise.resolve(res);
+      return res;
     }
   });
 }
