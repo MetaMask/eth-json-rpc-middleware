@@ -122,10 +122,10 @@ export function createRetryOnEmptyMiddleware({
   });
 }
 
-async function retry<Response>(
+async function retry<Result>(
   maxRetries: number,
-  asyncFn: () => Promise<Response>,
-): Promise<Response> {
+  asyncFn: () => Promise<Result>,
+): Promise<Result> {
   for (let index = 0; index < maxRetries; index++) {
     try {
       return await asyncFn();
