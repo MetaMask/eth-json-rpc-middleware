@@ -162,7 +162,6 @@ describe('createRetryOnEmptyMiddleware', () => {
                 id: 1,
                 jsonrpc: '2.0',
                 result: 'something',
-                error: undefined,
               });
             },
           );

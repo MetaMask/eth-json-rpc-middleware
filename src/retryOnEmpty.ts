@@ -98,39 +98,34 @@ export function createRetryOnEmptyMiddleware({
     // create child request with specific block-ref
     const childRequest = klona(req);
     // attempt child request until non-empty response is received
-    try {
-      const childResult = await retry(10, async () => {
-        log('Performing request %o', childRequest);
-        const result = await provider.request<JsonRpcParams, Block>(
-          childRequest,
+    const childResult = await retry(10, async () => {
+      log('Performing request %o', childRequest);
+      const attemptResult = await provider.request<JsonRpcParams, Block>(
+        childRequest,
+      );
+      log('Result is %o', attemptResult);
+      // verify result
+      const allEmptyValues: unknown[] = emptyValues;
+      if (allEmptyValues.includes(attemptResult)) {
+        throw new Error(
+          `RetryOnEmptyMiddleware - empty result "${JSON.stringify(
+            attemptResult,
+          )}" for request "${JSON.stringify(childRequest)}"`,
         );
-        log('Result is %o', result);
-        // verify result
-        if (emptyValues.includes(result as any)) {
-          throw new Error(
-            `RetryOnEmptyMiddleware - empty result "${JSON.stringify(
-              result,
-            )}" for request "${JSON.stringify(childRequest)}"`,
-          );
-        }
-        return result;
-      });
-      log('Copying result %o', childResult);
-      res.result = childResult;
-      res.error = undefined;
-    } catch (error: any) {
-      log('Copying error %o', error);
-      res.result = undefined;
-      res.error = error;
-    }
+      }
+      return attemptResult;
+    });
+    log('Copying result %o', childResult);
+    // copy child result onto original response
+    res.result = childResult;
     return undefined;
   });
 }
 
-async function retry(
+async function retry<Response>(
   maxRetries: number,
-  asyncFn: () => Promise<Block>,
-): Promise<Block> {
+  asyncFn: () => Promise<Response>,
+): Promise<Response> {
   for (let index = 0; index < maxRetries; index++) {
     try {
       return await asyncFn();
