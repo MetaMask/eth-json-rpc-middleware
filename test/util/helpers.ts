@@ -5,46 +5,46 @@ import { klona } from 'klona/full';
 import { isDeepStrictEqual } from 'util';
 
 /**
- * An object that can be used to assign a canned response to a request made via
+ * An object that can be used to assign a canned result to a request made via
  * `provider.request`.
  *
  * @template Params - The type that represents the request params.
- * @template Result - The type that represents the response result.
+ * @template Result - The type that represents the result.
  * @property request - An object that represents a JsonRpcRequest. Keys such as
  * `id` or `jsonrpc` may be omitted if you don't care about them.
- * @property response - A function that returns a JsonRpcResponse for that
- * request. This function takes two arguments: the *real* request and a
- * `callNumber`, which is the number of times the request has been made
+ * @property result - A function that returns a result for that request.
+ * This function takes `callNumber` argument,
+ * which is the number of times the request has been made
  * (counting the first request as 1). This latter argument be used to specify
- * different responses for different instances of the same request.
+ * different results for different instances of the same request.
  * @property remainAfterUse - Usually, when a request is made via
  * `provider.request`, the ProviderRequestStub which matches that request is
  * removed from the list of stubs, so that if the same request comes through
  * again, there will be no matching stub and an error will be thrown. This
- * feature is useful for making sure that all requests have canned responses.
+ * feature is useful for making sure that all requests have canned results.
  */
 export interface ProviderRequestStub<
   Params extends JsonRpcParams,
   Result extends Json,
 > {
   request: Partial<JsonRpcRequest<Params>>;
-  response: (callNumber: number) => Promise<Result>;
+  result: (callNumber: number) => Promise<Result>;
   remainAfterUse?: boolean;
 }
 
 /**
  * Creates a middleware function that ends the request, but not before ensuring
- * that the response has been filled with something. Additionally this function
+ * that the result has been filled with something. Additionally this function
  * is a Jest mock function so that you can make assertions on it.
  *
  * @template Params - The type that represents the request params.
- * @template Result - The type that represents the response result.
+ * @template Result - The type that represents the result.
  * @returns The created middleware, as a mock function.
  */
-export function buildFinalMiddlewareWithDefaultResponse<
+export function buildFinalMiddlewareWithDefaultResult<
   Params extends JsonRpcParams,
   Result extends Json,
->(): JsonRpcMiddleware<Params, Result | 'default response'> {
+>(): JsonRpcMiddleware<Params, Result | 'default result'> {
   return jest.fn((req, res, _next, end) => {
     if (res.id === undefined) {
       res.id = req.id;
@@ -55,7 +55,7 @@ export function buildFinalMiddlewareWithDefaultResponse<
     }
 
     if (res.result === undefined) {
-      res.result = 'default response';
+      res.result = 'default result';
     }
 
     end();
@@ -124,12 +124,12 @@ export function buildMockParamsWithoutBlockParamAt(
 }
 
 /**
- * Builds a canned response for a `eth_blockNumber` request made to
- * `provider.request` such that the response will return the given block
+ * Builds a canned result for a `eth_blockNumber` request made to
+ * `provider.request` such that the result will return the given block
  * number. Intended to be used in conjunction with `stubProviderRequests`.
  *
  * @param blockNumber - The block number (default: '0x0').
- * @returns The request/response pair.
+ * @returns The request/result pair.
  */
 export function buildStubForBlockNumberRequest(
   blockNumber = '0x0',
@@ -139,19 +139,19 @@ export function buildStubForBlockNumberRequest(
       method: 'eth_blockNumber',
       params: [],
     },
-    response: async () => blockNumber,
+    result: async () => blockNumber,
   };
 }
 
 /**
- * Builds a canned response for a request made to `provider.request`. Intended
+ * Builds a canned result for a request made to `provider.request`. Intended
  * to be used in conjunction with `stubProviderRequests`. Although not strictly
- * necessary, it helps to assign a proper type to a request/response pair.
+ * necessary, it helps to assign a proper type to a request/result pair.
  *
  * @template Params - The type that represents the request params.
- * @template Result - The type that represents the response result.
- * @param requestStub - The request/response pair.
- * @returns The request/response pair, properly typed.
+ * @template Result - The type that represents the result.
+ * @param requestStub - The request/result pair.
+ * @returns The request/result pair, properly typed.
  */
 export function buildStubForGenericRequest<
   Params extends JsonRpcParams,
@@ -181,18 +181,18 @@ export function expectProviderRequestNotToHaveBeenMade(
 }
 
 /**
- * Provides a way to assign specific responses to specific requests that are
+ * Provides a way to assign specific results to specific requests that are
  * made through a provider. When `provider.request` is called, a stub matching
  * the request will be looked for; if one is found, it is used and then
  * discarded, unless `remainAfterUse` is set for the stub.
  *
  * @param provider - The provider.
  * @param stubs - A series of pairs, where each pair specifies a request object
- * — or part of one, at least — and a response for that request. The response
- * is actually a function that takes two arguments: the *real* request and the
- * number of times that that request has been made (counting the first as 1).
- * This latter argument be used to specify different responses for different
- * instances of the same request. The function should return a response object.
+ * — or part of one, at least — and a result for that request. The result
+ * is actually a function that takes one argument, which is the number of times
+ * that request has been made (counting the first as 1).
+ * This latter argument be used to specify different results for different
+ * instances of the same request. The function should return a result.
  * @returns The Jest spy object that represents `provider.request` (so that
  * you can make assertions on the method later, if you like).
  */
@@ -213,23 +213,21 @@ export function stubProviderRequests(
       const stub = remainingStubs[stubIndex];
       const callNumber = callNumbersByRequest.get(stub.request) ?? 1;
 
-      const res = stub.response(callNumber);
-
       callNumbersByRequest.set(stub.request, callNumber + 1);
 
       if (!stub.remainAfterUse) {
         remainingStubs.splice(stubIndex, 1);
       }
 
-      return res;
+      return await stub.result(callNumber);
     }
   });
 }
 
 /**
- * When using `stubProviderRequests` to list canned responses for specific
+ * When using `stubProviderRequests` to list canned results for specific
  * requests that are made to `provider.request`, you don't need to provide the
- * full request object to go along with the response, but only part of that
+ * full request object to go along with the result, but only part of that
  * request object. When `provider.request` is then called, we can look up the
  * compare the real request object to the request object that was specified to
  * find a match. This function is used to do that comparison (and other

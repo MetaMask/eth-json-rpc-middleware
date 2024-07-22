@@ -99,7 +99,7 @@ export function createRetryOnEmptyMiddleware({
     const childRequest = klona(req);
     // attempt child request until non-empty response is received
     try {
-      const childResponse = await retry(10, async () => {
+      const childResult = await retry(10, async () => {
         log('Performing request %o', childRequest);
         const result = await provider.request<JsonRpcParams, Block>(
           childRequest,
@@ -115,8 +115,8 @@ export function createRetryOnEmptyMiddleware({
         }
         return result;
       });
-      log('Copying result %o', childResponse.result);
-      res.result = childResponse;
+      log('Copying result %o', childResult);
+      res.result = childResult;
       res.error = undefined;
     } catch (error: any) {
       log('Copying error %o', error);

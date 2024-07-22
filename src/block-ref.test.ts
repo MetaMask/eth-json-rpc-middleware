@@ -10,7 +10,7 @@ import {
   stubProviderRequests,
   buildStubForBlockNumberRequest,
   buildStubForGenericRequest,
-  buildFinalMiddlewareWithDefaultResponse,
+  buildFinalMiddlewareWithDefaultResult,
   buildMockParamsWithoutBlockParamAt,
   expectProviderRequestNotToHaveBeenMade,
 } from '../test/util/helpers';
@@ -106,7 +106,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: async () => 'something',
+                    result: async () => 'something',
                   }),
                 ]);
 
@@ -123,7 +123,7 @@ describe('createBlockRefMiddleware', () => {
           });
 
           it('does not proceed to the next middleware after making a request through the provider', async () => {
-            const finalMiddleware = buildFinalMiddlewareWithDefaultResponse();
+            const finalMiddleware = buildFinalMiddlewareWithDefaultResult();
 
             await withTestSetup(
               {
@@ -157,7 +157,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: async () => 'something',
+                    result: async () => 'something',
                   }),
                 ]);
 
@@ -199,7 +199,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: async () => 'something',
+                    result: async () => 'something',
                   }),
                 ]);
 
@@ -216,7 +216,7 @@ describe('createBlockRefMiddleware', () => {
           });
 
           it('does not proceed to the next middleware after making a request through the provider', async () => {
-            const finalMiddleware = buildFinalMiddlewareWithDefaultResponse();
+            const finalMiddleware = buildFinalMiddlewareWithDefaultResult();
 
             await withTestSetup(
               {
@@ -247,7 +247,7 @@ describe('createBlockRefMiddleware', () => {
                         '0x100',
                       ),
                     },
-                    response: async () => 'something',
+                    result: async () => 'something',
                   }),
                 ]);
 
@@ -263,7 +263,7 @@ describe('createBlockRefMiddleware', () => {
           'if the block param is something other than "latest", like %o',
           (blockParam) => {
             it('does not make a direct request through the provider', async () => {
-              const finalMiddleware = buildFinalMiddlewareWithDefaultResponse();
+              const finalMiddleware = buildFinalMiddlewareWithDefaultResult();
 
               await withTestSetup(
                 {
@@ -299,7 +299,7 @@ describe('createBlockRefMiddleware', () => {
             });
 
             it('proceeds to the next middleware', async () => {
-              const finalMiddleware = buildFinalMiddlewareWithDefaultResponse();
+              const finalMiddleware = buildFinalMiddlewareWithDefaultResult();
 
               await withTestSetup(
                 {
@@ -350,7 +350,7 @@ describe('createBlockRefMiddleware', () => {
 
   describe('when the RPC method does not take a block parameter', () => {
     it('does not make a direct request through the provider', async () => {
-      const finalMiddleware = buildFinalMiddlewareWithDefaultResponse();
+      const finalMiddleware = buildFinalMiddlewareWithDefaultResult();
 
       await withTestSetup(
         {
@@ -383,7 +383,7 @@ describe('createBlockRefMiddleware', () => {
     });
 
     it('proceeds to the next middleware', async () => {
-      const finalMiddleware = buildFinalMiddlewareWithDefaultResponse();
+      const finalMiddleware = buildFinalMiddlewareWithDefaultResult();
 
       await withTestSetup(
         {
@@ -449,7 +449,7 @@ async function withTestSetup<T>(
 
   const {
     middlewareUnderTest,
-    otherMiddleware = [buildFinalMiddlewareWithDefaultResponse()],
+    otherMiddleware = [buildFinalMiddlewareWithDefaultResult()],
   } = configureMiddleware({ engine, provider, blockTracker });
 
   for (const middleware of [middlewareUnderTest, ...otherMiddleware]) {

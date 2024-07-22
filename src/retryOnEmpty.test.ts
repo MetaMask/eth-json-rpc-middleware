@@ -3,13 +3,13 @@ import { providerFromEngine } from '@metamask/eth-json-rpc-provider';
 import type { SafeEventEmitterProvider } from '@metamask/eth-json-rpc-provider';
 import type { JsonRpcMiddleware } from '@metamask/json-rpc-engine';
 import { JsonRpcEngine } from '@metamask/json-rpc-engine';
-import { errorCodes, JsonRpcError, rpcErrors } from '@metamask/rpc-errors';
+import { errorCodes, providerErrors, rpcErrors } from '@metamask/rpc-errors';
 import type { Json, JsonRpcParams, JsonRpcRequest } from '@metamask/utils';
 
 import { createRetryOnEmptyMiddleware } from '.';
 import type { ProviderRequestStub } from '../test/util/helpers';
 import {
-  buildFinalMiddlewareWithDefaultResponse,
+  buildFinalMiddlewareWithDefaultResult,
   buildMockParamsWithBlockParamAt,
   buildMockParamsWithoutBlockParamAt,
   buildSimpleFinalMiddleware,
@@ -147,7 +147,7 @@ describe('createRetryOnEmptyMiddleware', () => {
                 stubRequestThatFailsThenFinallySucceeds({
                   request,
                   numberOfTimesToFail: 9,
-                  successfulResponse: async () => 'something',
+                  successfulResult: async () => 'something',
                 }),
               ]);
 
@@ -195,8 +195,8 @@ describe('createRetryOnEmptyMiddleware', () => {
                 buildStubForBlockNumberRequest(blockNumber),
                 stubGenericRequest({
                   request,
-                  response: () => {
-                    throw new JsonRpcError(-1, 'oops');
+                  result: () => {
+                    throw providerErrors.custom({ code: -1, message: 'oops' });
                   },
                   remainAfterUse: true,
                 }),
@@ -252,7 +252,7 @@ describe('createRetryOnEmptyMiddleware', () => {
                 buildStubForBlockNumberRequest(blockNumber),
                 stubGenericRequest({
                   request,
-                  response: async () => 'success',
+                  result: async () => 'success',
                 }),
               ]);
 
@@ -636,7 +636,7 @@ describe('createRetryOnEmptyMiddleware', () => {
             buildStubForBlockNumberRequest(),
             {
               request,
-              response: () => {
+              result: () => {
                 throw rpcErrors.invalidInput('execution reverted');
               },
             },
@@ -680,7 +680,7 @@ async function withTestSetup<T>(
 
   const {
     middlewareUnderTest,
-    otherMiddleware = [buildFinalMiddlewareWithDefaultResponse()],
+    otherMiddleware = [buildFinalMiddlewareWithDefaultResult()],
   } = configureMiddleware({ engine, provider, blockTracker });
 
   for (const middleware of [middlewareUnderTest, ...otherMiddleware]) {
@@ -694,9 +694,9 @@ async function withTestSetup<T>(
 }
 
 /**
- * Builds a canned response for a request made to `provider.request`. Intended
+ * Builds a canned result for a request made to `provider.request`. Intended
  * to be used in conjunction with `stubProviderRequests`. Although not strictly
- * necessary, it helps to assign a proper type to a request/response pair.
+ * necessary, it helps to assign a proper type to a request/result pair.
  *
  * @param requestStub - The request/response pair.
  * @returns The request/response pair, properly typed.
@@ -708,16 +708,16 @@ function stubGenericRequest<T extends JsonRpcParams, U extends Json>(
 }
 
 /**
- * Builds a canned response for a request made to `provider.request` which
+ * Builds a canned result for a request made to `provider.request` which
  * will error for the first N instances and then succeed on the last instance.
  * Intended to be used in conjunction with `stubProviderRequests`.
  *
  * @param request - The request matcher for the stub.
  * @param numberOfTimesToFail - The number of times the request is expected to
- * be called until it returns a successful response.
- * @param successfulResponse - The response that `provider.request` will
+ * be called until it returns a successful result.
+ * @param successfulResult - The result that `provider.request` will
  * return when called past `numberOfTimesToFail`.
- * @returns The request/response pair, properly typed.
+ * @returns The request/result pair, properly typed.
  */
 function stubRequestThatFailsThenFinallySucceeds<
   T extends JsonRpcParams,
@@ -725,20 +725,20 @@ function stubRequestThatFailsThenFinallySucceeds<
 >({
   request,
   numberOfTimesToFail,
-  successfulResponse,
+  successfulResult,
 }: {
   request: ProviderRequestStub<T, U>['request'];
   numberOfTimesToFail: number;
-  successfulResponse: ProviderRequestStub<T, U>['response'];
+  successfulResult: ProviderRequestStub<T, U>['result'];
 }): ProviderRequestStub<T, U> {
   return stubGenericRequest({
     request,
-    response: async (callNumber) => {
+    result: async (callNumber) => {
       if (callNumber <= numberOfTimesToFail) {
-        throw new JsonRpcError(-1, 'oops');
+        throw providerErrors.custom({ code: -1, message: 'oops' });
       }
 
-      return await successfulResponse(callNumber);
+      return await successfulResult(callNumber);
     },
     remainAfterUse: true,
   });
@@ -746,7 +746,7 @@ function stubRequestThatFailsThenFinallySucceeds<
 
 /**
  * The `retryOnEmpty` middleware, as its name implies, uses the provider to make
- * the given request, retrying said request up to 10 times if the response is
+ * the given request, retrying said request up to 10 times if the result is
  * empty before failing. Upon retrying, it will wait a brief time using
  * `setTimeout`. Because we are using Jest's fake timers, we have to manually
  * trigger the callback passed to `setTimeout` atfter it is called. The problem

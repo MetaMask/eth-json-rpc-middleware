@@ -63,7 +63,7 @@ export function createBlockRefMiddleware({
 
     // perform child request
     log('Performing another request %o', childRequest);
-    // copy child response onto original response
+    // copy child result onto original response
     try {
       const childResult = await provider.request<JsonRpcParams, Block>(
         childRequest,
