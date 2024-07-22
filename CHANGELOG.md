@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [13.0.1]
-### Uncategorized
-- fix: restore pipeline node version to 22.x ([#322](https://github.com/MetaMask/eth-json-rpc-middleware/pull/322))
-- Temporarily use Node 22.5.1 to get CI to run ([#321](https://github.com/MetaMask/eth-json-rpc-middleware/pull/321))
+### Changed
+- Bump `@metamask/eth-block-tracker` from `^10.0.0` to `^11.0.1` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
+- Bump `@metamask/eth-json-rpc-provider` from `^4.0.0` to `^4.1.1` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
+- Bump `@metamask/eth-sig-util` from `^7.0.0` to `^7.0.3` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
+- Bump `@metamask/json-rpc-engine` from `^9.0.0` to `^9.0.2` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
+- Bump `@metamask/rpc-errors` from `^6.0.0` to `^6.3.1` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
+- Bump `@metamask/utils` from `^8.1.0` to `^9.1.0` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
 
 ## [13.0.0]
 ### Changed
