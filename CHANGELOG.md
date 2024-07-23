@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [14.0.0]
 ### Changed
+- **BREAKING:** Adapt to EIP-1193 provider changes by deprecating the `sendAsync` method and replacing with the `request` method ([#317](https://github.com/MetaMask/eth-json-rpc-middleware/pull/317))
+  - **BREAKING:** Refactor `providerAsMiddleware` and middleware functions `retryOnEmpty`, `block-ref` to use the `sendAsync` method.
 - Bump `@metamask/eth-block-tracker` from `^10.0.0` to `^11.0.1` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
-- Bump `@metamask/eth-json-rpc-provider` from `^4.0.0` to `^4.1.1` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
+- Bump `@metamask/eth-json-rpc-provider` from `^4.0.0` to `^4.1.1` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323), [#317](https://github.com/MetaMask/eth-json-rpc-middleware/pull/317))
 - Bump `@metamask/eth-sig-util` from `^7.0.0` to `^7.0.3` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
 - Bump `@metamask/json-rpc-engine` from `^9.0.0` to `^9.0.2` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
 - Bump `@metamask/rpc-errors` from `^6.0.0` to `^6.3.1` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
