@@ -201,7 +201,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `eth-rpc-errors@3.0.0` ([#55](https://github.com/MetaMask/eth-json-rpc-middleware/pull/55))
 
 [Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v14.0.1...HEAD
-[14.1.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v14.0.0...v14.0.1
+[14.0.1]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v14.0.0...v14.0.1
 [14.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v13.0.0...v14.0.0
 [13.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v12.1.2...v13.0.0
 [12.1.2]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v12.1.1...v12.1.2
