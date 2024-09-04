@@ -6,8 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [14.1.0]
-### Changed
+## [14.0.1]
+### Fixed
 - Request validation should not throw if verifyingContract is not defined in typed signature ([#328](https://github.com/MetaMask/eth-json-rpc-middleware/pull/328))
 
 ## [14.0.0]
