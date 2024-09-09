@@ -500,7 +500,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
  */
 function validateVerifyingContract(data: string) {
   const { domain: { verifyingContract } = {} } = parseTypedMessage(data);
-  if (verifyingContract && !isValidHexAddress(verifyingContract)) {
+  if (verifyingContract && !(isValidHexAddress(verifyingContract) || verifyingContract == 'cosmos')) {
     throw rpcErrors.invalidInput();
   }
 }
