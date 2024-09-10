@@ -506,10 +506,8 @@ function validateVerifyingContract(data: string) {
   const { domain: { verifyingContract } = {} } = parseTypedMessage(data);
   if (
     verifyingContract &&
-    !(
-      isValidHexAddress(verifyingContract) ||
-      (verifyingContract as any) === 'cosmos'
-    )
+    !isValidHexAddress(verifyingContract) &&
+    (verifyingContract as any) !== 'cosmos'
   ) {
     throw rpcErrors.invalidInput();
   }
