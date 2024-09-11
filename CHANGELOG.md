@@ -6,6 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [14.0.1]
+### Fixed
+- Request validation should not throw if verifyingContract is not defined in typed signature ([#328](https://github.com/MetaMask/eth-json-rpc-middleware/pull/328))
+
+## [14.0.0]
+### Changed
+- **BREAKING:** Adapt to EIP-1193 provider changes by replacing the deprecated `sendAsync` method with the `request` method ([#317](https://github.com/MetaMask/eth-json-rpc-middleware/pull/317))
+  - **BREAKING:** Refactor `providerAsMiddleware` and middleware functions `retryOnEmpty`, `block-ref` to use the `request` method.
+- Bump `@metamask/eth-block-tracker` from `^10.0.0` to `^11.0.1` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
+- Bump `@metamask/eth-json-rpc-provider` from `^4.0.0` to `^4.1.1` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323), [#317](https://github.com/MetaMask/eth-json-rpc-middleware/pull/317))
+- Bump `@metamask/eth-sig-util` from `^7.0.0` to `^7.0.3` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
+- Bump `@metamask/json-rpc-engine` from `^9.0.0` to `^9.0.2` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
+- Bump `@metamask/rpc-errors` from `^6.0.0` to `^6.3.1` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
+- Bump `@metamask/utils` from `^8.1.0` to `^9.1.0` ([#323](https://github.com/MetaMask/eth-json-rpc-middleware/pull/323))
+
+### Security
+- **BREAKING:** Typed signature validation only replaces `0X` prefix with `0x`, and contract address normalization is removed for decimal and octal values ([#318](https://github.com/MetaMask/eth-json-rpc-middleware/pull/318))
+  - Threat actors have been manipulating `eth_signTypedData_v4` fields to cause failures in blockaid's detectors.
+  - Extension crashes with an error when performing Malicious permit with a non-0x prefixed integer address.
+  - This fixes an issue where the key value row or petname component disappears if a signed address is prefixed by "0X" instead of "0x".
+
 ## [13.0.0]
 ### Changed
 - **BREAKING**: Drop support for Node.js v16; add support for Node.js v20, v22 ([#312](https://github.com/MetaMask/eth-json-rpc-middleware/pull/312))
@@ -185,7 +206,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `json-rpc-engine@5.3.0` ([#53](https://github.com/MetaMask/eth-json-rpc-middleware/pull/53))
 - `eth-rpc-errors@3.0.0` ([#55](https://github.com/MetaMask/eth-json-rpc-middleware/pull/55))
 
-[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v13.0.0...HEAD
+[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v14.0.1...HEAD
+[14.0.1]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v14.0.0...v14.0.1
+[14.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v13.0.0...v14.0.0
 [13.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v12.1.2...v13.0.0
 [12.1.2]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v12.1.1...v12.1.2
 [12.1.1]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v12.1.0...v12.1.1

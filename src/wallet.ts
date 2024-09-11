@@ -5,14 +5,15 @@ import {
   createScaffoldMiddleware,
 } from '@metamask/json-rpc-engine';
 import { providerErrors, rpcErrors } from '@metamask/rpc-errors';
-import type {
-  Json,
-  JsonRpcRequest,
-  PendingJsonRpcResponse,
+import {
+  isValidHexAddress,
+  type Json,
+  type JsonRpcRequest,
+  type PendingJsonRpcResponse,
 } from '@metamask/utils';
 
 import type { Block } from './types';
-import { normalizeTypedMessage } from './utils/normalize';
+import { normalizeTypedMessage, parseTypedMessage } from './utils/normalize';
 
 /*
 export type TransactionParams = {
@@ -54,10 +55,6 @@ export interface WalletMiddlewareOptions {
     address: string,
     req: JsonRpcRequest,
   ) => Promise<string>;
-  processEthSignMessage?: (
-    msgParams: MessageParams,
-    req: JsonRpcRequest,
-  ) => Promise<string>;
   processPersonalMessage?: (
     msgParams: MessageParams,
     req: JsonRpcRequest,
@@ -91,7 +88,6 @@ export function createWalletMiddleware({
   getAccounts,
   processDecryptMessage,
   processEncryptionPublicKey,
-  processEthSignMessage,
   processPersonalMessage,
   processTransaction,
   processSignTransaction,
@@ -112,7 +108,6 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     eth_sendTransaction: createAsyncMiddleware(sendTransaction),
     eth_signTransaction: createAsyncMiddleware(signTransaction),
     // message signatures
-    eth_sign: createAsyncMiddleware(ethSign),
     eth_signTypedData: createAsyncMiddleware(signTypedData),
     eth_signTypedData_v3: createAsyncMiddleware(signTypedDataV3),
     eth_signTypedData_v4: createAsyncMiddleware(signTypedDataV4),
@@ -194,36 +189,6 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
   //
   // message signatures
   //
-
-  async function ethSign(
-    req: JsonRpcRequest,
-    res: PendingJsonRpcResponse<Json>,
-  ): Promise<void> {
-    if (!processEthSignMessage) {
-      throw rpcErrors.methodNotSupported();
-    }
-    if (
-      !req?.params ||
-      !Array.isArray(req.params) ||
-      !(req.params.length >= 2)
-    ) {
-      throw rpcErrors.invalidInput();
-    }
-
-    const params = req.params as [string, string, Record<string, string>?];
-    const address: string = await validateAndNormalizeKeyholder(params[0], req);
-    const message = params[1];
-    const extraParams = params[2] || {};
-    const msgParams: MessageParams = {
-      ...extraParams,
-      from: address,
-      data: message,
-      signatureMethod: 'eth_sign',
-    };
-
-    res.result = await processEthSignMessage(msgParams, req);
-  }
-
   async function signTypedData(
     req: JsonRpcRequest,
     res: PendingJsonRpcResponse<Json>,
@@ -278,6 +243,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
     const address = await validateAndNormalizeKeyholder(params[0], req);
     const message = normalizeTypedMessage(params[1]);
+    validateVerifyingContract(message);
     const version = 'V3';
     const msgParams: TypedMessageParams = {
       data: message,
@@ -308,6 +274,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
     const address = await validateAndNormalizeKeyholder(params[0], req);
     const message = normalizeTypedMessage(params[1]);
+    validateVerifyingContract(message);
     const version = 'V4';
     const msgParams: TypedMessageParams = {
       data: message,
@@ -487,6 +454,18 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     throw rpcErrors.invalidParams({
       message: `Invalid parameters: must provide an Ethereum address.`,
     });
+  }
+}
+
+/**
+ * Validates verifyingContract of typedSignMessage.
+ *
+ * @param data - The data passed in typedSign request.
+ */
+function validateVerifyingContract(data: string) {
+  const { domain: { verifyingContract } = {} } = parseTypedMessage(data);
+  if (verifyingContract && !isValidHexAddress(verifyingContract)) {
+    throw rpcErrors.invalidInput();
   }
 }
 
