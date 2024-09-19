@@ -465,7 +465,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 function validateVerifyingContract(data: string) {
   const { domain: { verifyingContract } = {} } = parseTypedMessage(data);
   // Explicit check for cosmos here has been added to address this issue
-  // https://github.com/MetaMask/metamask-extension/issues/26980
+  // https://github.com/MetaMask/eth-json-rpc-middleware/issues/new
   if (
     verifyingContract &&
     (verifyingContract as string) !== 'cosmos' &&
