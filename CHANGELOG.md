@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [14.0.2]
 ### Fixed
-- All the string "cosmos" in the "verifyingContract" field of EIP-712 signatures ([#333](https://github.com/MetaMask/eth-json-rpc-middleware/pull/333))
+- Allow the string "cosmos" in the "verifyingContract" field of EIP-712 signatures ([#333](https://github.com/MetaMask/eth-json-rpc-middleware/pull/333))
   - This change was made to support Ethermint's EIP-712 implementation, which was broken by validation added in v14.0.0
 
 ## [14.0.1]
