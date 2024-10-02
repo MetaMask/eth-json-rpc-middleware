@@ -497,10 +497,20 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
  * Validates verifyingContract of typedSignMessage.
  *
  * @param data - The data passed in typedSign request.
+ * This function allows the verifyingContract to be either:
+ * - A valid hex address
+ * - The string "cosmos" (as it is hard-coded in some Cosmos ecosystem's EVM adapters)
+ * - An empty string
  */
 function validateVerifyingContract(data: string) {
   const { domain: { verifyingContract } = {} } = parseTypedMessage(data);
-  if (verifyingContract && !isValidHexAddress(verifyingContract)) {
+  // Explicit check for cosmos here has been added to address this issue
+  // https://github.com/MetaMask/eth-json-rpc-middleware/issues/new
+  if (
+    verifyingContract &&
+    (verifyingContract as string) !== 'cosmos' &&
+    !isValidHexAddress(verifyingContract)
+  ) {
     throw rpcErrors.invalidInput();
   }
 }
