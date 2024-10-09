@@ -956,7 +956,7 @@ __metadata:
     "@metamask/eth-json-rpc-provider": ^4.1.1
     "@metamask/eth-sig-util": ^7.0.3
     "@metamask/json-rpc-engine": ^9.0.2
-    "@metamask/rpc-errors": ^6.3.1
+    "@metamask/rpc-errors": ^7.0.0
     "@metamask/utils": ^9.1.0
     "@types/bn.js": ^5.1.5
     "@types/btoa": ^1.2.3
@@ -1032,6 +1032,16 @@ __metadata:
     "@metamask/utils": ^9.0.0
     fast-safe-stringify: ^2.0.6
   checksum: 8761f5c0161cb3b342abd3ccccbd7b792f36a987e1f22c3f89b1bd29f72a2e35a2c91b58164fdd9dc3e5b67157500dcbdb5d04245117c14310c34cf42f7b8463
+  languageName: node
+  linkType: hard
+
+"@metamask/rpc-errors@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "@metamask/rpc-errors@npm:7.0.0"
+  dependencies:
+    "@metamask/utils": ^9.0.0
+    fast-safe-stringify: ^2.0.6
+  checksum: 07984f473e9e7c0f57abee53de8da282d113b3e293453858f44b58a43706486b36dfbe2f46de4a92324797a53730f410d32c382f138ef015e250efacb7de2081
   languageName: node
   linkType: hard
 
