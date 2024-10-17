@@ -7,15 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [15.0.0]
-### Uncategorized
-- deps: @metamask/rpc-errors@^6.3.1->^7.0.0 ([#342](https://github.com/MetaMask/eth-json-rpc-middleware/pull/342))
-- Bump the npm_and_yarn group across 1 directory with 3 updates ([#315](https://github.com/MetaMask/eth-json-rpc-middleware/pull/315))
-- Fix: update wrong cosmos issue url ([#341](https://github.com/MetaMask/eth-json-rpc-middleware/pull/341))
-- Update `main` with changes from v14.0.2 ([#340](https://github.com/MetaMask/eth-json-rpc-middleware/pull/340))
-- fix: change types signatures verifyingContract validation to allow 'cosmos' as address ([#334](https://github.com/MetaMask/eth-json-rpc-middleware/pull/334))
-- Update `main` with changes from v14.0.1 ([#332](https://github.com/MetaMask/eth-json-rpc-middleware/pull/332))
-- Add changelog entries for `#318` ([#327](https://github.com/MetaMask/eth-json-rpc-middleware/pull/327))
-- remove eth_sign ([#320](https://github.com/MetaMask/eth-json-rpc-middleware/pull/320))
+### Changed
+- **BREAKING**: Update `@metamask/rpc-errors` from `^6.3.1` to `^7.0.0` ([#342](https://github.com/MetaMask/eth-json-rpc-middleware/pull/342))
+- **BREAKING**: Update `@metamask/json-rpc-engine` from `^9.0.2` to `^10.0.0` ([#342](https://github.com/MetaMask/eth-json-rpc-middleware/pull/342))
+- Bump `@metamask/eth-json-rpc-provider` from `^4.1.1` to `^4.1.5` ([#342](https://github.com/MetaMask/eth-json-rpc-middleware/pull/342))
+
+### Removed
+- **BREAKING**: Remove `eth_sign` support ([#320](https://github.com/MetaMask/eth-json-rpc-middleware/pull/320))
+  - The functions `ethSign` and `processEthSignMessage` have been removed
 
 ## [14.0.2]
 ### Fixed
