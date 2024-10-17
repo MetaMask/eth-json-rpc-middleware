@@ -955,7 +955,7 @@ __metadata:
     "@metamask/eth-block-tracker": ^11.0.1
     "@metamask/eth-json-rpc-provider": ^4.1.5
     "@metamask/eth-sig-util": ^7.0.3
-    "@metamask/json-rpc-engine": ^9.0.2
+    "@metamask/json-rpc-engine": ^10.0.0
     "@metamask/rpc-errors": ^7.0.0
     "@metamask/utils": ^9.1.0
     "@types/bn.js": ^5.1.5
@@ -987,20 +987,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@metamask/eth-json-rpc-provider@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "@metamask/eth-json-rpc-provider@npm:4.1.1"
-  dependencies:
-    "@metamask/json-rpc-engine": ^9.0.1
-    "@metamask/rpc-errors": ^6.3.1
-    "@metamask/safe-event-emitter": ^3.0.0
-    "@metamask/utils": ^9.0.0
-    uuid: ^8.3.2
-  checksum: a429d9511f33a62eb5f2f2f82f26d30a2a8f27d48aa3c8819d6ba03c2c0eef0e7eee7894a0899dd9af4b7d7f3e2092c25304bb34ab6e8d0daffee717f4109b5c
-  languageName: node
-  linkType: hard
-
-"@metamask/eth-json-rpc-provider@npm:^4.1.5":
+"@metamask/eth-json-rpc-provider@npm:^4.1.1, @metamask/eth-json-rpc-provider@npm:^4.1.5":
   version: 4.1.5
   resolution: "@metamask/eth-json-rpc-provider@npm:4.1.5"
   dependencies:
@@ -1035,27 +1022,6 @@ __metadata:
     "@metamask/safe-event-emitter": ^3.0.0
     "@metamask/utils": ^9.1.0
   checksum: 0ed1cabe62774d7140c7e27b4485d0a536a95194628ab90f6543cdd7e0a80b80e2789929900c161728b25fb29782d048a18c981d728516e643f4b3be4d971663
-  languageName: node
-  linkType: hard
-
-"@metamask/json-rpc-engine@npm:^9.0.1, @metamask/json-rpc-engine@npm:^9.0.2":
-  version: 9.0.2
-  resolution: "@metamask/json-rpc-engine@npm:9.0.2"
-  dependencies:
-    "@metamask/rpc-errors": ^6.3.1
-    "@metamask/safe-event-emitter": ^3.0.0
-    "@metamask/utils": ^9.1.0
-  checksum: 4c852c9f30d05706ee497a2aca3ef6df12aabcff4a71a7426a27d95829f20cf2ff45c774eb9d95224bf16c9555a8cd7e44dccaea1bd44eda4dc43bf298885272
-  languageName: node
-  linkType: hard
-
-"@metamask/rpc-errors@npm:^6.3.1":
-  version: 6.3.1
-  resolution: "@metamask/rpc-errors@npm:6.3.1"
-  dependencies:
-    "@metamask/utils": ^9.0.0
-    fast-safe-stringify: ^2.0.6
-  checksum: 8761f5c0161cb3b342abd3ccccbd7b792f36a987e1f22c3f89b1bd29f72a2e35a2c91b58164fdd9dc3e5b67157500dcbdb5d04245117c14310c34cf42f7b8463
   languageName: node
   linkType: hard
 
