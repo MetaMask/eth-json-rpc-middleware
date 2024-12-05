@@ -7,9 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [15.0.1]
-### Uncategorized
-- chore(deps): bump `@metamask/eth-block-tracker` to `^11.0.3` ([#347](https://github.com/MetaMask/eth-json-rpc-middleware/pull/347))
-- Bump micromatch from 4.0.5 to 4.0.8 in the npm_and_yarn group ([#343](https://github.com/MetaMask/eth-json-rpc-middleware/pull/343))
+### Changed
+- Bump `@metamask/eth-block-tracker` from `^11.0.1` to `^11.0.3` ([#347](https://github.com/MetaMask/eth-json-rpc-middleware/pull/347))
 
 ## [15.0.0]
 ### Changed
