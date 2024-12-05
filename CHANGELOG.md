@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.0.1]
+### Uncategorized
+- chore(deps): bump `@metamask/eth-block-tracker` to `^11.0.3` ([#347](https://github.com/MetaMask/eth-json-rpc-middleware/pull/347))
+- Bump micromatch from 4.0.5 to 4.0.8 in the npm_and_yarn group ([#343](https://github.com/MetaMask/eth-json-rpc-middleware/pull/343))
+
 ## [15.0.0]
 ### Changed
 - **BREAKING**: Update `@metamask/rpc-errors` from `^6.3.1` to `^7.0.0` ([#342](https://github.com/MetaMask/eth-json-rpc-middleware/pull/342))
@@ -221,7 +226,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `json-rpc-engine@5.3.0` ([#53](https://github.com/MetaMask/eth-json-rpc-middleware/pull/53))
 - `eth-rpc-errors@3.0.0` ([#55](https://github.com/MetaMask/eth-json-rpc-middleware/pull/55))
 
-[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v15.0.0...HEAD
+[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v15.0.1...HEAD
+[15.0.1]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v15.0.0...v15.0.1
 [15.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v14.0.2...v15.0.0
 [14.0.2]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v14.0.1...v14.0.2
 [14.0.1]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v14.0.0...v14.0.1
