@@ -130,9 +130,7 @@ function parseResponse(fetchRes: Response, body: Record<string, Block>): Block {
 
   // check for rpc error
   if (body.error) {
-    throw rpcErrors.internal({
-      data: body.error,
-    });
+    throw rpcErrors.internal(body.error);
   }
   // return successful result
   return body.result;
