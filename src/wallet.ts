@@ -472,7 +472,7 @@ function validatePrimaryType(data: string) {
   }
 
   // Primary type can be an array.
-  const baseType = stripArrayTypeIfPresent(primaryType)
+  const baseType = stripArrayTypeIfPresent(primaryType);
 
   // Return if the base type is not defined in the types
   const baseTypeDefinitions = types[baseType];

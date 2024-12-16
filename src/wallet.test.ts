@@ -646,7 +646,7 @@ describe('wallet', () => {
         method: 'eth_signTypedData_v4',
         params: [
           testAddresses[0],
-          JSON.stringify({...messageParams, types: undefined}),
+          JSON.stringify({ ...messageParams, types: undefined }),
         ],
       };
 
@@ -673,7 +673,10 @@ describe('wallet', () => {
         method: 'eth_signTypedData_v4',
         params: [
           testAddresses[0],
-          JSON.stringify({...messageParams, types: {...messageParams.types, Permit: undefined}}),
+          JSON.stringify({
+            ...messageParams,
+            types: { ...messageParams.types, Permit: undefined },
+          }),
         ],
       };
 
