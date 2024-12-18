@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [15.1.0]
-### Uncategorized
+### Changed
 - fix: Add validation for types sign message primary type ([#350](https://github.com/MetaMask/eth-json-rpc-middleware/pull/350))
 
 ## [15.0.1]
