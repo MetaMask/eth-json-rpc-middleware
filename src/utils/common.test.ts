@@ -11,7 +11,8 @@ describe('CommonUtils', () => {
       expect(stripArrayTypeIfPresent('string')).toBe('string');
       expect(stripArrayTypeIfPresent('string []')).toBe('string []');
       expect(
-        stripArrayTypeIfPresent(undefined as unknown as string),
+        // @ts-expect-error Intentionally testing invalid input
+        stripArrayTypeIfPresent(undefined),
       ).toBeUndefined();
     });
   });
