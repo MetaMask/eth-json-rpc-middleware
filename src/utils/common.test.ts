@@ -10,6 +10,7 @@ describe('CommonUtils', () => {
     it('return types which are not array without any change', () => {
       expect(stripArrayTypeIfPresent('string')).toBe('string');
       expect(stripArrayTypeIfPresent('string []')).toBe('string []');
+      expect(stripArrayTypeIfPresent(undefined as unknown as string)).toBe(undefined);
     });
   });
 });
