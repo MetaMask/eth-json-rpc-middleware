@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [15.1.1]
-### Uncategorized
-- Bump MetaMask dependencies ([#351](https://github.com/MetaMask/eth-json-rpc-middleware/pull/351))
+### Changed
+- Bump `@metamask/eth-block-tracker` from `^11.0.3` to `^11.0.4` ([#351](https://github.com/MetaMask/eth-json-rpc-middleware/pull/351))
+- Bump `@metamask/eth-json-rpc-provider` from `^4.1.5` to `^4.1.7` ([#351](https://github.com/MetaMask/eth-json-rpc-middleware/pull/351))
+- Bump `@metamask/eth-sig-util` from `^7.0.3` to `^8.1.2` ([#351](https://github.com/MetaMask/eth-json-rpc-middleware/pull/351))
+- Bump `@metamask/json-rpc-engine` from `^10.0.0` to `^10.0.2` ([#351](https://github.com/MetaMask/eth-json-rpc-middleware/pull/351))
+- Bump `@metamask/rpc-errors` from `^7.0.0` to `^7.0.2` ([#351](https://github.com/MetaMask/eth-json-rpc-middleware/pull/351))
+- Bump `@metamask/utils` from `^9.1.0` to `^11.0.1` ([#351](https://github.com/MetaMask/eth-json-rpc-middleware/pull/351))
 
 ## [15.1.0]
 ### Changed
