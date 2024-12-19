@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [15.1.2]
 ### Changed
-- fix the regex used to match primary type array when validating primary type of typed sign request ([#353](https://github.com/MetaMask/eth-json-rpc-middleware/pull/353))
+- Fix validation of primary type for signTypedDataV3 and signTypedDataV4 ([#353](https://github.com/MetaMask/eth-json-rpc-middleware/pull/353))
+  - It was updated to handle `undefined` input
 
 ## [15.1.1]
 ### Changed
