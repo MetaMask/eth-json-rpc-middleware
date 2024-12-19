@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [15.1.2]
-### Uncategorized
-- fix: regex match condition for primary type ([#353](https://github.com/MetaMask/eth-json-rpc-middleware/pull/353))
+### Changed
+- fix the regex used to match primary type array when validating primary type of typed sign request ([#353](https://github.com/MetaMask/eth-json-rpc-middleware/pull/353))
 
 ## [15.1.1]
 ### Changed
