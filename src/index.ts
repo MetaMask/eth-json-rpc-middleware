@@ -4,6 +4,7 @@ export * from './block-ref';
 export * from './block-tracker-inspector';
 export * from './fetch';
 export * from './inflight-cache';
+export type { SendCalls } from './methods/wallet-send-calls';
 export * from './providerAsMiddleware';
 export * from './retryOnEmpty';
 export * from './wallet';

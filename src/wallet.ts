@@ -4,17 +4,24 @@ import {
   createAsyncMiddleware,
   createScaffoldMiddleware,
 } from '@metamask/json-rpc-engine';
-import { providerErrors, rpcErrors } from '@metamask/rpc-errors';
-import {
-  isValidHexAddress,
-  type Json,
-  type JsonRpcRequest,
-  type PendingJsonRpcResponse,
+import { rpcErrors } from '@metamask/rpc-errors';
+import { isValidHexAddress } from '@metamask/utils';
+import type {
+  JsonRpcRequest,
+  PendingJsonRpcResponse,
+  Json,
+  Hex,
 } from '@metamask/utils';
 
+import type { ProcessSendCalls } from './methods/wallet-send-calls';
+import { walletSendCalls } from './methods/wallet-send-calls';
 import type { Block } from './types';
 import { stripArrayTypeIfPresent } from './utils/common';
 import { normalizeTypedMessage, parseTypedMessage } from './utils/normalize';
+import {
+  resemblesAddress,
+  validateAndNormalizeKeyholder as validateKeyholder,
+} from './utils/validation';
 
 /*
 export type TransactionParams = {
@@ -83,6 +90,7 @@ export interface WalletMiddlewareOptions {
     req: JsonRpcRequest,
     version: string,
   ) => Promise<string>;
+  processSendCalls?: ProcessSendCalls;
 }
 
 export function createWalletMiddleware({
@@ -95,6 +103,7 @@ export function createWalletMiddleware({
   processTypedMessage,
   processTypedMessageV3,
   processTypedMessageV4,
+  processSendCalls,
 }: // }: WalletMiddlewareOptions): JsonRpcMiddleware<string, Block> {
 WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
   if (!getAccounts) {
@@ -116,6 +125,10 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     eth_getEncryptionPublicKey: createAsyncMiddleware(encryptionPublicKey),
     eth_decrypt: createAsyncMiddleware(decryptMessage),
     personal_ecRecover: createAsyncMiddleware(personalRecover),
+    // EIP-5792
+    wallet_sendCalls: createAsyncMiddleware(async (params, req) =>
+      walletSendCalls(params, req, { getAccounts, processSendCalls }),
+    ),
   });
 
   //
@@ -436,27 +449,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     address: string,
     req: JsonRpcRequest,
   ): Promise<string> {
-    if (
-      typeof address === 'string' &&
-      address.length > 0 &&
-      resemblesAddress(address)
-    ) {
-      // Ensure that an "unauthorized" error is thrown if the requester does not have the `eth_accounts`
-      // permission.
-      const accounts = await getAccounts(req);
-      const normalizedAccounts: string[] = accounts.map((_address) =>
-        _address.toLowerCase(),
-      );
-      const normalizedAddress: string = address.toLowerCase();
-
-      if (normalizedAccounts.includes(normalizedAddress)) {
-        return normalizedAddress;
-      }
-      throw providerErrors.unauthorized();
-    }
-    throw rpcErrors.invalidParams({
-      message: `Invalid parameters: must provide an Ethereum address.`,
-    });
+    return validateKeyholder(address as Hex, req, { getAccounts });
   }
 }
 
@@ -501,9 +494,4 @@ function validateVerifyingContract(data: string) {
   ) {
     throw rpcErrors.invalidInput();
   }
-}
-
-function resemblesAddress(str: string): boolean {
-  // hex prefix 2 + 20 bytes
-  return str.length === 2 + 20 * 2;
 }
