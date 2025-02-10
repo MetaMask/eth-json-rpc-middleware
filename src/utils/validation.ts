@@ -58,6 +58,8 @@ export function resemblesAddress(str: string): boolean {
 function formatValidationError(error: StructError, message: string): string {
   return `${message}\n\n${error
     .failures()
-    .map((f) => `[${f.path.join(' > ')}] - ${f.message}`)
+    .map(
+      (f) => `${f.path.join(' > ')}${f.path.length ? ' - ' : ''}${f.message}`,
+    )
     .join('\n')}`;
 }

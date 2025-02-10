@@ -69,7 +69,7 @@ describe('wallet_sendCalls', () => {
     await expect(callMethod()).rejects.toMatchInlineSnapshot(`
             [Error: Invalid params
 
-            [] - Expected an array, but received: undefined]
+            Expected an array, but received: undefined]
           `);
   });
 
@@ -81,8 +81,8 @@ describe('wallet_sendCalls', () => {
     await expect(callMethod()).rejects.toMatchInlineSnapshot(`
             [Error: Invalid params
 
-            [0 > from] - Expected a string, but received: undefined
-            [0 > calls] - Expected an array value, but received: undefined]
+            0 > from - Expected a string, but received: undefined
+            0 > calls - Expected an array value, but received: undefined]
           `);
   });
 
@@ -94,9 +94,9 @@ describe('wallet_sendCalls', () => {
     await expect(callMethod()).rejects.toMatchInlineSnapshot(`
             [Error: Invalid params
 
-            [0 > from] - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "123"
-            [0 > chainId] - Expected a string, but received: 123
-            [0 > calls] - Expected an array value, but received: "123"]
+            0 > from - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "123"
+            0 > chainId - Expected a string, but received: 123
+            0 > calls - Expected an array value, but received: "123"]
           `);
   });
 
@@ -108,9 +108,9 @@ describe('wallet_sendCalls', () => {
     await expect(callMethod()).rejects.toMatchInlineSnapshot(`
             [Error: Invalid params
 
-            [0 > calls > 0 > to] - Expected a string, but received: 123
-            [0 > calls > 0 > data] - Expected a string, but received: 123
-            [0 > calls > 0 > value] - Expected a string, but received: 123]
+            0 > calls > 0 > to - Expected a string, but received: 123
+            0 > calls > 0 > data - Expected a string, but received: 123
+            0 > calls > 0 > value - Expected a string, but received: 123]
           `);
   });
 
@@ -124,11 +124,11 @@ describe('wallet_sendCalls', () => {
     await expect(callMethod()).rejects.toMatchInlineSnapshot(`
             [Error: Invalid params
 
-            [0 > from] - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "123"
-            [0 > chainId] - Expected a string matching \`/^0x[0-9a-f]+$/\` but received "123"
-            [0 > calls > 0 > to] - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "123"
-            [0 > calls > 0 > data] - Expected a string matching \`/^0x[0-9a-f]+$/\` but received "123"
-            [0 > calls > 0 > value] - Expected a string matching \`/^0x[0-9a-f]+$/\` but received "123"]
+            0 > from - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "123"
+            0 > chainId - Expected a string matching \`/^0x[0-9a-f]+$/\` but received "123"
+            0 > calls > 0 > to - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "123"
+            0 > calls > 0 > data - Expected a string matching \`/^0x[0-9a-f]+$/\` but received "123"
+            0 > calls > 0 > value - Expected a string matching \`/^0x[0-9a-f]+$/\` but received "123"]
           `);
   });
 
@@ -139,8 +139,8 @@ describe('wallet_sendCalls', () => {
     await expect(callMethod()).rejects.toMatchInlineSnapshot(`
             [Error: Invalid params
 
-            [0 > from] - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "0x123"
-            [0 > calls > 0 > to] - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "0x123"]
+            0 > from - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "0x123"
+            0 > calls > 0 > to - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "0x123"]
           `);
   });
 
