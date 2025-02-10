@@ -67,6 +67,12 @@ export async function walletGetCallsStatus(
 
   const batchId = req.params[0];
   const rawReceipts = await getTransactionReceiptsByBatchId(batchId, req);
+
+  if (!rawReceipts.length) {
+    res.result = null;
+    return;
+  }
+
   const isComplete = rawReceipts.every((receipt) => Boolean(receipt));
   const status = isComplete ? 'CONFIRMED' : 'PENDING';
 

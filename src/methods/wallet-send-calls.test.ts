@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 import type { JsonRpcRequest, PendingJsonRpcResponse } from '@metamask/utils';
 import { klona } from 'klona';
 
