@@ -13,6 +13,8 @@ import type {
   Hex,
 } from '@metamask/utils';
 
+import type { GetTransactionReceiptsByBatchIdHook } from './methods/wallet-get-calls-status';
+import { walletGetCallsStatus } from './methods/wallet-get-calls-status';
 import type { ProcessSendCalls } from './methods/wallet-send-calls';
 import { walletSendCalls } from './methods/wallet-send-calls';
 import type { Block } from './types';
@@ -55,6 +57,7 @@ export type TypedMessageV1Params = Omit<TypedMessageParams, 'data'> & {
 
 export interface WalletMiddlewareOptions {
   getAccounts: (req: JsonRpcRequest) => Promise<string[]>;
+  getTransactionReceiptsByBatchId?: GetTransactionReceiptsByBatchIdHook;
   processDecryptMessage?: (
     msgParams: MessageParams,
     req: JsonRpcRequest,
@@ -95,6 +98,7 @@ export interface WalletMiddlewareOptions {
 
 export function createWalletMiddleware({
   getAccounts,
+  getTransactionReceiptsByBatchId,
   processDecryptMessage,
   processEncryptionPublicKey,
   processPersonalMessage,
@@ -128,6 +132,11 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     // EIP-5792
     wallet_sendCalls: createAsyncMiddleware(async (params, req) =>
       walletSendCalls(params, req, { getAccounts, processSendCalls }),
+    ),
+    wallet_getCallsStatus: createAsyncMiddleware(async (params, req) =>
+      walletGetCallsStatus(params, req, {
+        getTransactionReceiptsByBatchId,
+      }),
     ),
   });
 
