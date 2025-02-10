@@ -15,6 +15,10 @@ import type {
 
 import type { GetTransactionReceiptsByBatchIdHook } from './methods/wallet-get-calls-status';
 import { walletGetCallsStatus } from './methods/wallet-get-calls-status';
+import {
+  GetCapabilitiesHook,
+  walletGetCapabilities,
+} from './methods/wallet-get-capabilities';
 import type { ProcessSendCalls } from './methods/wallet-send-calls';
 import { walletSendCalls } from './methods/wallet-send-calls';
 import type { Block } from './types';
@@ -57,6 +61,7 @@ export type TypedMessageV1Params = Omit<TypedMessageParams, 'data'> & {
 
 export interface WalletMiddlewareOptions {
   getAccounts: (req: JsonRpcRequest) => Promise<string[]>;
+  getCapabilities?: GetCapabilitiesHook;
   getTransactionReceiptsByBatchId?: GetTransactionReceiptsByBatchIdHook;
   processDecryptMessage?: (
     msgParams: MessageParams,
@@ -98,6 +103,7 @@ export interface WalletMiddlewareOptions {
 
 export function createWalletMiddleware({
   getAccounts,
+  getCapabilities,
   getTransactionReceiptsByBatchId,
   processDecryptMessage,
   processEncryptionPublicKey,
@@ -118,9 +124,11 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     // account lookups
     eth_accounts: createAsyncMiddleware(lookupAccounts),
     eth_coinbase: createAsyncMiddleware(lookupDefaultAccount),
+
     // tx signatures
     eth_sendTransaction: createAsyncMiddleware(sendTransaction),
     eth_signTransaction: createAsyncMiddleware(signTransaction),
+
     // message signatures
     eth_signTypedData: createAsyncMiddleware(signTypedData),
     eth_signTypedData_v3: createAsyncMiddleware(signTypedDataV3),
@@ -129,7 +137,11 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     eth_getEncryptionPublicKey: createAsyncMiddleware(encryptionPublicKey),
     eth_decrypt: createAsyncMiddleware(decryptMessage),
     personal_ecRecover: createAsyncMiddleware(personalRecover),
+
     // EIP-5792
+    wallet_getCapabilities: createAsyncMiddleware(async (params, req) =>
+      walletGetCapabilities(params, req, { getCapabilities }),
+    ),
     wallet_sendCalls: createAsyncMiddleware(async (params, req) =>
       walletSendCalls(params, req, { getAccounts, processSendCalls }),
     ),
