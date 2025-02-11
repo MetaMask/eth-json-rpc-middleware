@@ -15,11 +15,9 @@ import type {
 
 import type { GetTransactionReceiptsByBatchIdHook } from './methods/wallet-get-calls-status';
 import { walletGetCallsStatus } from './methods/wallet-get-calls-status';
-import {
-  GetCapabilitiesHook,
-  walletGetCapabilities,
-} from './methods/wallet-get-capabilities';
-import type { ProcessSendCalls } from './methods/wallet-send-calls';
+import type { GetCapabilitiesHook } from './methods/wallet-get-capabilities';
+import { walletGetCapabilities } from './methods/wallet-get-capabilities';
+import type { ProcessSendCallsHook } from './methods/wallet-send-calls';
 import { walletSendCalls } from './methods/wallet-send-calls';
 import type { Block } from './types';
 import { stripArrayTypeIfPresent } from './utils/common';
@@ -98,7 +96,7 @@ export interface WalletMiddlewareOptions {
     req: JsonRpcRequest,
     version: string,
   ) => Promise<string>;
-  processSendCalls?: ProcessSendCalls;
+  processSendCalls?: ProcessSendCallsHook;
 }
 
 export function createWalletMiddleware({
