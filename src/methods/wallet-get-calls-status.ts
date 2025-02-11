@@ -1,6 +1,7 @@
 import { rpcErrors } from '@metamask/rpc-errors';
 import type { Infer } from '@metamask/superstruct';
 import {
+  nonempty,
   optional,
   mask,
   string,
@@ -17,7 +18,7 @@ import { HexChecksumAddressStruct, StrictHexStruct } from '@metamask/utils';
 
 import { validateParams } from '../utils/validation';
 
-const GetCallsStatusStruct = tuple([string()]);
+const GetCallsStatusStruct = tuple([nonempty(string())]);
 
 const GetCallsStatusReceiptStruct = object({
   logs: array(

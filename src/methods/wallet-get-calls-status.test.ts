@@ -92,6 +92,12 @@ describe('wallet_getCallsStatus', () => {
     expect(response.result).toBeNull();
   });
 
+  it('throws if no hook', async () => {
+    await expect(
+      walletGetCallsStatus(request, response, {}),
+    ).rejects.toMatchInlineSnapshot(`[Error: Method not supported.]`);
+  });
+
   it('throws if no params', async () => {
     request.params = undefined;
 
@@ -109,6 +115,16 @@ describe('wallet_getCallsStatus', () => {
             [Error: Invalid params
 
             0 - Expected a string, but received: 123]
+          `);
+  });
+
+  it('throws if empty', async () => {
+    params[0] = '';
+
+    await expect(callMethod()).rejects.toMatchInlineSnapshot(`
+            [Error: Invalid params
+
+            0 - Expected a nonempty string but received an empty one]
           `);
   });
 });

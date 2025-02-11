@@ -31,7 +31,7 @@ const SendCallsStruct = tuple([
 export type SendCallsParams = Infer<typeof SendCallsStruct>;
 export type SendCalls = SendCallsParams[0];
 
-export type ProcessSendCalls = (
+export type ProcessSendCallsHook = (
   sendCalls: SendCalls,
   req: JsonRpcRequest,
 ) => Promise<string>;
@@ -44,7 +44,7 @@ export async function walletSendCalls(
     processSendCalls,
   }: {
     getAccounts: (req: JsonRpcRequest) => Promise<string[]>;
-    processSendCalls?: ProcessSendCalls;
+    processSendCalls?: ProcessSendCallsHook;
   },
 ): Promise<void> {
   if (!processSendCalls) {

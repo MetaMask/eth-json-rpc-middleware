@@ -85,7 +85,17 @@ describe('wallet_getCapabilities', () => {
     await expect(callMethod()).rejects.toMatchInlineSnapshot(`
             [Error: Invalid params
 
-            0 - Expected a string matching \`/^0x[0-9a-f]+$/\` but received "test"]
+            0 - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "test"]
+          `);
+  });
+
+  it('throws if wrong length', async () => {
+    params[0] = '0x123' as never;
+
+    await expect(callMethod()).rejects.toMatchInlineSnapshot(`
+            [Error: Invalid params
+
+            0 - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "0x123"]
           `);
   });
 });

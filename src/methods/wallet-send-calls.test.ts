@@ -1,7 +1,10 @@
 import type { JsonRpcRequest, PendingJsonRpcResponse } from '@metamask/utils';
 import { klona } from 'klona';
 
-import type { ProcessSendCalls, SendCallsParams } from './wallet-send-calls';
+import type {
+  ProcessSendCallsHook,
+  SendCallsParams,
+} from './wallet-send-calls';
 import { walletSendCalls } from './wallet-send-calls';
 import type { WalletMiddlewareOptions } from '../wallet';
 
@@ -32,7 +35,7 @@ describe('wallet_sendCalls', () => {
   let params: SendCallsParams;
   let response: PendingJsonRpcResponse<string>;
   let getAccountsMock: jest.MockedFn<GetAccounts>;
-  let processSendCallsMock: jest.MockedFunction<ProcessSendCalls>;
+  let processSendCallsMock: jest.MockedFunction<ProcessSendCallsHook>;
 
   async function callMethod() {
     return walletSendCalls(request, response, {
@@ -60,6 +63,14 @@ describe('wallet_sendCalls', () => {
   it('returns ID from hook', async () => {
     await callMethod();
     expect(response.result).toStrictEqual(ID_MOCK);
+  });
+
+  it('throws if no hook', async () => {
+    await expect(
+      walletSendCalls(request, response, {
+        getAccounts: getAccountsMock,
+      }),
+    ).rejects.toMatchInlineSnapshot(`[Error: Method not supported.]`);
   });
 
   it('throws if no params', async () => {

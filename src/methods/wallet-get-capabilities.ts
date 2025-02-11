@@ -7,11 +7,11 @@ import type {
   JsonRpcRequest,
   PendingJsonRpcResponse,
 } from '@metamask/utils';
-import { StrictHexStruct } from '@metamask/utils';
+import { HexChecksumAddressStruct } from '@metamask/utils';
 
 import { validateParams } from '../utils/validation';
 
-const GetCapabilitiesStruct = tuple([StrictHexStruct]);
+const GetCapabilitiesStruct = tuple([HexChecksumAddressStruct]);
 
 export type GetCapabilitiesParams = Infer<typeof GetCapabilitiesStruct>;
 export type GetCapabilitiesResult = Record<Hex, Record<string, any>>;
