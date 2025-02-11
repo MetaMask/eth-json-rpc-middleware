@@ -74,6 +74,7 @@ describe('wallet_getCallsStatus', () => {
 
     await callMethod();
     expect(response.result?.status).toBe('PENDING');
+    expect(response.result?.receipts).toBeNull();
   });
 
   it('returns receipts', async () => {
@@ -126,5 +127,19 @@ describe('wallet_getCallsStatus', () => {
 
             0 - Expected a nonempty string but received an empty one]
           `);
+  });
+
+  it('removes excess properties from receipts', async () => {
+    getTransactionReceiptsByBatchIdMock.mockResolvedValue([
+      {
+        ...RECEIPT_MOCK,
+        extra: 'value1',
+        logs: [{ ...RECEIPT_MOCK.logs[0], extra2: 'value2' }],
+      } as never,
+    ]);
+
+    await callMethod();
+
+    expect(response.result?.receipts).toStrictEqual([RECEIPT_MOCK]);
   });
 });

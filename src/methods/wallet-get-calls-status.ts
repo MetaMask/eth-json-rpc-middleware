@@ -21,19 +21,21 @@ import { validateParams } from '../utils/validation';
 const GetCallsStatusStruct = tuple([nonempty(string())]);
 
 const GetCallsStatusReceiptStruct = object({
-  logs: array(
-    object({
-      address: HexChecksumAddressStruct,
-      data: StrictHexStruct,
-      topics: array(StrictHexStruct),
-    }),
+  logs: optional(
+    array(
+      object({
+        address: optional(HexChecksumAddressStruct),
+        data: optional(StrictHexStruct),
+        topics: optional(array(StrictHexStruct)),
+      }),
+    ),
   ),
-  status: StrictHexStruct,
+  status: optional(StrictHexStruct),
   chainId: optional(StrictHexStruct),
-  blockHash: StrictHexStruct,
-  blockNumber: StrictHexStruct,
-  gasUsed: StrictHexStruct,
-  transactionHash: StrictHexStruct,
+  blockHash: optional(StrictHexStruct),
+  blockNumber: optional(StrictHexStruct),
+  gasUsed: optional(StrictHexStruct),
+  transactionHash: optional(StrictHexStruct),
 });
 
 export type GetCallsStatusParams = Infer<typeof GetCallsStatusStruct>;
@@ -62,9 +64,7 @@ export async function walletGetCallsStatus(
     throw rpcErrors.methodNotSupported();
   }
 
-  if (!validateParams(req.params, GetCallsStatusStruct)) {
-    return;
-  }
+  validateParams(req.params, GetCallsStatusStruct);
 
   const batchId = req.params[0];
   const rawReceipts = await getTransactionReceiptsByBatchId(batchId, req);

@@ -17,6 +17,7 @@ const ID_MOCK = '1234-5678';
 const REQUEST_MOCK = {
   params: [
     {
+      version: '1.0',
       from: ADDRESS_MOCK,
       chainId: HEX_MOCK,
       calls: [
@@ -63,12 +64,6 @@ describe('wallet_sendCalls', () => {
   it('returns ID from hook', async () => {
     await callMethod();
     expect(response.result).toStrictEqual(ID_MOCK);
-  });
-
-  it('supports version', async () => {
-    params[0].version = '1.0.0';
-    await callMethod();
-    expect(processSendCallsMock).toHaveBeenCalledWith(params[0], request);
   });
 
   it('supports capabilities', async () => {

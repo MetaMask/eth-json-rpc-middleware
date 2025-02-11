@@ -34,9 +34,7 @@ export async function walletGetCapabilities(
     throw rpcErrors.methodNotSupported();
   }
 
-  if (!validateParams(req.params, GetCapabilitiesStruct)) {
-    return;
-  }
+  validateParams(req.params, GetCapabilitiesStruct);
 
   const address = req.params[0];
   const capabilities = await getCapabilities(address, req);

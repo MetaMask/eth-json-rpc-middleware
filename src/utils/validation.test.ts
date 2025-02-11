@@ -108,9 +108,9 @@ describe('Validation Utils', () => {
   });
 
   describe('validateParams', () => {
-    it('returns true if superstruct returns no error', () => {
+    it('does now throw if superstruct returns no error', () => {
       validateMock.mockReturnValue([undefined, undefined]);
-      expect(validateParams({}, any())).toBe(true);
+      expect(() => validateParams({}, any())).not.toThrow();
     });
 
     it('throws if superstruct returns error', () => {

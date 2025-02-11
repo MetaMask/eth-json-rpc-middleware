@@ -23,7 +23,7 @@ import {
 
 const SendCallsStruct = tuple([
   object({
-    version: optional(nonempty(string())),
+    version: nonempty(string()),
     from: HexChecksumAddressStruct,
     chainId: optional(StrictHexStruct),
     calls: array(
@@ -60,10 +60,7 @@ export async function walletSendCalls(
     throw rpcErrors.methodNotSupported();
   }
 
-  if (!validateParams(req.params, SendCallsStruct)) {
-    // Not possible as throws.
-    return;
-  }
+  validateParams(req.params, SendCallsStruct);
 
   const params = req.params[0];
 

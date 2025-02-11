@@ -38,7 +38,7 @@ export async function validateAndNormalizeKeyholder(
 export function validateParams<ParamsType>(
   value: unknown | ParamsType,
   struct: Struct<ParamsType>,
-): value is ParamsType {
+): asserts value is ParamsType {
   const [error] = validate(value, struct);
 
   if (error) {
@@ -46,8 +46,6 @@ export function validateParams<ParamsType>(
       formatValidationError(error, `Invalid params`),
     );
   }
-
-  return true;
 }
 
 export function resemblesAddress(str: string): boolean {
