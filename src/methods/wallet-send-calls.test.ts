@@ -65,6 +65,18 @@ describe('wallet_sendCalls', () => {
     expect(response.result).toStrictEqual(ID_MOCK);
   });
 
+  it('supports version', async () => {
+    params[0].version = '1.0.0';
+    await callMethod();
+    expect(processSendCallsMock).toHaveBeenCalledWith(params[0], request);
+  });
+
+  it('supports capabilities', async () => {
+    params[0].capabilities = { test: 'value' };
+    await callMethod();
+    expect(processSendCallsMock).toHaveBeenCalledWith(params[0], request);
+  });
+
   it('throws if no hook', async () => {
     await expect(
       walletSendCalls(request, response, {

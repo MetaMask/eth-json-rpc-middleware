@@ -1,6 +1,14 @@
 import { rpcErrors } from '@metamask/rpc-errors';
 import type { Infer } from '@metamask/superstruct';
-import { string, array, object, optional, tuple } from '@metamask/superstruct';
+import {
+  nonempty,
+  type,
+  string,
+  array,
+  object,
+  optional,
+  tuple,
+} from '@metamask/superstruct';
 import type {
   Json,
   JsonRpcRequest,
@@ -15,7 +23,7 @@ import {
 
 const SendCallsStruct = tuple([
   object({
-    version: optional(string()),
+    version: optional(nonempty(string())),
     from: HexChecksumAddressStruct,
     chainId: optional(StrictHexStruct),
     calls: array(
@@ -25,6 +33,7 @@ const SendCallsStruct = tuple([
         value: optional(StrictHexStruct),
       }),
     ),
+    capabilities: optional(type({})),
   }),
 ]);
 
