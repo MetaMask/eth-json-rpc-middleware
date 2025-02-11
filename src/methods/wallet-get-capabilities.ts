@@ -14,7 +14,7 @@ import { validateParams } from '../utils/validation';
 const GetCapabilitiesStruct = tuple([HexChecksumAddressStruct]);
 
 export type GetCapabilitiesParams = Infer<typeof GetCapabilitiesStruct>;
-export type GetCapabilitiesResult = Record<Hex, Record<string, any>>;
+export type GetCapabilitiesResult = Record<Hex, Record<string, Json>>;
 
 export type GetCapabilitiesHook = (
   address: Hex,
