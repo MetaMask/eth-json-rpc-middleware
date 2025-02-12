@@ -19,6 +19,9 @@ const RETRIABLE_ERRORS: string[] = [
   'Failed to fetch',
 ];
 
+/**
+ * @deprecated Please use {@link JsonRpcRequestWithOrigin} instead.
+ */
 export interface PayloadWithOrigin extends JsonRpcRequest {
   origin?: string;
 }
@@ -27,7 +30,7 @@ export interface PayloadWithOrigin extends JsonRpcRequest {
  * Like a JSON-RPC request, but includes an optional `origin` property.
  * This will be included in the request as a header if specified.
  */
-export type JsonRpcRequestWithOrigin<Params extends JsonRpcParams> =
+type JsonRpcRequestWithOrigin<Params extends JsonRpcParams> =
   JsonRpcRequest<Params> & {
     origin?: string;
   };
@@ -147,15 +150,14 @@ function createFetchMiddlewareWithRpcService({
         },
       );
 
-      // Discard the `id` and `jsonrpc` fields in the response body
-      // (the JSON-RPC engine will fill those in)
-
       if (isJsonRpcFailure(jsonRpcResponse)) {
         throw rpcErrors.internal({
           data: jsonRpcResponse.error,
         });
       }
 
+      // Discard the `id` and `jsonrpc` fields in the response body
+      // (the JSON-RPC engine will fill those in)
       res.result = jsonRpcResponse.result;
     },
   );
@@ -271,6 +273,9 @@ function parseResponse(fetchRes: Response, body: Record<string, Block>): Block {
 /**
  * Generate `fetch` configuration for sending the given request to an RPC API.
  *
+ * @deprecated This function was created to support a now-deprecated signature
+ * for {@link createFetchMiddleware}. It will be removed in a future major
+ * version.
  * @param options - Options
  * @param options.btoa - Generates a base64-encoded string from a binary string.
  * @param options.rpcUrl - The URL to send the request to.
