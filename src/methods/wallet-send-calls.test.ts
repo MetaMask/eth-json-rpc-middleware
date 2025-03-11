@@ -3,6 +3,7 @@ import { klona } from 'klona';
 
 import type {
   ProcessSendCallsHook,
+  SendCalls,
   SendCallsParams,
 } from './wallet-send-calls';
 import { walletSendCalls } from './wallet-send-calls';
@@ -66,9 +67,23 @@ describe('wallet_sendCalls', () => {
     expect(response.result).toStrictEqual(ID_MOCK);
   });
 
-  it('supports capabilities', async () => {
-    params[0].capabilities = { test: 'value' };
+  it('supports top-level capabilities', async () => {
+    params[0].capabilities = {
+      'test-capability': { test: 'value', optional: true },
+    } as SendCalls['capabilities'];
+
     await callMethod();
+
+    expect(processSendCallsMock).toHaveBeenCalledWith(params[0], request);
+  });
+
+  it('supports call capabilities', async () => {
+    params[0].calls[0].capabilities = {
+      'test-capability': { test: 'value', optional: false },
+    } as SendCalls['capabilities'];
+
+    await callMethod();
+
     expect(processSendCallsMock).toHaveBeenCalledWith(params[0], request);
   });
 
@@ -107,13 +122,15 @@ describe('wallet_sendCalls', () => {
     params[0].from = '123' as never;
     params[0].chainId = 123 as never;
     params[0].calls = '123' as never;
+    params[0].capabilities = '123' as never;
 
     await expect(callMethod()).rejects.toMatchInlineSnapshot(`
             [Error: Invalid params
 
             0 > from - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "123"
             0 > chainId - Expected a string, but received: 123
-            0 > calls - Expected an array value, but received: "123"]
+            0 > calls - Expected an array value, but received: "123"
+            0 > capabilities - Expected an object, but received: "123"]
           `);
   });
 
@@ -121,13 +138,15 @@ describe('wallet_sendCalls', () => {
     params[0].calls[0].data = 123 as never;
     params[0].calls[0].to = 123 as never;
     params[0].calls[0].value = 123 as never;
+    params[0].calls[0].capabilities = '123' as never;
 
     await expect(callMethod()).rejects.toMatchInlineSnapshot(`
             [Error: Invalid params
 
             0 > calls > 0 > to - Expected a string, but received: 123
             0 > calls > 0 > data - Expected a string, but received: 123
-            0 > calls > 0 > value - Expected a string, but received: 123]
+            0 > calls > 0 > value - Expected a string, but received: 123
+            0 > calls > 0 > capabilities - Expected an object, but received: "123"]
           `);
   });
 

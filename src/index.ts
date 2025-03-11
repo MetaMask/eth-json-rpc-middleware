@@ -5,10 +5,9 @@ export * from './block-tracker-inspector';
 export * from './fetch';
 export * from './inflight-cache';
 export type {
+  GetCallsStatusHook,
   GetCallsStatusParams,
-  GetCallsStatusReceipt,
   GetCallsStatusResult,
-  GetTransactionReceiptsByBatchIdHook,
 } from './methods/wallet-get-calls-status';
 export type {
   GetCapabilitiesHook,
