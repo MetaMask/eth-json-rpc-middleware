@@ -9,6 +9,7 @@ export type {
   GetCallsStatusParams,
   GetCallsStatusResult,
 } from './methods/wallet-get-calls-status';
+export { GetCallsStatusCode } from './methods/wallet-get-calls-status';
 export type {
   GetCapabilitiesHook,
   GetCapabilitiesParams,
@@ -18,6 +19,7 @@ export type {
   ProcessSendCallsHook,
   SendCalls,
   SendCallsParams,
+  SendCallsResult,
 } from './methods/wallet-send-calls';
 export * from './providerAsMiddleware';
 export * from './retryOnEmpty';

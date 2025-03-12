@@ -13,6 +13,14 @@ import { validateParams } from '../utils/validation';
 
 const GetCallsStatusStruct = tuple([StrictHexStruct]);
 
+export enum GetCallsStatusCode {
+  PENDING = 100,
+  CONFIRMED = 200,
+  FAILED_OFFCHAIN = 400,
+  REVERTED = 500,
+  REVERTED_PARTIAL = 600,
+}
+
 export type GetCallsStatusParams = Infer<typeof GetCallsStatusStruct>;
 
 export type GetCallsStatusResult = {
