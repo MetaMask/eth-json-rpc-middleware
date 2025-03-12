@@ -34,6 +34,7 @@ const CapabilitiesStruct = record(
 const SendCallsStruct = tuple([
   object({
     version: nonempty(string()),
+    id: optional(StrictHexStruct),
     from: HexChecksumAddressStruct,
     chainId: optional(StrictHexStruct),
     calls: array(
