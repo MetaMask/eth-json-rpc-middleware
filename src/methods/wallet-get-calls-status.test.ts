@@ -100,7 +100,7 @@ describe('wallet_getCallsStatus', () => {
           `);
   });
 
-  it('throws if not hex', async () => {
+  it('throws if address is not hex', async () => {
     params[0] = '123' as Hex;
 
     await expect(callMethod()).rejects.toMatchInlineSnapshot(`
@@ -110,7 +110,7 @@ describe('wallet_getCallsStatus', () => {
           `);
   });
 
-  it('throws if empty', async () => {
+  it('throws if address is empty', async () => {
     params[0] = '' as never;
 
     await expect(callMethod()).rejects.toMatchInlineSnapshot(`

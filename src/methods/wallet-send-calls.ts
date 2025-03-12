@@ -36,7 +36,7 @@ const SendCallsStruct = tuple([
     version: nonempty(string()),
     id: optional(StrictHexStruct),
     from: HexChecksumAddressStruct,
-    chainId: optional(StrictHexStruct),
+    chainId: StrictHexStruct,
     calls: array(
       object({
         to: optional(HexChecksumAddressStruct),

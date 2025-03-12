@@ -34,7 +34,7 @@ export type GetCallsStatusResult = {
       data: Hex;
       topics: Hex[];
     }[];
-    status: Hex;
+    status: '0x0' | '0x1';
     blockHash: Hex;
     blockNumber: Hex;
     gasUsed: Hex;
@@ -46,7 +46,7 @@ export type GetCallsStatusResult = {
 export type GetCallsStatusHook = (
   id: GetCallsStatusParams[0],
   req: JsonRpcRequest,
-) => Promise<GetCallsStatusResult[]>;
+) => Promise<GetCallsStatusResult>;
 
 export async function walletGetCallsStatus(
   req: JsonRpcRequest,

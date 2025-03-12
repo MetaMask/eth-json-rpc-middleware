@@ -128,6 +128,7 @@ describe('wallet_sendCalls', () => {
             [Error: Invalid params
 
             0 > from - Expected a string, but received: undefined
+            0 > chainId - Expected a string, but received: undefined
             0 > calls - Expected an array value, but received: undefined]
           `);
   });
