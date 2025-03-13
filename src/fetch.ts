@@ -239,7 +239,7 @@ function checkForHttpErrors(fetchRes: Response): void {
     case 405:
       throw rpcErrors.methodNotFound();
 
-    case 418:
+    case 429:
       throw createRatelimitError();
 
     case 503:
