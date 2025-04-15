@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [17.0.0]
-### Uncategorized
-- feat: support version 2.0.0 of EIP-5792 ([#370](https://github.com/MetaMask/eth-json-rpc-middleware/pull/370))
-- chore: update codeowners for wallet request handlers ([#369](https://github.com/MetaMask/eth-json-rpc-middleware/pull/369))
+### Changed
+- **BREAKING:** Support version `2.0.0` of EIP-5792 ([#370](https://github.com/MetaMask/eth-json-rpc-middleware/pull/370))
+  - Add `atomicRequired` property to `SendCallsStruct`.
+  - Make `from` optional in `SendCallsStruct`.
+  - Add `atomic` property to `GetCallsStatusResult`.
+  - Validate `address` in `GetCapabilitiesParams` is added to wallet.
+  - Use `-32602` code for all EIP-5792 schema errors.
 
 ## [16.0.1]
 ### Fixed
