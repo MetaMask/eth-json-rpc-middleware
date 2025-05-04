@@ -23,4 +23,5 @@ export type {
 } from './methods/wallet-send-calls';
 export * from './providerAsMiddleware';
 export * from './retryOnEmpty';
+export * from './retryOnRateLimit';
 export * from './wallet';
