@@ -995,14 +995,14 @@ __metadata:
   linkType: hard
 
 "@metamask/eth-json-rpc-infura@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "@metamask/eth-json-rpc-infura@npm:10.0.0"
+  version: 10.2.0
+  resolution: "@metamask/eth-json-rpc-infura@npm:10.2.0"
   dependencies:
-    "@metamask/eth-json-rpc-provider": ^4.1.5
-    "@metamask/json-rpc-engine": ^10.0.0
-    "@metamask/rpc-errors": ^7.0.0
-    "@metamask/utils": ^9.1.0
-  checksum: bfee1c32e71150b06acd163eecc317926de07678e0be0bc65b9ed81a8ddb56bdffc54e0270de6bf80ed4e09c2925088a6a315f534605c19dcdb5f2a711e97d37
+    "@metamask/eth-json-rpc-provider": ^4.1.7
+    "@metamask/json-rpc-engine": ^10.0.2
+    "@metamask/rpc-errors": ^7.0.2
+    "@metamask/utils": ^11.0.1
+  checksum: d183a1577c5b47b648a359efdcc389cf4467d396213057f061d66ba2d20a44c3234d18f67c4b6130827da6f5d192c67dd4c731476207e4a9969e7b21548df475
   languageName: node
   linkType: hard
 
@@ -1124,7 +1124,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/json-rpc-engine@npm:^10.0.0, @metamask/json-rpc-engine@npm:^10.0.2, @metamask/json-rpc-engine@npm:^10.0.3":
+"@metamask/json-rpc-engine@npm:^10.0.2, @metamask/json-rpc-engine@npm:^10.0.3":
   version: 10.0.3
   resolution: "@metamask/json-rpc-engine@npm:10.0.3"
   dependencies:
@@ -1171,7 +1171,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/rpc-errors@npm:^7.0.0, @metamask/rpc-errors@npm:^7.0.2":
+"@metamask/rpc-errors@npm:^7.0.2":
   version: 7.0.2
   resolution: "@metamask/rpc-errors@npm:7.0.2"
   dependencies:
@@ -1216,23 +1216,6 @@ __metadata:
     semver: ^7.5.4
     uuid: ^9.0.1
   checksum: 41ec84e9198969bb5a0e7a1f5426ca886a62f6d47456a1575f60b2712b9078829d0c3a947bbfffd47ca832447591b36b64a4ce767e56a6fc0304e4a1b9ec5231
-  languageName: node
-  linkType: hard
-
-"@metamask/utils@npm:^9.1.0":
-  version: 9.3.0
-  resolution: "@metamask/utils@npm:9.3.0"
-  dependencies:
-    "@ethereumjs/tx": ^4.2.0
-    "@metamask/superstruct": ^3.1.0
-    "@noble/hashes": ^1.3.1
-    "@scure/base": ^1.1.3
-    "@types/debug": ^4.1.7
-    debug: ^4.3.4
-    pony-cause: ^2.1.10
-    semver: ^7.5.4
-    uuid: ^9.0.1
-  checksum: f720b0f7bdd46054aa88d15a9702e1de6d7200a1ca1d4f6bc48761b039f1bbffb46ac88bc87fe79e66128c196d424f3b9ef071b3cb4b40139223786d56da35e0
   languageName: node
   linkType: hard
 
