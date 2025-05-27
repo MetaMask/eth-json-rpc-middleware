@@ -4,16 +4,28 @@ import {
   createAsyncMiddleware,
   createScaffoldMiddleware,
 } from '@metamask/json-rpc-engine';
-import { providerErrors, rpcErrors } from '@metamask/rpc-errors';
-import {
-  isValidHexAddress,
-  type Json,
-  type JsonRpcRequest,
-  type PendingJsonRpcResponse,
+import { rpcErrors } from '@metamask/rpc-errors';
+import { isValidHexAddress } from '@metamask/utils';
+import type {
+  JsonRpcRequest,
+  PendingJsonRpcResponse,
+  Json,
+  Hex,
 } from '@metamask/utils';
 
+import type { GetCallsStatusHook } from './methods/wallet-get-calls-status';
+import { walletGetCallsStatus } from './methods/wallet-get-calls-status';
+import type { GetCapabilitiesHook } from './methods/wallet-get-capabilities';
+import { walletGetCapabilities } from './methods/wallet-get-capabilities';
+import type { ProcessSendCallsHook } from './methods/wallet-send-calls';
+import { walletSendCalls } from './methods/wallet-send-calls';
 import type { Block } from './types';
+import { stripArrayTypeIfPresent } from './utils/common';
 import { normalizeTypedMessage, parseTypedMessage } from './utils/normalize';
+import {
+  resemblesAddress,
+  validateAndNormalizeKeyholder as validateKeyholder,
+} from './utils/validation';
 
 /*
 export type TransactionParams = {
@@ -47,6 +59,8 @@ export type TypedMessageV1Params = Omit<TypedMessageParams, 'data'> & {
 
 export interface WalletMiddlewareOptions {
   getAccounts: (req: JsonRpcRequest) => Promise<string[]>;
+  getCallsStatus?: GetCallsStatusHook;
+  getCapabilities?: GetCapabilitiesHook;
   processDecryptMessage?: (
     msgParams: MessageParams,
     req: JsonRpcRequest,
@@ -82,10 +96,13 @@ export interface WalletMiddlewareOptions {
     req: JsonRpcRequest,
     version: string,
   ) => Promise<string>;
+  processSendCalls?: ProcessSendCallsHook;
 }
 
 export function createWalletMiddleware({
   getAccounts,
+  getCallsStatus,
+  getCapabilities,
   processDecryptMessage,
   processEncryptionPublicKey,
   processPersonalMessage,
@@ -94,6 +111,7 @@ export function createWalletMiddleware({
   processTypedMessage,
   processTypedMessageV3,
   processTypedMessageV4,
+  processSendCalls,
 }: // }: WalletMiddlewareOptions): JsonRpcMiddleware<string, Block> {
 WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
   if (!getAccounts) {
@@ -104,9 +122,11 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     // account lookups
     eth_accounts: createAsyncMiddleware(lookupAccounts),
     eth_coinbase: createAsyncMiddleware(lookupDefaultAccount),
+
     // tx signatures
     eth_sendTransaction: createAsyncMiddleware(sendTransaction),
     eth_signTransaction: createAsyncMiddleware(signTransaction),
+
     // message signatures
     eth_signTypedData: createAsyncMiddleware(signTypedData),
     eth_signTypedData_v3: createAsyncMiddleware(signTypedDataV3),
@@ -115,6 +135,19 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     eth_getEncryptionPublicKey: createAsyncMiddleware(encryptionPublicKey),
     eth_decrypt: createAsyncMiddleware(decryptMessage),
     personal_ecRecover: createAsyncMiddleware(personalRecover),
+
+    // EIP-5792
+    wallet_getCapabilities: createAsyncMiddleware(async (params, req) =>
+      walletGetCapabilities(params, req, { getAccounts, getCapabilities }),
+    ),
+    wallet_sendCalls: createAsyncMiddleware(async (params, req) =>
+      walletSendCalls(params, req, { getAccounts, processSendCalls }),
+    ),
+    wallet_getCallsStatus: createAsyncMiddleware(async (params, req) =>
+      walletGetCallsStatus(params, req, {
+        getCallsStatus,
+      }),
+    ),
   });
 
   //
@@ -243,6 +276,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
     const address = await validateAndNormalizeKeyholder(params[0], req);
     const message = normalizeTypedMessage(params[1]);
+    validatePrimaryType(message);
     validateVerifyingContract(message);
     const version = 'V3';
     const msgParams: TypedMessageParams = {
@@ -274,6 +308,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
     const address = await validateAndNormalizeKeyholder(params[0], req);
     const message = normalizeTypedMessage(params[1]);
+    validatePrimaryType(message);
     validateVerifyingContract(message);
     const version = 'V4';
     const msgParams: TypedMessageParams = {
@@ -433,27 +468,28 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
     address: string,
     req: JsonRpcRequest,
   ): Promise<string> {
-    if (
-      typeof address === 'string' &&
-      address.length > 0 &&
-      resemblesAddress(address)
-    ) {
-      // Ensure that an "unauthorized" error is thrown if the requester does not have the `eth_accounts`
-      // permission.
-      const accounts = await getAccounts(req);
-      const normalizedAccounts: string[] = accounts.map((_address) =>
-        _address.toLowerCase(),
-      );
-      const normalizedAddress: string = address.toLowerCase();
+    return validateKeyholder(address as Hex, req, { getAccounts });
+  }
+}
 
-      if (normalizedAccounts.includes(normalizedAddress)) {
-        return normalizedAddress;
-      }
-      throw providerErrors.unauthorized();
-    }
-    throw rpcErrors.invalidParams({
-      message: `Invalid parameters: must provide an Ethereum address.`,
-    });
+/**
+ * Validates primary of typedSignMessage, to ensure that it's type definition is present in message.
+ *
+ * @param data - The data passed in typedSign request.
+ */
+function validatePrimaryType(data: string) {
+  const { primaryType, types } = parseTypedMessage(data);
+  if (!types) {
+    throw rpcErrors.invalidInput();
+  }
+
+  // Primary type can be an array.
+  const baseType = stripArrayTypeIfPresent(primaryType);
+
+  // Return if the base type is not defined in the types
+  const baseTypeDefinitions = types[baseType];
+  if (!baseTypeDefinitions) {
+    throw rpcErrors.invalidInput();
   }
 }
 
@@ -461,15 +497,20 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
  * Validates verifyingContract of typedSignMessage.
  *
  * @param data - The data passed in typedSign request.
+ * This function allows the verifyingContract to be either:
+ * - A valid hex address
+ * - The string "cosmos" (as it is hard-coded in some Cosmos ecosystem's EVM adapters)
+ * - An empty string
  */
 function validateVerifyingContract(data: string) {
   const { domain: { verifyingContract } = {} } = parseTypedMessage(data);
-  if (verifyingContract && !isValidHexAddress(verifyingContract)) {
+  // Explicit check for cosmos here has been added to address this issue
+  // https://github.com/MetaMask/eth-json-rpc-middleware/issues/337
+  if (
+    verifyingContract &&
+    (verifyingContract as string) !== 'cosmos' &&
+    !isValidHexAddress(verifyingContract)
+  ) {
     throw rpcErrors.invalidInput();
   }
-}
-
-function resemblesAddress(str: string): boolean {
-  // hex prefix 2 + 20 bytes
-  return str.length === 2 + 20 * 2;
 }
