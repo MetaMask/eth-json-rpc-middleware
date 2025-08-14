@@ -17,6 +17,14 @@ import type { GetCallsStatusHook } from './methods/wallet-get-calls-status';
 import { walletGetCallsStatus } from './methods/wallet-get-calls-status';
 import type { GetCapabilitiesHook } from './methods/wallet-get-capabilities';
 import { walletGetCapabilities } from './methods/wallet-get-capabilities';
+import {
+  type ProcessRequestExecutionPermissionsHook,
+  walletRequestExecutionPermissions,
+} from './methods/wallet-request-execution-permissions';
+import {
+  type ProcessRevokeExecutionPermissionHook,
+  walletRevokeExecutionPermission,
+} from './methods/wallet-revoke-execution-permission';
 import type { ProcessSendCallsHook } from './methods/wallet-send-calls';
 import { walletSendCalls } from './methods/wallet-send-calls';
 import type { Block } from './types';
@@ -97,6 +105,8 @@ export interface WalletMiddlewareOptions {
     version: string,
   ) => Promise<string>;
   processSendCalls?: ProcessSendCallsHook;
+  processRequestExecutionPermissions?: ProcessRequestExecutionPermissionsHook;
+  processRevokeExecutionPermission?: ProcessRevokeExecutionPermissionHook;
 }
 
 export function createWalletMiddleware({
@@ -112,6 +122,8 @@ export function createWalletMiddleware({
   processTypedMessageV3,
   processTypedMessageV4,
   processSendCalls,
+  processRequestExecutionPermissions,
+  processRevokeExecutionPermission,
 }: // }: WalletMiddlewareOptions): JsonRpcMiddleware<string, Block> {
 WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
   if (!getAccounts) {
@@ -147,6 +159,20 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
       walletGetCallsStatus(params, req, {
         getCallsStatus,
       }),
+    ),
+
+    // EIP-7715
+    wallet_requestExecutionPermissions: createAsyncMiddleware(
+      async (params, req) =>
+        walletRequestExecutionPermissions(params, req, {
+          processRequestExecutionPermissions,
+        }),
+    ),
+    wallet_revokeExecutionPermission: createAsyncMiddleware(
+      async (params, req) =>
+        walletRevokeExecutionPermission(params, req, {
+          processRevokeExecutionPermission,
+        }),
     ),
   });
 
