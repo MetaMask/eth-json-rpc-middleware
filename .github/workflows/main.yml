@@ -38,6 +38,12 @@ jobs:
     name: Build, lint, and test
     uses: ./.github/workflows/build-lint-test.yml
 
+  compatibility-test:
+    name: Compatibility test
+    uses: ./.github/workflows/compatibility-test.yml
+    with:
+      enabled: ${{ github.ref == 'refs/heads/main' }}
+
   all-jobs-completed:
     name: All jobs completed
     runs-on: ubuntu-latest
@@ -45,6 +51,7 @@ jobs:
       - check-workflows
       - analyse-code
       - build-lint-test
+      - compatibility-test
     outputs:
       PASSED: ${{ steps.set-output.outputs.PASSED }}
     steps:
