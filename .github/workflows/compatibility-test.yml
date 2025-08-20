@@ -2,23 +2,9 @@ name: Compatibility Test
 
 on:
   workflow_call:
-    inputs:
-      enabled:
-        required: false
-        type: boolean
-        default: true
 
 jobs:
-  enabled-check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Skipping compatibility test
-        if: !inputs.enabled
-        run: echo "Skipping compatibility test"
-
   compatibility-test:
-    needs: enabled-check
-    if: inputs.enabled
     runs-on: ubuntu-latest
     strategy:
       matrix:
