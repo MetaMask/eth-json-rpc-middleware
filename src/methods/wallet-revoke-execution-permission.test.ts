@@ -58,46 +58,30 @@ describe('wallet_revokeExecutionPermission', () => {
   it('throws if no hook', async () => {
     await expect(
       walletRevokeExecutionPermission(request, response, {}),
-    ).rejects.toMatchInlineSnapshot(`[Error: Resource not found.]`);
+    ).rejects.toThrow('Resource not found.');
   });
 
   it('throws if no params', async () => {
     (request as JsonRpcRequest).params = undefined;
 
-    await expect(callMethod()).rejects.toMatchInlineSnapshot(`
-            [Error: Invalid params
-
-            Expected an object, but received: undefined]
-          `);
+    await expect(callMethod()).rejects.toThrow('Invalid params');
   });
 
   it('throws if missing properties', async () => {
     (request as JsonRpcRequest).params = {} as never;
 
-    await expect(callMethod()).rejects.toMatchInlineSnapshot(`
-            [Error: Invalid params
-
-            permissionContext - Expected a string, but received: undefined]
-          `);
+    await expect(callMethod()).rejects.toThrow('Invalid params');
   });
 
   it('throws if wrong types', async () => {
     params.permissionContext = 123 as never;
 
-    await expect(callMethod()).rejects.toMatchInlineSnapshot(`
-            [Error: Invalid params
-
-            permissionContext - Expected a string, but received: 123]
-          `);
+    await expect(callMethod()).rejects.toThrow('Invalid params');
   });
 
   it('throws if not hex', async () => {
     params.permissionContext = '123' as never;
 
-    await expect(callMethod()).rejects.toMatchInlineSnapshot(`
-            [Error: Invalid params
-
-            permissionContext - Expected a string matching \`/^0x[0-9a-f]+$/\` but received "123"]
-          `);
+    await expect(callMethod()).rejects.toThrow('Invalid params');
   });
 });

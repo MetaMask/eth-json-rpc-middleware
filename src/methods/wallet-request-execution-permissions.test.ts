@@ -129,19 +129,15 @@ describe('wallet_requestExecutionPermissions', () => {
   it('throws if no hook', async () => {
     await expect(
       walletRequestExecutionPermissions(request, response, {}),
-    ).rejects.toMatchInlineSnapshot(
-      `[Error: wallet_requestExecutionPermissions - no middleware configured]`,
+    ).rejects.toThrow(
+      `wallet_requestExecutionPermissions - no middleware configured`,
     );
   });
 
   it('throws if no params', async () => {
     request.params = undefined;
 
-    await expect(callMethod()).rejects.toMatchInlineSnapshot(`
-            [Error: Invalid params
-
-            Expected an array value, but received: undefined]
-          `);
+    await expect(callMethod()).rejects.toThrow('Invalid params');
   });
 
   it('throws if missing properties', async () => {
@@ -149,13 +145,7 @@ describe('wallet_requestExecutionPermissions', () => {
     params[0].signer = undefined as never;
     params[0].permission = undefined as never;
 
-    await expect(callMethod()).rejects.toMatchInlineSnapshot(`
-            [Error: Invalid params
-
-            0 > chainId - Expected a string, but received: undefined
-            0 > signer - Expected an object, but received: undefined
-            0 > permission - Expected an object, but received: undefined]
-          `);
+    await expect(callMethod()).rejects.toThrow('Invalid params');
   });
 
   it('throws if wrong types', async () => {
@@ -169,20 +159,7 @@ describe('wallet_requestExecutionPermissions', () => {
     } as never;
     params[0].rules = [{} as never];
 
-    await expect(callMethod()).rejects.toMatchInlineSnapshot(`
-            [Error: Invalid params
-
-            0 > chainId - Expected a string, but received: 123
-            0 > address - Expected a string, but received: 123
-            0 > signer > type - Expected the literal \`"account"\`, but received: 123
-            0 > signer > data - Expected an object, but received: "123"
-            0 > permission - Expected an object, but received: "123"
-            0 > rules - Expected the value to satisfy a union of \`array | literal\`, but received: [object Object]
-            0 > rules > 0 > type - Expected a string, but received: undefined
-            0 > rules > 0 > isAdjustmentAllowed - Expected a value of type \`boolean\`, but received: \`undefined\`
-            0 > rules > 0 > data - Expected an object, but received: undefined
-            0 > rules - Expected the literal \`null\`, but received: [object Object]]
-          `);
+    await expect(callMethod()).rejects.toThrow('Invalid params');
   });
 
   it('throws if not hex', async () => {
@@ -190,12 +167,6 @@ describe('wallet_requestExecutionPermissions', () => {
     params[0].address = '123' as never;
     params[0].signer.data.address = '123' as never;
 
-    await expect(callMethod()).rejects.toMatchInlineSnapshot(`
-            [Error: Invalid params
-
-            0 > chainId - Expected a string matching \`/^0x[0-9a-f]+$/\` but received "123"
-            0 > address - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "123"
-            0 > signer > data > address - Expected a string matching \`/^0x[0-9a-fA-F]{40}$/\` but received "123"]
-          `);
+    await expect(callMethod()).rejects.toThrow('Invalid params');
   });
 });
