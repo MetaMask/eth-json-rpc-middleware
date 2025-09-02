@@ -58,7 +58,9 @@ describe('wallet_revokeExecutionPermission', () => {
   it('throws if no hook', async () => {
     await expect(
       walletRevokeExecutionPermission(request, response, {}),
-    ).rejects.toThrow('Resource not found.');
+    ).rejects.toThrow(
+      'wallet_revokeExecutionPermission - no middleware configured',
+    );
   });
 
   it('throws if no params', async () => {

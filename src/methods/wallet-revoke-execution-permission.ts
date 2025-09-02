@@ -39,7 +39,9 @@ export async function walletRevokeExecutionPermission(
   },
 ): Promise<void> {
   if (!processRevokeExecutionPermission) {
-    throw rpcErrors.resourceNotFound();
+    throw rpcErrors.methodNotSupported(
+      'wallet_revokeExecutionPermission - no middleware configured',
+    );
   }
 
   const { params } = req;

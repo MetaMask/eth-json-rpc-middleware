@@ -76,7 +76,7 @@ export async function walletRequestExecutionPermissions(
   },
 ): Promise<void> {
   if (!processRequestExecutionPermissions) {
-    throw rpcErrors.resourceNotFound(
+    throw rpcErrors.methodNotSupported(
       'wallet_requestExecutionPermissions - no middleware configured',
     );
   }
