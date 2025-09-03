@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add RPC methods described in (revised) EIP-7715 specification ([#396](https://github.com/MetaMask/eth-json-rpc-middleware/pull/396))
+  - `wallet_requestExecutionPermissions`
+  - `wallet_revokeExecutionPermission`
 
 ## [17.0.1]
 
