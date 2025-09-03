@@ -28,8 +28,8 @@ export type {
 } from './methods/wallet-request-execution-permissions';
 export type {
   ProcessRevokeExecutionPermissionHook,
-  RevokeExecutionPermissionsRequestParams,
-  RevokeExecutionPermissionsResult,
+  RevokeExecutionPermissionRequestParams,
+  RevokeExecutionPermissionResult,
 } from './methods/wallet-revoke-execution-permission';
 export * from './providerAsMiddleware';
 export * from './retryOnEmpty';

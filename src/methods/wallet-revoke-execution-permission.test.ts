@@ -7,7 +7,7 @@ import { klona } from 'klona';
 
 import type {
   ProcessRevokeExecutionPermissionHook,
-  RevokeExecutionPermissionsRequestParams,
+  RevokeExecutionPermissionRequestParams,
 } from './wallet-revoke-execution-permission';
 import { walletRevokeExecutionPermission } from './wallet-revoke-execution-permission';
 
@@ -17,11 +17,11 @@ const REQUEST_MOCK = {
   params: {
     permissionContext: HEX_MOCK,
   },
-} as unknown as JsonRpcRequest<RevokeExecutionPermissionsRequestParams>;
+} as unknown as JsonRpcRequest<RevokeExecutionPermissionRequestParams>;
 
 describe('wallet_revokeExecutionPermission', () => {
-  let request: JsonRpcRequest<RevokeExecutionPermissionsRequestParams>;
-  let params: RevokeExecutionPermissionsRequestParams;
+  let request: JsonRpcRequest<RevokeExecutionPermissionRequestParams>;
+  let params: RevokeExecutionPermissionRequestParams;
   let response: PendingJsonRpcResponse<Json>;
   let processRevokeExecutionPermissionMock: jest.MockedFunction<ProcessRevokeExecutionPermissionHook>;
 
@@ -35,7 +35,7 @@ describe('wallet_revokeExecutionPermission', () => {
     jest.resetAllMocks();
 
     request = klona(REQUEST_MOCK);
-    params = request.params as RevokeExecutionPermissionsRequestParams;
+    params = request.params as RevokeExecutionPermissionRequestParams;
     response = {} as PendingJsonRpcResponse<Json>;
 
     processRevokeExecutionPermissionMock = jest.fn();

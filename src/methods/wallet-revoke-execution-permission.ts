@@ -10,24 +10,24 @@ import {
 
 import { validateParams } from '../utils/validation';
 
-export const RevokeExecutionPermissionsResultStruct = object({});
+export const RevokeExecutionPermissionResultStruct = object({});
 
-export type RevokeExecutionPermissionsResult = Infer<
-  typeof RevokeExecutionPermissionsResultStruct
+export type RevokeExecutionPermissionResult = Infer<
+  typeof RevokeExecutionPermissionResultStruct
 >;
 
-export const RevokeExecutionPermissionsRequestParamsStruct = object({
+export const RevokeExecutionPermissionRequestParamsStruct = object({
   permissionContext: StrictHexStruct,
 });
 
-export type RevokeExecutionPermissionsRequestParams = Infer<
-  typeof RevokeExecutionPermissionsRequestParamsStruct
+export type RevokeExecutionPermissionRequestParams = Infer<
+  typeof RevokeExecutionPermissionRequestParamsStruct
 >;
 
 export type ProcessRevokeExecutionPermissionHook = (
-  request: RevokeExecutionPermissionsRequestParams,
+  request: RevokeExecutionPermissionRequestParams,
   req: JsonRpcRequest,
-) => Promise<RevokeExecutionPermissionsResult>;
+) => Promise<RevokeExecutionPermissionResult>;
 
 export async function walletRevokeExecutionPermission(
   req: JsonRpcRequest,
@@ -46,7 +46,7 @@ export async function walletRevokeExecutionPermission(
 
   const { params } = req;
 
-  validateParams(params, RevokeExecutionPermissionsRequestParamsStruct);
+  validateParams(params, RevokeExecutionPermissionRequestParamsStruct);
 
   res.result = await processRevokeExecutionPermission(params, req);
 }
