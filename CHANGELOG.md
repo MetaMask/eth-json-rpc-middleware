@@ -9,10 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [17.1.0]
 
-### Uncategorized
+### Added
 
-- feat: add RPC methods described in (revised) EIP-7715 ([#396](https://github.com/MetaMask/eth-json-rpc-middleware/pull/396))
-- Run compatibility test only in main branch. ([#397](https://github.com/MetaMask/eth-json-rpc-middleware/pull/397))
+- Add RPC methods described in (revised) EIP-7715 specification ([#396](https://github.com/MetaMask/eth-json-rpc-middleware/pull/396))
 
 ## [17.0.1]
 
