@@ -30,7 +30,7 @@ export type GetCapabilitiesHook = (
 
 export async function walletGetCapabilities(
   req: JsonRpcRequest,
-  res: PendingJsonRpcResponse<Json>,
+  res: PendingJsonRpcResponse,
   {
     getAccounts,
     getCapabilities,

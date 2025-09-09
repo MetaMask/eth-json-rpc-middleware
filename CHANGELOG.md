@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Bump `@metamask/utils` to `^11.7.0` ([#404](https://github.com/MetaMask/eth-json-rpc-middleware/pull/404))
+
 ## [17.1.0]
 
 ### Added
