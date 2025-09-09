@@ -9,12 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **BREAKING:** `createFetchMiddleware` no longer takes `fetch`, `btoa`, `rpcUrl`, and `originHttpHeaderKey`
+- **BREAKING:** `createFetchMiddleware` no longer takes `fetch`, `btoa`, `rpcUrl`, and `originHttpHeaderKey` ([#402](https://github.com/MetaMask/eth-json-rpc-middleware/pull/402))
   - The existing signature (`rpcService` and `options`) is now the only way to use this function; please use that instead.
 
 ### Removed
 
-- **BREAKING:** Remove `PayloadWithOrigin` type
+- **BREAKING:** Remove `PayloadWithOrigin` type ([#402](https://github.com/MetaMask/eth-json-rpc-middleware/pull/402))
   - There is no equivalent.
 
 ## [17.1.0]
