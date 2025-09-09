@@ -51,7 +51,7 @@ export type GetCallsStatusHook = (
 
 export async function walletGetCallsStatus(
   req: JsonRpcRequest,
-  res: PendingJsonRpcResponse<Json>,
+  res: PendingJsonRpcResponse,
   {
     getCallsStatus,
   }: {
