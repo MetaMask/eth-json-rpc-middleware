@@ -65,7 +65,7 @@ export type ProcessSendCallsHook = (
 
 export async function walletSendCalls(
   req: JsonRpcRequest,
-  res: PendingJsonRpcResponse<Json>,
+  res: PendingJsonRpcResponse,
   {
     getAccounts,
     processSendCalls,

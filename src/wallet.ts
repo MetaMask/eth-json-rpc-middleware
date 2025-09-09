@@ -181,14 +181,14 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
   async function lookupAccounts(
     req: JsonRpcRequest,
-    res: PendingJsonRpcResponse<Json>,
+    res: PendingJsonRpcResponse,
   ): Promise<void> {
     res.result = await getAccounts(req);
   }
 
   async function lookupDefaultAccount(
     req: JsonRpcRequest,
-    res: PendingJsonRpcResponse<Json>,
+    res: PendingJsonRpcResponse,
   ): Promise<void> {
     const accounts = await getAccounts(req);
     res.result = accounts[0] || null;
@@ -200,7 +200,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
   async function sendTransaction(
     req: JsonRpcRequest,
-    res: PendingJsonRpcResponse<Json>,
+    res: PendingJsonRpcResponse,
   ): Promise<void> {
     if (!processTransaction) {
       throw rpcErrors.methodNotSupported();
@@ -223,7 +223,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
   async function signTransaction(
     req: JsonRpcRequest,
-    res: PendingJsonRpcResponse<Json>,
+    res: PendingJsonRpcResponse,
   ): Promise<void> {
     if (!processSignTransaction) {
       throw rpcErrors.methodNotSupported();
@@ -249,7 +249,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
   //
   async function signTypedData(
     req: JsonRpcRequest,
-    res: PendingJsonRpcResponse<Json>,
+    res: PendingJsonRpcResponse,
   ): Promise<void> {
     if (!processTypedMessage) {
       throw rpcErrors.methodNotSupported();
@@ -284,7 +284,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
   async function signTypedDataV3(
     req: JsonRpcRequest,
-    res: PendingJsonRpcResponse<Json>,
+    res: PendingJsonRpcResponse,
   ): Promise<void> {
     if (!processTypedMessageV3) {
       throw rpcErrors.methodNotSupported();
@@ -316,7 +316,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
   async function signTypedDataV4(
     req: JsonRpcRequest,
-    res: PendingJsonRpcResponse<Json>,
+    res: PendingJsonRpcResponse,
   ): Promise<void> {
     if (!processTypedMessageV4) {
       throw rpcErrors.methodNotSupported();
@@ -348,7 +348,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
   async function personalSign(
     req: JsonRpcRequest,
-    res: PendingJsonRpcResponse<Json>,
+    res: PendingJsonRpcResponse,
   ): Promise<void> {
     if (!processPersonalMessage) {
       throw rpcErrors.methodNotSupported();
@@ -405,7 +405,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
   async function personalRecover(
     req: JsonRpcRequest,
-    res: PendingJsonRpcResponse<Json>,
+    res: PendingJsonRpcResponse,
   ): Promise<void> {
     if (
       !req?.params ||
@@ -428,7 +428,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
   async function encryptionPublicKey(
     req: JsonRpcRequest,
-    res: PendingJsonRpcResponse<Json>,
+    res: PendingJsonRpcResponse,
   ): Promise<void> {
     if (!processEncryptionPublicKey) {
       throw rpcErrors.methodNotSupported();
@@ -450,7 +450,7 @@ WalletMiddlewareOptions): JsonRpcMiddleware<any, Block> {
 
   async function decryptMessage(
     req: JsonRpcRequest,
-    res: PendingJsonRpcResponse<Json>,
+    res: PendingJsonRpcResponse,
   ): Promise<void> {
     if (!processDecryptMessage) {
       throw rpcErrors.methodNotSupported();
