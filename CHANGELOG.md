@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **BREAKING:** Remove `PayloadWithOrigin` type ([#402](https://github.com/MetaMask/eth-json-rpc-middleware/pull/402))
   - There is no equivalent.
+- **BREAKING:** Remove `createFetchConfigFromReq` function ([#402](https://github.com/MetaMask/eth-json-rpc-middleware/pull/402))
+  - There is no equivalent.
 
 ## [17.1.0]
 
