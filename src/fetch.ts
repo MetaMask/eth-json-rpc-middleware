@@ -3,7 +3,7 @@ import { createAsyncMiddleware } from '@metamask/json-rpc-engine';
 import { rpcErrors } from '@metamask/rpc-errors';
 import type { Json, JsonRpcParams, JsonRpcRequest } from '@metamask/utils';
 
-import type { AbstractRpcService } from './types';
+import type { AbstractRpcServiceRequestMethod } from './types';
 
 /**
  * Like a JSON-RPC request, but includes an optional `origin` property.
@@ -20,6 +20,7 @@ type JsonRpcRequestWithOrigin<Params extends JsonRpcParams> =
  *
  * @param args - The arguments to this function.
  * @param args.rpcService - The RPC service to use.
+ * @param args.rpcService.request - The `request` method of the RPC service.
  * @param args.options - Options.
  * @param args.options.originHttpHeaderKey - If provided, the origin field for
  * each JSON-RPC request will be attached to each outgoing fetch request under
@@ -30,7 +31,7 @@ export function createFetchMiddleware({
   rpcService,
   options = {},
 }: {
-  rpcService: AbstractRpcService;
+  rpcService: { request: AbstractRpcServiceRequestMethod };
   options?: {
     originHttpHeaderKey?: string;
   };

@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **BREAKING:** `createFetchMiddleware` no longer takes `fetch`, `btoa`, `rpcUrl`, and `originHttpHeaderKey` ([#402](https://github.com/MetaMask/eth-json-rpc-middleware/pull/402))
   - The existing signature (`rpcService` and `options`) is now the only way to use this function; please use that instead.
+- **BREAKING:** `createFetchMiddleware` now takes an RPC service object that must be compatible with `@metamask/network-controller` 24.x and `@metamask/utils` 11.x ([#403](https://github.com/MetaMask/eth-json-rpc-middleware/pull/403))
+  - On the other hand, the only required property for this object now is `request`; all other properties will be ignored.
 - Bump `@metamask/utils` to `^11.7.0` ([#404](https://github.com/MetaMask/eth-json-rpc-middleware/pull/404))
 
 ### Removed
