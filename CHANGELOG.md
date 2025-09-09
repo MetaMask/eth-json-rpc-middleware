@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **BREAKING:** `createFetchMiddleware` no longer takes `fetch`, `btoa`, `rpcUrl`, and `originHttpHeaderKey`
+  - The existing signature (`rpcService` and `options`) is now the only way to use this function; please use that instead.
+
+### Removed
+
+- **BREAKING:** Remove `PayloadWithOrigin` type
+  - There is no equivalent.
+
 ## [17.1.0]
 
 ### Added
