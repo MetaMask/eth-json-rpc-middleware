@@ -3,11 +3,7 @@ import {
   createAsyncMiddleware,
   type JsonRpcMiddleware,
 } from '@metamask/json-rpc-engine';
-import type {
-  Json,
-  JsonRpcParams,
-  PendingJsonRpcResponse,
-} from '@metamask/utils';
+import type { Json, JsonRpcParams } from '@metamask/utils';
 
 export function providerAsMiddleware(
   provider: SafeEventEmitterProvider,
