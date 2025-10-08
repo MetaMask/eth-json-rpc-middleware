@@ -1049,13 +1049,13 @@ __metadata:
     "@metamask/eslint-config-nodejs": ^12.1.0
     "@metamask/eslint-config-typescript": ^12.1.0
     "@metamask/eth-block-tracker": ^12.2.0
-    "@metamask/eth-json-rpc-provider": ^4.1.7
+    "@metamask/eth-json-rpc-provider": ^5.0.0
     "@metamask/eth-sig-util": ^8.1.2
-    "@metamask/json-rpc-engine": ^10.0.2
+    "@metamask/json-rpc-engine": ^10.1.0
     "@metamask/network-controller": ^24.1.0
     "@metamask/rpc-errors": ^7.0.2
     "@metamask/superstruct": ^3.1.0
-    "@metamask/utils": ^11.7.0
+    "@metamask/utils": ^11.8.1
     "@types/bn.js": ^5.1.5
     "@types/btoa": ^1.2.3
     "@types/jest": ^27.4.1
@@ -1246,7 +1246,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/utils@npm:^11.0.1, @metamask/utils@npm:^11.1.0, @metamask/utils@npm:^11.4.2, @metamask/utils@npm:^11.7.0":
+"@metamask/utils@npm:^11.0.1, @metamask/utils@npm:^11.1.0, @metamask/utils@npm:^11.4.2":
   version: 11.7.0
   resolution: "@metamask/utils@npm:11.7.0"
   dependencies:
@@ -1265,7 +1265,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/utils@npm:^11.8.0":
+"@metamask/utils@npm:^11.8.0, @metamask/utils@npm:^11.8.1":
   version: 11.8.1
   resolution: "@metamask/utils@npm:11.8.1"
   dependencies:
