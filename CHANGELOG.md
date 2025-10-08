@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Bump `@metamask/eth-block-tracker` to 12.2.0 ([#TODO](TODO))
+ - `PollingBlockTracker.getLatestBlock()` now accepts an optional parameter `useCache`. This option defaults to `true`, but when `false`, it ignores the cached block number and instead updates and returns a new block number, ensuring that the frequency of requests is limited to the `pollingInterval` period
+- Change all `PollingBlockTracker.getLatestBlock()` calls to include `useCache: true` ([#TODO](TODO))
+
+- **BREAKING:** Remove `ethersProviderAsMiddleware` ([#415](https://github.com/MetaMask/eth-json-rpc-middleware/pull/415))
+
 ### Removed
 
 - **BREAKING:** Remove `ethersProviderAsMiddleware` ([#415](https://github.com/MetaMask/eth-json-rpc-middleware/pull/415))
