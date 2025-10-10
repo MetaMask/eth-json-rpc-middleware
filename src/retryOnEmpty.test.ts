@@ -21,27 +21,33 @@ import {
 
 /**
  * Objects used in each test.
- *
- * @property engine - The engine that holds the middleware stack, including the
- * one being tested.
- * @property provider - The provider that is used to make requests against
- * (which the middleware being tested will react to).
- * @property blockTracker - The block tracker which is used inside of the
- * middleware being tested.
  */
 interface Setup {
+  /**
+   * The engine that holds the middleware stack, including the
+   * one being tested.
+   */
   engine: JsonRpcEngine;
+  /**
+   * The provider that is used to make requests against
+   * (which the middleware being tested will react to).
+   */
   provider: SafeEventEmitterProvider;
+  /**
+   * The block tracker which is used inside of the
+   * middleware being tested.
+   */
   blockTracker: PollingBlockTracker;
 }
 
 /**
  * Options supported by `withTestSetup`.
- *
- * @property configureMiddleware - A function which determines which middleware
- * should be added to the engine.
  */
 interface WithTestSetupOptions {
+  /**
+   * A function which determines which middleware
+   * should be added to the engine.
+   */
   configureMiddleware: (setup: Setup) => {
     middlewareUnderTest: JsonRpcMiddleware<any, any>;
     otherMiddleware?: JsonRpcMiddleware<any, any>[];
@@ -57,15 +63,9 @@ interface WithTestSetupOptions {
  */
 type WithTestSetupCallback<T> = (setup: Setup) => Promise<T>;
 
-const originalSetTimeout = setTimeout;
-
 describe('createRetryOnEmptyMiddleware', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
+    jest.clearAllTimers();
   });
 
   it('throws if not given a provider', async () => {
@@ -775,7 +775,7 @@ async function waitForRequestToBeRetried({
   let iterationNumber = 1;
 
   while (iterationNumber <= numberOfTimes) {
-    await new Promise((resolve) => originalSetTimeout(resolve, 0));
+    await new Promise((resolve) => process.nextTick(resolve));
 
     if (
       requestSpy.mock.calls.filter((args) => requestMatches(args[0], request))
