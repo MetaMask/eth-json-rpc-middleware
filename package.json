@@ -45,7 +45,7 @@
     "lint:misc": "prettier '**/*.json' '**/*.md' '**/*.yml' '!.yarnrc.yml' --ignore-path .gitignore --no-error-on-unmatched-pattern",
     "prepack": "./scripts/prepack.sh",
     "test": "jest && jest-it-up && yarn build:clean && yarn test:types",
-    "test:types": "tsd --files 'src/**/*.test-d.ts'",
+    "test:types": "tsd --files 'src/**/*.test-d.ts' && attw --pack",
     "test:watch": "jest --watch"
   },
   "dependencies": {
@@ -61,6 +61,7 @@
     "safe-stable-stringify": "^2.4.3"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.15.3",
     "@lavamoat/allow-scripts": "^3.0.4",
     "@metamask/auto-changelog": "^4.0.0",
     "@metamask/error-reporting-service": "^2.0.0",
