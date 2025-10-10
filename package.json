@@ -1,7 +1,7 @@
 {
   "name": "@metamask/eth-json-rpc-middleware",
   "version": "19.0.0",
-  "description": "Ethereum-related json-rpc-engine middleware.",
+  "description": "Ethereum-related json-rpc-engine middleware",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/eth-json-rpc-middleware.git"
@@ -14,7 +14,7 @@
   },
   "types": "./dist/index.d.ts",
   "files": [
-    "dist/"
+    "dist"
   ],
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
@@ -40,8 +40,6 @@
     "@metamask/rpc-errors": "^7.0.2",
     "@metamask/superstruct": "^3.1.0",
     "@metamask/utils": "^11.8.1",
-    "@types/bn.js": "^5.1.5",
-    "bn.js": "^5.2.1",
     "klona": "^2.0.6",
     "pify": "^5.0.0",
     "safe-stable-stringify": "^2.4.3"
@@ -59,9 +57,7 @@
     "@types/jest": "^28.1.6",
     "@types/node": "^18.18",
     "@types/pify": "^5.0.2",
-    "@typescript-eslint/eslint-plugin": "^5.42.1",
-    "@typescript-eslint/parser": "^5.42.1",
-    "@typescript-eslint/utils": "^8.6.0",
+    "@yarnpkg/types": "^4.0.1",
     "depcheck": "^1.4.3",
     "eslint": "^9.11.0",
     "eslint-config-prettier": "^9.1.0",
@@ -99,5 +95,9 @@
       "@metamask/eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": false,
       "eslint-plugin-import-x>unrs-resolver": false
     }
+  },
+  "homepage": "https://github.com/MetaMask/eth-json-rpc-middleware#readme",
+  "bugs": {
+    "url": "https://github.com/MetaMask/eth-json-rpc-middleware/issues"
   }
 }
