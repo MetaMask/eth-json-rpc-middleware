@@ -1163,7 +1163,7 @@ __metadata:
     "@metamask/network-controller": "npm:^24.2.1"
     "@metamask/rpc-errors": "npm:^7.0.2"
     "@metamask/superstruct": "npm:^3.1.0"
-    "@metamask/utils": "npm:^11.8.1"
+    "@metamask/utils": "npm:^11.7.0"
     "@ts-bridge/cli": "npm:^0.6.3"
     "@types/jest": "npm:^28.1.6"
     "@types/node": "npm:^18.18"
