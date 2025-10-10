@@ -195,32 +195,31 @@ async function expectPullRequestTemplate(workspace, workspaceName) {
   }
 }
 
-// TODO: Enable this
-// /**
-//  * Expect that the workspace has a valid `exports` field. The `exports` field
-//  * is expected to:
-//  *
-//  * - Export a `types` entrypoint as the first export, or not at all.
-//  *
-//  * This is required for proper TypeScript support when using `Node16` (or later)
-//  * module resolution.
-//  *
-//  * @param {Workspace} workspace - The workspace to check.
-//  * @returns {void}
-//  */
-// function expectExports(workspace) {
-//   const { exports: manifestExports } = workspace.manifest;
-//   Object.entries(manifestExports)
-//     .filter(([, exportValue]) => typeof exportValue !== 'string')
-//     .forEach(([exportName, exportObject]) => {
-//       const keys = Object.keys(exportObject);
-//       if (keys.includes('types') && keys[0] !== 'types') {
-//         workspace.error(
-//           `The "types" export must be the first export in the "exports" field for the export "${exportName}".`,
-//         );
-//       }
-//     });
-// }
+/**
+ * Expect that the workspace has a valid `exports` field. The `exports` field
+ * is expected to:
+ *
+ * - Export a `types` entrypoint as the first export, or not at all.
+ *
+ * This is required for proper TypeScript support when using `Node16` (or later)
+ * module resolution.
+ *
+ * @param {Workspace} workspace - The workspace to check.
+ * @returns {void}
+ */
+function expectExports(workspace) {
+  const { exports: manifestExports } = workspace.manifest;
+  Object.entries(manifestExports)
+    .filter(([, exportValue]) => typeof exportValue !== 'string')
+    .forEach(([exportName, exportObject]) => {
+      const keys = Object.keys(exportObject);
+      if (keys.includes('types') && keys[0] !== 'types') {
+        workspace.error(
+          `The "types" export must be the first export in the "exports" field for the export "${exportName}".`,
+        );
+      }
+    });
+}
 
 module.exports = defineConfig({
   async constraints({ Yarn }) {
@@ -257,24 +256,23 @@ module.exports = defineConfig({
     // The package must specify the expected minimum Node versions
     workspace.set('engines.node', '^18.16 || ^20 || >=22');
 
-    // TODO: Exports-related fields
     // The package must provide the location of the CommonJS-compatible
     // entrypoint and its matching type declaration file.
-    // workspace.set('main', './dist/index.cjs');
-    // workspace.set('exports["."].require.default', './dist/index.cjs');
-    // workspace.set('types', './dist/index.d.cts');
-    // workspace.set('exports["."].require.types', './dist/index.d.cts');
+    workspace.set('main', './dist/index.cjs');
+    workspace.set('exports["."].require.default', './dist/index.cjs');
+    workspace.set('types', './dist/index.d.cts');
+    workspace.set('exports["."].require.types', './dist/index.d.cts');
 
     // The package must provide the location of the ESM-compatible JavaScript
     // entrypoint and its matching type declaration file.
-    // workspace.set('module', './dist/index.mjs');
-    // workspace.set('exports["."].import.default', './dist/index.mjs');
-    // workspace.set('exports["."].import.types', './dist/index.d.mts');
+    workspace.set('module', './dist/index.mjs');
+    workspace.set('exports["."].import.default', './dist/index.mjs');
+    workspace.set('exports["."].import.types', './dist/index.d.mts');
 
     // The package must export a `package.json` file.
-    // workspace.set('exports["./package.json"]', './package.json');
+    workspace.set('exports["./package.json"]', './package.json');
 
-    // expectExports(workspace);
+    expectExports(workspace);
 
     // The list of files included in the package must only include files
     // generated during the build process.
