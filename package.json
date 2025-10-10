@@ -44,7 +44,7 @@
     "lint:fix": "yarn lint:eslint --fix && yarn lint:constraints --fix && yarn lint:misc --write && yarn lint:dependencies:fix && yarn lint:changelog",
     "lint:misc": "prettier '**/*.json' '**/*.md' '**/*.yml' '!.yarnrc.yml' --ignore-path .gitignore --no-error-on-unmatched-pattern",
     "prepack": "./scripts/prepack.sh",
-    "test": "jest && jest-it-up && yarn build:clean && yarn test:types",
+    "test": "jest && yarn build:clean && yarn test:types",
     "test:types": "tsd --files 'src/**/*.test-d.ts' && attw --pack",
     "test:watch": "jest --watch"
   },
@@ -86,7 +86,6 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-promise": "^7.1.0",
     "jest": "^28.1.3",
-    "jest-it-up": "^2.0.2",
     "prettier": "^3.3.3",
     "prettier-plugin-packagejson": "^2.5.8",
     "rimraf": "^3.0.2",
