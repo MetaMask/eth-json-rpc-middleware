@@ -2,14 +2,6 @@ import { timeout } from './timeout';
 
 describe('timeout', () => {
   describe('with real timers', () => {
-    beforeAll(() => {
-      jest.useRealTimers();
-    });
-
-    afterAll(() => {
-      jest.useFakeTimers();
-    });
-
     it('does not resolve in the current event loop', async () => {
       const winner = await Promise.race([
         (async () => {
@@ -44,8 +36,16 @@ describe('timeout', () => {
   });
 
   describe('with fake timers', () => {
+    beforeAll(() => {
+      jest.useFakeTimers();
+    });
+
     afterEach(() => {
       jest.clearAllTimers();
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
     });
 
     it('does not resolve before given duration', async () => {

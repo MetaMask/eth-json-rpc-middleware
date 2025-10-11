@@ -12,14 +12,6 @@ function createTestSetup() {
 }
 
 describe('inflight cache', () => {
-  beforeAll(() => {
-    jest.useRealTimers();
-  });
-
-  afterAll(() => {
-    jest.useFakeTimers();
-  });
-
   it('should cache an inflight request and only hit provider once', async () => {
     const { engine } = createTestSetup();
     let hitCount = 0;

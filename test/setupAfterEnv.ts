@@ -8,8 +8,6 @@ Object.defineProperty(global, 'performance', {
   writable: true,
 });
 
-jest.useFakeTimers({ doNotFake: ['nextTick'] });
-
 /**
  * Produces a sort of dummy promise which can be used in conjunction with a
  * "real" promise to determine whether the "real" promise was ever resolved. If

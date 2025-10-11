@@ -63,8 +63,14 @@ interface WithTestSetupOptions {
  */
 type WithTestSetupCallback<T> = (setup: Setup) => Promise<T>;
 
+const originalSetTimeout = globalThis.setTimeout;
+
 describe('createRetryOnEmptyMiddleware', () => {
-  beforeEach(() => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
     jest.clearAllTimers();
   });
 
@@ -775,7 +781,7 @@ async function waitForRequestToBeRetried({
   let iterationNumber = 1;
 
   while (iterationNumber <= numberOfTimes) {
-    await new Promise((resolve) => process.nextTick(resolve));
+    await new Promise((resolve) => originalSetTimeout(resolve, 0));
 
     if (
       requestSpy.mock.calls.filter((args) => requestMatches(args[0], request))
