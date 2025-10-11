@@ -63,7 +63,7 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.3",
     "@lavamoat/allow-scripts": "^3.0.4",
-    "@metamask/auto-changelog": "^4.0.0",
+    "@metamask/auto-changelog": "^3.4.4",
     "@metamask/error-reporting-service": "^2.0.0",
     "@metamask/eslint-config": "^14.0.0",
     "@metamask/eslint-config-jest": "^14.0.0",
@@ -92,9 +92,9 @@
     "ts-jest": "^28.0.7",
     "ts-node": "^10.7.0",
     "tsd": "^0.31.2",
-    "typedoc": "^0.26.11",
-    "typescript": "~5.7.3",
-    "typescript-eslint": "^8.6.0"
+    "typedoc": "^0.24.8",
+    "typescript": "~5.2.2",
+    "typescript-eslint": "^8.7.0"
   },
   "packageManager": "yarn@4.1.1",
   "engines": {
