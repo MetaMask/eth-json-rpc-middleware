@@ -57,7 +57,10 @@ export function buildFinalMiddlewareWithDefaultResult<
     }
 
     res.jsonrpc ??= '2.0';
-    res.result ??= 'default result';
+
+    if (res.result === undefined) {
+      res.result = 'default result';
+    }
 
     end();
   });
