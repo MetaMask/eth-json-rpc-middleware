@@ -9,10 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [20.0.0]
 
-### Uncategorized
-
-- docs: Add migration notice ([#428](https://github.com/MetaMask/eth-json-rpc-middleware/pull/428))
-
 ### Changed
 
 - **BREAKING:** Distribute separate CommonJS and ESM files ([#420](https://github.com/MetaMask/eth-json-rpc-middleware/pull/420))
