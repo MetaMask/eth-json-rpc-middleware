@@ -12,6 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **BREAKING:** Distribute separate CommonJS and ESM files ([#420](https://github.com/MetaMask/eth-json-rpc-middleware/pull/420))
   - Use the `exports` field of `package.json`, breaking some previously valid imports.
 
+## [19.0.1]
+
+### Changed
+
+- Bump `@metamask/eth-block-tracker` from `^12.2.0` to `^12.2.1` ([#422](https://github.com/MetaMask/eth-json-rpc-middleware/pull/422))
+
+### Fixed
+
+- Prevent delays in request processing ([#421](https://github.com/MetaMask/eth-json-rpc-middleware/pull/421))
+  - All `PollingBlockTracker.getLatestBlock()` calls have been updated to not include `useCache: false`
+  - This reverts [#416](https://github.com/MetaMask/eth-json-rpc-middleware/pull/416). This change ended up introducing a bug (it caused delays in request processing).
+
 ## [19.0.0]
 
 ### Changed
@@ -458,7 +470,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `json-rpc-engine@5.3.0` ([#53](https://github.com/MetaMask/eth-json-rpc-middleware/pull/53))
 - `eth-rpc-errors@3.0.0` ([#55](https://github.com/MetaMask/eth-json-rpc-middleware/pull/55))
 
-[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v19.0.0...HEAD
+[Unreleased]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v19.0.1...HEAD
+[19.0.1]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v19.0.0...v19.0.1
 [19.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v18.0.0...v19.0.0
 [18.0.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v17.1.0...v18.0.0
 [17.1.0]: https://github.com/MetaMask/eth-json-rpc-middleware/compare/v17.0.1...v17.1.0

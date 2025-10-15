@@ -38,9 +38,7 @@ export function createBlockRefRewriteMiddleware({
       return next();
     }
     // rewrite blockRef to block-tracker's block number
-    const latestBlockNumber = await blockTracker.getLatestBlock({
-      useCache: false,
-    });
+    const latestBlockNumber = await blockTracker.getLatestBlock();
     if (Array.isArray(req.params)) {
       req.params[blockRefIndex] = latestBlockNumber;
     }
