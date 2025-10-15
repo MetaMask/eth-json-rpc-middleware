@@ -972,7 +972,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/base-controller@npm:^8.0.1, @metamask/base-controller@npm:^8.4.1":
+"@metamask/base-controller@npm:^8.4.1":
   version: 8.4.1
   resolution: "@metamask/base-controller@npm:8.4.1"
   dependencies:
@@ -1005,11 +1005,11 @@ __metadata:
   linkType: hard
 
 "@metamask/error-reporting-service@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@metamask/error-reporting-service@npm:2.0.0"
+  version: 2.2.1
+  resolution: "@metamask/error-reporting-service@npm:2.2.1"
   dependencies:
-    "@metamask/base-controller": "npm:^8.0.1"
-  checksum: 10/639206e3d3fcf136243503073692b97cac194dc6f2003e62db58315b82393be8d6426d22b0e0c97c7f2903ffa3c11ef4600565576bcb58ea6ff72fce74e18d59
+    "@metamask/base-controller": "npm:^8.4.1"
+  checksum: 10/f43466c8a7c27664944a63436b8e8997cc434abc56d234bea8bdd073df216af442ca962dee18948923a09c3b2aeee9768a1ca86c1af633f34634a84acd6747fd
   languageName: node
   linkType: hard
 
