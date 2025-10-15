@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **BREAKING:** Distribute separate CommonJS and ESM files ([#420](https://github.com/MetaMask/eth-json-rpc-middleware/pull/420))
   - Use the `exports` field of `package.json`, breaking some previously valid imports.
+- Change all `PollingBlockTracker.getLatestBlock()` calls to not include `useCache: true` ([#421](https://github.com/MetaMask/eth-json-rpc-middleware/pull/421))
 
 ## [19.0.0]
 
