@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **BREAKING:** Distribute separate CommonJS and ESM files ([#420](https://github.com/MetaMask/eth-json-rpc-middleware/pull/420))
   - Use the `exports` field of `package.json`, breaking some previously valid imports.
+- Bump `@metamask/eth-block-tracker` from `^12.2.0` to `^12.2.1` ([#422](https://github.com/MetaMask/eth-json-rpc-middleware/pull/422))
 
 ## [19.0.0]
 
