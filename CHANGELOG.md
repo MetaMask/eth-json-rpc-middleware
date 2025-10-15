@@ -9,12 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [19.0.1]
 
-### Uncategorized
-
-- chore: Update dependencies to resolve audit warnings ([#425](https://github.com/MetaMask/eth-json-rpc-middleware/pull/425))
-- Revert "refactor!: Synchronize dev toolchain with module template and core monorepo (#420)" ([#420](https://github.com/MetaMask/eth-json-rpc-middleware/pull/420))
-- refactor!: Synchronize dev toolchain with module template and core monorepo ([#420](https://github.com/MetaMask/eth-json-rpc-middleware/pull/420))
-
 ### Changed
 
 - Bump `@metamask/eth-block-tracker` from `^12.2.0` to `^12.2.1` ([#422](https://github.com/MetaMask/eth-json-rpc-middleware/pull/422))
